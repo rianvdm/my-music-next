@@ -1,107 +1,476 @@
 :root {
-  --max-width: 1100px;
-  --border-radius: 12px;
-  --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
-    "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
-    "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
-
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-
-  --primary-glow: conic-gradient(
-    from 180deg at 50% 50%,
-    #16abff33 0deg,
-    #0885ff33 55deg,
-    #54d6ff33 120deg,
-    #0071ff33 160deg,
-    transparent 360deg
-  );
-  --secondary-glow: radial-gradient(
-    rgba(255, 255, 255, 1),
-    rgba(255, 255, 255, 0)
-  );
-
-  --tile-start-rgb: 239, 245, 249;
-  --tile-end-rgb: 228, 232, 233;
-  --tile-border: conic-gradient(
-    #00000080,
-    #00000040,
-    #00000030,
-    #00000020,
-    #00000010,
-    #00000010,
-    #00000080
-  );
-
-  --callout-rgb: 238, 240, 241;
-  --callout-border-rgb: 172, 175, 176;
-  --card-rgb: 180, 185, 188;
-  --card-border-rgb: 131, 134, 135;
+  --c-bg: #ffffff;
+  --c-accent: #FF6C00;
+  --c-base: #000000;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-
-    --primary-glow: radial-gradient(rgba(1, 65, 255, 0.4), rgba(1, 65, 255, 0));
-    --secondary-glow: linear-gradient(
-      to bottom right,
-      rgba(1, 65, 255, 0),
-      rgba(1, 65, 255, 0),
-      rgba(1, 65, 255, 0.3)
-    );
-
-    --tile-start-rgb: 2, 13, 46;
-    --tile-end-rgb: 2, 5, 19;
-    --tile-border: conic-gradient(
-      #ffffff80,
-      #ffffff40,
-      #ffffff30,
-      #ffffff20,
-      #ffffff10,
-      #ffffff10,
-      #ffffff80
-    );
-
-    --callout-rgb: 20, 20, 20;
-    --callout-border-rgb: 108, 108, 108;
-    --card-rgb: 100, 100, 100;
-    --card-border-rgb: 200, 200, 200;
-  }
+[data-theme="dark"] {
+  --c-bg: #000000;
+  --c-accent: #FFA500;
+  --c-base: #ffffff;
 }
+
 
 * {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
+  font-family: Optima, Candara, 'Noto Sans', source-sans-pro, sans-serif;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background-color: var(--c-bg);
+  color: var(--c-base);
+}
+
+p {
+  color: var(--c-base);
+  margin: 1em auto;
+  line-height: 1.4em;
+  font-size: 18px;
+  max-width: 800px;
 }
 
 a {
-  color: inherit;
+  color: var(--c-accent);
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+h1 {
+  color: var(--c-accent);
+  text-align: center;
+  margin: 1.4em 0 0.8em; 
+  position: relative;
+}
+
+h1 span {
+  position: relative;
+  z-index: 2;
+}
+
+h2 {
+  color: var(--c-base);
+  text-align: center;
+  margin: 2.5em 0 1em;
+  position: relative;
+}
+
+h3 {
+  color: var(--c-base);
+  margin: 2em auto 0.5em;
+  max-width: 800px;
+}
+
+h4 {
+  color: var(--c-base);
+  font-size: 18px;
+  margin: 2em auto 0.5em;
+  max-width: 800px;
+}
+
+nav {
+  background-color: var(--c-bg);
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  display: inline-block;
+}
+
+nav a {
+  display: block;
+  color: var(--c-accent);
+  text-align: center;
+  padding: 16px 16px 0px 16px;
+  text-decoration: none;
+}
+
+nav li.active a {
+  font-weight: bold;
+}
+
+#mode-toggle {
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+  }
+
+  nav ul {
+    text-align: center;
+  }
+
+  nav li {
+    display: inline-block;
+    margin: 0px 5px 0px 5px;
   }
 }
+
+blockquote {
+  border-left: 3px solid var(--c-accent);
+  padding: 0 10px;
+  margin: 0;
+  max-width: 800px;
+}
+
+.footnote {
+  color: var(--c-base);
+  margin: 1em auto;
+  line-height: 1.4em;
+  font-size: 12px;
+  max-width: 800px;
+}
+
+.button,
+.button:visited {
+  background-color: var(--c-accent);
+  color: var(--c-bg);
+  display: inline-block;
+  font-weight: bold;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  margin-left: 0.5em;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.button:hover {
+  background-color: rgba(var(--c-accent), 0.8);
+  color: rgba(var(--c-bg), 0.8);
+}
+
+.recent-tracks {
+
+}
+
+.track-grid {
+  display: grid;
+  gap: 35px;
+  max-width: 800px;
+  margin: 0 auto;
+  justify-items: center;
+}
+
+@media (min-width: 600px) {
+  .track-grid {  grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 800px) {
+  .track-grid {  grid-template-columns: repeat(3, 1fr); }
+}
+
+.track-list {
+  margin: 0 20px;
+}
+
+.track {
+  border-radius: 5px;
+  position: relative;
+  z-index: 1;
+  margin: 0 auto;
+  max-width: 200px;
+}
+
+.track_content {
+  margin-top: 5px;
+}
+.track_link {
+  text-decoration: none;
+  color: var(--c-accent);
+}
+.track_artist {
+  color: var(--c-accent);
+  text-align: left;
+  font-size: 16px;
+  margin: 0;
+}
+.track_name {
+  font-size: 15px;
+  margin: 0;
+  color: var(--c-base);
+}
+.track_album {
+  font-size: 14px;
+  margin: 0;
+  font-style: italic;
+}
+.track_none {
+  margin: 0 auto;
+  font-size: 18px;
+  max-width: 800px;
+}
+
+.track_video {
+  margin: 0 auto;
+  font-size: 18px;
+  max-width: 500px;
+}
+
+.track_image {
+  position: relative;
+  max-width: 200px;
+  border-radius: 10px;
+  z-index: 2;
+}
+
+.track_image:hover {
+  transition: all 180ms ease-in-out;
+  transform: translateY(-5px) rotate(-5deg);
+}
+
+.track_ol {
+  margin: 0.1em auto 0;
+  font-size: 18px;
+  line-height: 1.4em;
+  max-width: 800px;
+}
+
+.track_ul {
+  margin: 0.4em auto 1.5em;
+  font-size: 18px;
+  line-height: 1.4em;
+  max-width: 800px;
+  overflow: auto;
+}
+
+.track_ul img {
+  float: left;
+  max-width: 150px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+
+.track_ul2 {
+  margin: 0 auto;
+  font-size: 18px;
+  line-height: 1.4em;
+  max-width: 800px;
+  overflow: auto;
+}
+
+.track_ul2 img {
+  float: left;
+  max-width: 150px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+
+.no-wrap-text {
+  overflow: hidden;
+}
+
+.no-wrap-text p {
+  margin-top: 0;            /* Remove top margin */
+  margin-bottom: 0.5em;     /* Add a smaller bottom margin */
+  max-width: none;          /* Remove the max-width restriction for alignment */
+  line-height: 1.4em;       /* Retain line-height */
+  font-size: 18px;          /* Retain font size */
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .track_ul img {
+    float: none;
+    display: block;
+    margin-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .no-wrap-text {
+    text-align: left;
+  }
+}
+
+.track_recent {
+  margin: 0.2em auto;
+  font-size: 18px;
+  line-height: 1.2em;
+  max-width: 800px;
+}
+
+.footer {
+  color: var(--c-base);
+  position: block;
+  margin: 5em auto;
+  text-align: center;
+  line-height: 1.5em;
+  max-width: 800px;
+}
+
+.footer p {
+  font-size: 16px;
+}
+
+.videoWrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+}
+
+.videoWrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.video-holder {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    max-width: 600px;
+    max-height: 338px;
+}
+
+.spotify-iframe {
+  display: block;
+  border-radius:12px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+}
+
+img.center-image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 300px;
+}
+
+/* Search Form */
+#search-form, #usernameInput {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1em;
+  padding-top: 2em;
+  padding-bottom: 1em;
+}
+
+#search-form label, #usernameInput label {
+  margin-right: 0.5em;
+}
+
+#artist-name, #album-name, #song-name, #lastFmUsername {
+  border: 2px solid var(--c-accent);
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s;
+  width: 90%;
+  max-width: 300px;
+}
+
+#artist-name:focus, #album-name:focus, #song-name:focus, #lastFmUsername:focus {
+  border-color: rgba(var(--c-accent), 0.6);
+}
+
+#search-form button {
+  background-color: var(--c-accent);
+  color: var(--c-bg);
+  font-weight: bold;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  margin-left: 0.5em;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+#search-form button:hover {
+  background-color: rgba(var(--c-accent), 0.8);
+  color: rgba(var(--c-bg), 0.8);
+}
+
+.image-text-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  margin-bottom: 1em;
+}
+
+@media (max-width: 768px) {
+  .image-text-wrapper {
+    flex-direction: column;
+    align-items: center;
+  } }
+
+
+/* Style the dropdown button */
+.dropbtn {
+  color: var(--c-accent);
+  padding: 16px 16px 0px 16px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+/* Change color of the dropdown button on hover */
+.dropdown:hover .dropbtn {
+  color: var(--c-base);
+}
+
+
+
+/* Style the dropdown button to fit in with the list items */
+.dropdown {
+  display: inline-block;
+  color: var(--c-accent);
+}
+
+/* Style the dropdown content box (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  min-width: 160px;
+  background-color: var(--c-bg);
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Style the links inside the dropdown */
+.dropdown-content a {
+  color: var(--c-accent);
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Show the dropdown when the user hovers over the dropdown button */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Change the color of dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: var(--c-accent);
+  color: var(--c-bg);
+}
+
+/* Change the color of the dropdown button on hover */
+.dropdown:hover .dropbtn {
+  color: var(--c-accent);
+}
+
+
+
