@@ -1,0 +1,14 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "api-openai-artistdetail"
+main = "src/index.js"
+compatibility_date = "2024-08-21"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+OPENAI_API_TOKEN="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"
+
+[env.production]
+vars = { }
+
+[env.staging]
+vars = { }
