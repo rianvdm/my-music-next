@@ -112,8 +112,11 @@ export default function Home() {
                             <img src={album.image} className="track_image" alt={album.name} />
                         </a>
                         <div className="track_content">
-                            <h2 className="track_artist">{album.name}</h2>
-                            <p className="track_name">{album.artist}</p>
+                            <p className="track_name"><strong>{album.name}</strong></p>
+                            <p className="track_artist">
+                                <Link href={`artist/${encodeURIComponent(album.artist)}`} rel="noopener noreferrer">
+                                    {album.artist}
+                                </Link></p>
                             <p className="track_album">{album.playcount} songs played</p>
                         </div>
                     </div>
