@@ -136,12 +136,6 @@ export default function Home() {
 
     return (
         <div>
-            <Head>
-                <title>Rian&rsquo;s Music</title>
-                <meta name="description" content="Tracking my Last.fm music listening habits." />
-                <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
             <header>
                 <h1>{dayGreeting}</h1>
             </header>
