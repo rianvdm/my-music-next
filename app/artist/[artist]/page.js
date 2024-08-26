@@ -151,9 +151,9 @@ export default function ArtistPage({ params }) {
                 </section>
                 {renderBioContent(artistDetails.bio)}
             </main>
-            <footer className="footer">
+            <div className="footer">
                 <p><a href="https://youtu.be/cNtprycno14?t=9036">There’s a fire that’s been burning right outside my door.</a></p>
-            </footer>
+            </div>
         </div>
     );
 }
