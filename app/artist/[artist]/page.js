@@ -13,59 +13,37 @@ export default function ArtistPage({ params }) {
     const [topAlbums, setTopAlbums] = useState([]);
     const router = useRouter();
 
-  useEffect(() => {
+useEffect(() => {
     if (artist) {
-      async function fetchArtistData() {
-        try {
-          // Decode the artist name before making the request
-          const decodedArtist = decodeURIComponent(artist);
+        async function fetchArtistData() {
+            try {
+                // Decode the artist name before making the request
+                const decodedArtist = decodeURIComponent(artist);
 
-          const artistResponse = await fetch(
-            `https://api-lastfm-artistdetail.rian-db8.workers.dev?artist=${encodeURIComponent(decodedArtist)}`
-          );
-          let artistData = await artistResponse.json();
-          console.log('Fetched Artist Data:', artistData);
+                const artistResponse = await fetch(`https://api-lastfm-artistdetail.rian-db8.workers.dev?artist=${encodeURIComponent(decodedArtist)}`);
+                let artistData = await artistResponse.json();
+                console.log('Fetched Artist Data:', artistData);
 
-          // Remove the Creative Commons text from the bio
-          if (artistData.bio) {
-            artistData.bio = artistData.bio.replace(
-              /User-contributed text is available under the Creative Commons By-SA License; additional terms may apply\./g,
-              ''
-            ).trim();
-          }
+                // Remove the Creative Commons text from the bio
+                if (artistData.bio) {
+                    artistData.bio = artistData.bio.replace(/User-contributed text is available under the Creative Commons By-SA License; additional terms may apply\./g, '').trim();
+                }
 
-          setArtistDetails(artistData);
+                setArtistDetails(artistData);
 
-          // Fetch top albums for the artist
-          const albumsResponse = await fetch(
-            `https://api-lastfm-artisttopalbums.rian-db8.workers.dev?artist=${encodeURIComponent(decodedArtist)}`
-          );
-          const albumsData = await albumsResponse.json();
-          console.log('Fetched Albums Data:', albumsData);
+                // Fetch top albums for the artist
+                const albumsResponse = await fetch(`https://api-lastfm-artisttopalbums.rian-db8.workers.dev?artist=${encodeURIComponent(decodedArtist)}`);
+                const albumsData = await albumsResponse.json();
+                console.log('Fetched Albums Data:', albumsData);
 
-          setTopAlbums(albumsData.topAlbums.slice(0, 3)); // Limit to top 3 albums
-
-          // Set the document title and meta description dynamically
-          document.title = `${artistData.name} - Artist Details`;
-
-          // Set the meta description
-          const metaDescription = document.querySelector('meta[name="description"]');
-          if (metaDescription) {
-            metaDescription.setAttribute('content', `Details about ${artistData.name}`);
-          } else {
-            const metaTag = document.createElement('meta');
-            metaTag.name = 'description';
-            metaTag.content = `Details about ${artistData.name}`;
-            document.head.appendChild(metaTag);
-          }
-
-        } catch (error) {
-          console.error('Error fetching artist data:', error);
+                setTopAlbums(albumsData.topAlbums.slice(0, 3)); // Limit to top 3 albums
+            } catch (error) {
+                console.error('Error fetching artist data:', error);
+            }
         }
-      }
-      fetchArtistData();
+        fetchArtistData();
     }
-  }, [artist]);
+}, [artist]);
 
     if (!artistDetails) {
         return <p>Loading...</p>;
@@ -80,6 +58,10 @@ export default function ArtistPage({ params }) {
 
     return (
         <div>
+            <Head>
+                <title>{artistDetails.name} - Artist Details</title>
+                <meta name="description" content={`Details about the artist ${artistDetails.name}`} />
+            </Head>
             <div className="track_ul2" style={{ paddingTop: '20px' }}>
             <Link href="#" onClick={(e) => { 
                 e.preventDefault(); 
