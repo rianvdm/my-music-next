@@ -156,9 +156,9 @@ export default function ArtistPage({ params }) {
                             </li>
                         ))}
                     </ul>
-                    <strong>ChatGPT Summary</strong>
+                    <strong>ChatGPT Summary:</strong>
                     {renderOpenAISummary(openAISummary)}
-                    <strong>Artist bio:</strong>
+                    <strong>Artist bio from Last.fm:</strong>
                 </section>
                 {renderBioContent(artistDetails.bio)}
             </main>
