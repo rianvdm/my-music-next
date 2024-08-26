@@ -108,19 +108,8 @@ export default function ArtistPage({ params }) {
 
     return (
         <div>
-            <div className="track_ul2" style={{ paddingTop: '20px' }}>
-                <Link href="#" onClick={(e) => {
-                    e.preventDefault();
-                    router.back();
-                }} style={{ color: 'var(--c-accent)', textDecoration: 'none', marginRight: '10px' }}>
-                    ← Back
-                </Link>
-                <Link href="/" style={{ color: 'var(--c-accent)', textDecoration: 'none' }}>
-                    Home
-                </Link>
-            </div>
             <header>
-                <h1 style={{ marginTop: '0.4em' }}>{artistDetails.name}</h1>
+                <h1>{artistDetails.name}</h1>
             </header>
             <main>
                 <section className="track_ul2">
