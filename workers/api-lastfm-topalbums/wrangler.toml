@@ -1,0 +1,15 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "api-lastfm-topalbums"
+main = "src/index.js"
+compatibility_date = "2024-08-21"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+LASTFM_API_KEY = "393b42dc3a5d42fde4743c1c27133681"
+LASTFM_USERNAME = "bordesak"
+
+[env.production]
+vars = { }
+
+[env.staging]
+vars = { }
