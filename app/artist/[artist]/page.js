@@ -106,6 +106,9 @@ export default function ArtistPage({ params }) {
         ));
     };
 
+    // Format the user playcount with commas
+    const formattedPlaycount = new Intl.NumberFormat().format(artistDetails.userplaycount);
+
     return (
         <div>
             <header>
@@ -120,7 +123,7 @@ export default function ArtistPage({ params }) {
                             style={{ maxWidth: '100%', width: '220px', height: 'auto' }} 
                         />
                         <div className="no-wrap-text">
-                            <p><strong>My playcount:</strong> {artistDetails.userplaycount} tracks</p>
+                            <p><strong>My playcount:</strong> {formattedPlaycount} tracks</p>
                             <p><strong>Genres:</strong> {artistDetails.tags.join(', ')}</p>
 
                             <p style={{ marginBottom: '0.2em' }}><strong>Top 3 Albums:</strong></p>
