@@ -117,7 +117,6 @@ export default function Home() {
                                     {artist.name}
                                 </Link>
                             </h2>
-                            <p className="track_name">{artist.playcount} plays</p>
                         </div>
                     </div>
                 ))}
@@ -143,7 +142,6 @@ export default function Home() {
                                 <Link href={`artist/${encodeURIComponent(album.artist)}`} rel="noopener noreferrer">
                                     {album.artist}
                                 </Link></p>
-                            <p className="track_album">{album.playcount} songs played</p>
                         </div>
                     </div>
                 ))}
@@ -158,8 +156,8 @@ export default function Home() {
             </header>
             <main>
                 <section id="lastfm-stats">
-                    {renderRecentTracks()}
-                    <h2>👩‍🎤 Top Artists</h2>
+                    {renderRecentTracks()}``
+                    <h2 style={{ marginTop: '0.3em' }}>👩‍🎤 Top Artists</h2>
                     <p style={{ textAlign: 'center' }}>
                         <strong>The top artists I listened to in the past 7 days.</strong>
                     </p>
