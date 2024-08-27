@@ -9,9 +9,9 @@ export default function Home() {
     const [topArtistsData, setTopArtistsData] = useState(null);
     const [topAlbumsData, setTopAlbumsData] = useState(null);
     const [dayGreeting, setDayGreeting] = useState('');
+    const [artistSummary, setArtistSummary] = useState(''); // State for the last artist summary
 
     useEffect(() => {
-        // Set the greeting based on the current day in the user's time zone
         const setGreeting = () => {
             const options = { weekday: 'long' };
             const today = new Date();
@@ -21,7 +21,6 @@ export default function Home() {
 
         setGreeting();
 
-        // Fetch recent tracks separately to ensure it can render as soon as it's ready
         const fetchRecentTracks = async () => {
             try {
                 console.time('fetchRecentTracks');
@@ -29,6 +28,11 @@ export default function Home() {
                 const recentTracksData = await recentTracksResponse.json();
                 console.timeEnd('fetchRecentTracks');
                 setRecentTracksData(recentTracksData);
+
+                // Fetch the artist summary for the last artist
+                if (recentTracksData.last_artist) {
+                    fetchArtistSummary(recentTracksData.last_artist);
+                }
             } catch (error) {
                 console.error('Error fetching recent tracks data:', error);
             }
@@ -39,7 +43,6 @@ export default function Home() {
                 const topArtistsResponse = await fetch('https://api-lastfm-topartists.rian-db8.workers.dev');
                 const topArtistsData = await topArtistsResponse.json();
 
-                // Fetch artist details for each artist to get the image and other details
                 const detailedArtistsData = await Promise.all(topArtistsData.map(async (artist) => {
                     const detailResponse = await fetch(`https://api-lastfm-artistdetail.rian-db8.workers.dev?artist=${encodeURIComponent(artist.name)}`);
                     const detailData = await detailResponse.json();
@@ -68,10 +71,33 @@ export default function Home() {
             }
         };
 
+        const fetchArtistSummary = async (artistName) => {
+            try {
+                const summaryResponse = await fetch(`https://api-openai-artistsentence.rian-db8.workers.dev?name=${encodeURIComponent(artistName)}`);
+                const summaryData = await summaryResponse.json();
+                setArtistSummary(summaryData.data);
+            } catch (error) {
+                console.error(`Error fetching summary for ${artistName}:`, error);
+                setArtistSummary('Failed to load artist summary.');
+            }
+        };
+
         fetchRecentTracks();
         fetchTopArtists();
         fetchTopAlbums();
     }, []);
+
+    const renderRecentTracks = () => {
+        if (!recentTracksData) {
+            return <p>Loading recent stats...</p>;
+        }
+
+        return (
+            <p>
+                Over the last 7 days I listened to <strong>{new Intl.NumberFormat().format(recentTracksData.playcount)} tracks</strong> across <strong>{new Intl.NumberFormat().format(recentTracksData.artist_count)} artists</strong> and <strong>{new Intl.NumberFormat().format(recentTracksData.album_count)} albums</strong>. The last artist I listened to was <Link href={`artist/${encodeURIComponent(recentTracksData.last_artist)}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}
+            </p>
+        );
+    };
 
     const renderTopArtists = () => {
         if (!topArtistsData) {
@@ -122,18 +148,6 @@ export default function Home() {
                     </div>
                 ))}
             </div>
-        );
-    };
-
-    const renderRecentTracks = () => {
-        if (!recentTracksData) {
-            return <p>Loading recent stats...</p>;
-        }
-
-        return (
-            <p>
-                Over the last 7 days I listened to <strong>{new Intl.NumberFormat().format(recentTracksData.playcount)} tracks</strong> across <strong>{new Intl.NumberFormat().format(recentTracksData.artist_count)} artists</strong> and <strong>{new Intl.NumberFormat().format(recentTracksData.album_count)} albums</strong>. The last artist I listened to was <Link href={`artist/${encodeURIComponent(recentTracksData.last_artist)}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>.
-            </p>
         );
     };
 
