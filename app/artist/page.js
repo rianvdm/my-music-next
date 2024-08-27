@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function ArtistPage() {
-    const [randomFact, setRandomFact] = useState('Loading random fact...');
+    const [randomFact, setRandomFact] = useState('Did you know ...');
     const [searchTerm, setSearchTerm] = useState(''); // State to hold the search term
     const router = useRouter();
 
