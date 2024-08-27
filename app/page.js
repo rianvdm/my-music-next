@@ -159,9 +159,6 @@ export default function Home() {
             <main>
                 <section id="lastfm-stats">
                     {renderRecentTracks()}
-                    <p style={{ textAlign: 'center' }}>
-                      🚧 <em>I am slowly porting <a href="https://music.elezea.com">the old music site</a> over to Cloudflare <a href="https://pages.cloudflare.com/">Pages</a> and <a href="https://workers.cloudflare.com/">Workers</a>. Things might be a bit messy for a while.</em> 🚧
-                    </p>
                     <h2>👩‍🎤 Top Artists</h2>
                     <p style={{ textAlign: 'center' }}>
                         <strong>The top artists I listened to in the past 7 days.</strong>
