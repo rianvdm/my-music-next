@@ -46,7 +46,7 @@ export default function RootLayout({ children }) {
         {children}
         <div className="footer">
           <p>
-            <a href="https://youtu.be/cNtprycno14?t=9036">
+            <a href="https://youtu.be/cNtprycno14?t=9036" target="_blank">
               There’s a fire that’s been burning right outside my door.
             </a>
           </p>
