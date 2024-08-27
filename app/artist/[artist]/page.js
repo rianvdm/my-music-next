@@ -152,9 +152,6 @@ export default function ArtistPage({ params }) {
                     {renderOpenAISummary(openAISummary)}
                 </section>
             </main>
-            <div className="footer">
-                <p><a href="https://youtu.be/cNtprycno14?t=9036">There’s a fire that’s been burning right outside my door.</a></p>
-            </div>
         </div>
     );
 }

@@ -18,6 +18,13 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <NavBar />
         {children}
+        <div className="footer">
+          <p>
+            <a href="https://youtu.be/cNtprycno14?t=9036">
+              There’s a fire that’s been burning right outside my door.
+            </a>
+          </p>
+        </div>
       </body>
     </html>
   );
