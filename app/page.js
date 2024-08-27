@@ -156,8 +156,8 @@ export default function Home() {
             </header>
             <main>
                 <section id="lastfm-stats">
-                    {renderRecentTracks()}``
-                    <h2 style={{ marginTop: '0.3em' }}>👩‍🎤 Top Artists</h2>
+                    {renderRecentTracks()}
+                    <h2>👩‍🎤 Top Artists</h2>
                     <p style={{ textAlign: 'center' }}>
                         <strong>The top artists I listened to in the past 7 days.</strong>
                     </p>
