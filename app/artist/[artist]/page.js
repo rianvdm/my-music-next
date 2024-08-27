@@ -11,6 +11,7 @@ export default function ArtistPage({ params }) {
     const [artistDetails, setArtistDetails] = useState(null);
     const [topAlbums, setTopAlbums] = useState([]);
     const [openAISummary, setOpenAISummary] = useState('Loading ChatGPT summary...');
+    const [error, setError] = useState(null); // State to track errors
     const router = useRouter();
     const fetchedOpenAISummary = useRef(false); // Track whether the OpenAI summary has been fetched
 
@@ -24,8 +25,15 @@ export default function ArtistPage({ params }) {
                     const artistResponse = await fetch(
                         `https://api-lastfm-artistdetail.rian-db8.workers.dev?artist=${encodeURIComponent(decodedArtist)}`
                     );
+                    if (!artistResponse.ok) {
+                        throw new Error('Artist not found');
+                    }
                     let artistData = await artistResponse.json();
-                    console.log('Fetched Artist Data:', artistData);
+
+                    // Check if artistData is undefined or has an error property
+                    if (!artistData || artistData.error) {
+                        throw new Error('Artist not found');
+                    }
 
                     // Clean up the bio text
                     if (artistData.bio) {
@@ -42,7 +50,6 @@ export default function ArtistPage({ params }) {
                         `https://api-lastfm-artisttopalbums.rian-db8.workers.dev?artist=${encodeURIComponent(decodedArtist)}`
                     );
                     const albumsData = await albumsResponse.json();
-                    console.log('Fetched Albums Data:', albumsData);
 
                     setTopAlbums(albumsData.topAlbums.slice(0, 3)); // Limit to top 3 albums
 
@@ -58,9 +65,9 @@ export default function ArtistPage({ params }) {
                         metaTag.content = `Details about ${artistData.name}`;
                         document.head.appendChild(metaTag);
                     }
-
                 } catch (error) {
                     console.error('Error fetching artist data:', error);
+                    setError(error.message); // Set error state
                 }
             }
             fetchArtistData();
@@ -79,7 +86,6 @@ export default function ArtistPage({ params }) {
                         `https://api-openai-artistdetail.rian-db8.workers.dev?name=${encodeURIComponent(decodedArtist)}`
                     );
                     const summaryData = await summaryResponse.json();
-                    console.log('Fetched OpenAI Summary:', summaryData);
                     setOpenAISummary(summaryData.data);
                 } catch (error) {
                     console.error('Error fetching OpenAI summary:', error);
@@ -89,6 +95,10 @@ export default function ArtistPage({ params }) {
             fetchOpenAISummary();
         }
     }, [artist]);
+
+    if (error) {
+        return <p>{error}</p>; // Display error message if artist not found
+    }
 
     if (!artistDetails) {
         return <p>Loading...</p>;
@@ -124,7 +134,7 @@ export default function ArtistPage({ params }) {
                         />
                         <div className="no-wrap-text">
                             <p><strong>My playcount:</strong> {formattedPlaycount} tracks</p>
-                            <p><strong>Genres:</strong> {artistDetails.tags.join(', ')}</p>
+                            <p><strong>Genres:</strong> {artistDetails.tags?.join(', ') || 'No genres found'}</p>
 
                             <p style={{ marginBottom: '0.2em' }}><strong>Top 3 Albums:</strong></p>
                             <ul style={{ listStyleType: 'none', paddingLeft: '0', marginTop: '0' }}>

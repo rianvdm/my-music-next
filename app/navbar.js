@@ -8,6 +8,9 @@ export default function NavBar() {
           <Link href="/">Home</Link>
         </li>
         <li style={liStyle}>
+          <Link href="/artist">Artists</Link>
+        </li>
+        <li style={liStyle}>
           <Link href="/about">About</Link>
         </li>
       </ul>
