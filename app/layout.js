@@ -24,12 +24,13 @@ export default function RootLayout({ children }) {
         <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" />
 
         {/* HTML Meta Tags */}
+        <meta name="title" content="Rian’s Music" />
         <meta name="description" content="Real-time listening data and music recommendations." />
 
         {/* Open Graph / Facebook Meta Tags */}
         <meta property="og:url" content="https://music.rianvdm.com/about" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="About Rian's music" />
+        <meta property="og:title" content="Rian's music" />
         <meta property="og:description" content="Real-time listening data and music recommendations." />
         <meta property="og:image" content="https://files.elezea.com/alberto-bigoni-4-DeS5a-hAM-unsplash.jpg" />
 
@@ -37,8 +38,8 @@ export default function RootLayout({ children }) {
         <meta name="twitter:card" content="summary_large_image" />
         <meta property="twitter:domain" content="music.rianvdm.com" />
         <meta property="twitter:url" content="https://music.rianvdm.com/about" />
-        <meta name="twitter:title" content="About Rian's music" />
-        <meta name="twitter:description" content="Real-time listening data and music recommendations for your enjoyment." />
+        <meta name="twitter:title" content="Rian's music" />
+        <meta name="twitter:description" content="Real-time listening data and music recommendations." />
         <meta name="twitter:image" content="https://files.elezea.com/alberto-bigoni-4-DeS5a-hAM-unsplash.jpg" />
       </head>
       <body className={inter.className}>
