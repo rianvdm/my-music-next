@@ -145,11 +145,9 @@ export default function ArtistPage({ params }) {
                             </li>
                         ))}
                     </ul>
-                    <strong>ChatGPT Summary:</strong>
+                    <strong>Artist Summary:</strong>
                     {renderOpenAISummary(openAISummary)}
-                    <strong>Artist bio from Last.fm:</strong>
                 </section>
-                {renderBioContent(artistDetails.bio)}
             </main>
             <div className="footer">
                 <p><a href="https://youtu.be/cNtprycno14?t=9036">There’s a fire that’s been burning right outside my door.</a></p>
