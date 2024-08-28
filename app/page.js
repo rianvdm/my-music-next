@@ -103,7 +103,7 @@ export default function Home() {
 
     const renderRecentTracks = () => {
         if (!recentTracksData) {
-            return <p>Loading recent stats...</p>;
+            return <p>Loading...</p>;
         }
 
         return (
