@@ -10,7 +10,6 @@ export default function Home() {
     const [topAlbumsData, setTopAlbumsData] = useState(null);
     const [dayGreeting, setDayGreeting] = useState('');
     const [artistSummary, setArtistSummary] = useState(''); // State for the last artist summary
-    const [randomFact, setRandomFact] = useState(''); // State for the random fact
 
     useEffect(() => {
         const setGreeting = () => {
@@ -21,19 +20,6 @@ export default function Home() {
         };
 
         setGreeting();
-
-        const fetchRandomFact = async () => {
-            try {
-                const response = await fetch('https://kv-fetch-random-fact.rian-db8.workers.dev/');
-                const factData = await response.json();
-                setRandomFact(factData.data); // Set the random fact
-            } catch (error) {
-                console.error('Error fetching random fact:', error);
-                setRandomFact('Did you know? There was an error loading a random fact.');
-            }
-        };
-
-        fetchRandomFact();
 
         const fetchRecentTracks = async () => {
             try {
@@ -107,12 +93,9 @@ export default function Home() {
         }
 
         return (
-            <>
-                <p>{randomFact}</p>
-                <p>
-                    Anyway, the last artist I listened to was <Link href={`artist/${encodeURIComponent(recentTracksData.last_artist)}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}
-                </p>
-            </>
+            <p>
+                Over the last 7 days I listened to <strong>{new Intl.NumberFormat().format(recentTracksData.playcount)} tracks</strong> across <strong>{new Intl.NumberFormat().format(recentTracksData.artist_count)} artists</strong> and <strong>{new Intl.NumberFormat().format(recentTracksData.album_count)} albums</strong>. The last artist I listened to was <Link href={`artist/${encodeURIComponent(recentTracksData.last_artist)}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}
+            </p>
         );
     };
 
