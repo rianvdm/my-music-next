@@ -88,7 +88,7 @@ export default function Home() {
             try {
                 const topAlbumsResponse = await fetch('https://api-lastfm-topalbums.rian-db8.workers.dev');
                 const topAlbumsData = await topAlbumsResponse.json();
-                setTopAlbumsData(topAlbumsData.slice(0, 6)); // Limit to top 6 albums
+                setTopAlbumsData(topAlbumsData);
             } catch (error) {
                 console.error('Error fetching top albums:', error);
             }
@@ -120,7 +120,7 @@ export default function Home() {
 
         return (
             <div className="track-grid">
-                {topArtistsData.slice(0, 6).map(artist => (
+                {topArtistsData.map(artist => (
                     <div className="track" key={artist.name}>
                         <Link href={`artist/${encodeURIComponent(artist.name)}`} rel="noopener noreferrer">
                             <img src={artist.image || '/path/to/default/image.png'} className="track_image" alt={artist.name} />
