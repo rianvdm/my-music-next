@@ -5,21 +5,32 @@ import { useRouter } from 'next/navigation';
 
 export default function ArtistPage() {
     const [randomFact, setRandomFact] = useState('Did you know ...');
-    const [searchTerm, setSearchTerm] = useState(''); // State to hold the search term
+    const [searchTerm, setSearchTerm] = useState('');
     const router = useRouter();
+    let fetchController = null; // Controller for aborting previous fetch
 
     useEffect(() => {
         let didCancel = false;
 
+        // If there is an existing fetch operation, abort it
+        if (fetchController) {
+            fetchController.abort();
+        }
+        
+        // Create a new AbortController for this request
+        fetchController = new AbortController();
+
         async function fetchRandomFact() {
             try {
-                const response = await fetch('https://api-openai-randomfact.rian-db8.workers.dev');
+                const response = await fetch('https://api-openai-randomfact.rian-db8.workers.dev', {
+                    signal: fetchController.signal, // Attach the controller's signal to the fetch
+                });
                 const data = await response.json();
                 if (!didCancel) {
                     setRandomFact(data.data);
                 }
             } catch (error) {
-                if (!didCancel) {
+                if (!didCancel && error.name !== 'AbortError') {
                     console.error('Error fetching random fact:', error);
                     setRandomFact('Failed to load fact.');
                 }
@@ -30,8 +41,11 @@ export default function ArtistPage() {
 
         return () => {
             didCancel = true;
+            if (fetchController) {
+                fetchController.abort(); // Cleanup on unmount or rerender
+            }
         };
-    }, []);
+    }, []); // Empty dependency array ensures this effect runs only once
 
     const handleSearch = () => {
         if (searchTerm.trim() !== '') {
@@ -62,7 +76,7 @@ export default function ArtistPage() {
                     />
                     <button className="button" onClick={handleSearch}>Search</button>
                 </div>
-            <p>{randomFact}</p>
+                <p>{randomFact}</p>
             </main>
         </div>
     );

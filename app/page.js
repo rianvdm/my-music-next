@@ -1,16 +1,15 @@
 'use client';
 
-import Head from 'next/head';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 export default function Home() {
     const [recentTracksData, setRecentTracksData] = useState(null);
     const [topArtistsData, setTopArtistsData] = useState(null);
     const [topAlbumsData, setTopAlbumsData] = useState(null);
     const [dayGreeting, setDayGreeting] = useState('');
-    const [artistSummary, setArtistSummary] = useState(''); // State for the last artist summary
-    const [randomFact, setRandomFact] = useState(''); // State for the random fact
+    const [artistSummary, setArtistSummary] = useState('');
+    const [randomFact, setRandomFact] = useState('');
 
     useEffect(() => {
         const setGreeting = () => {
@@ -20,30 +19,23 @@ export default function Home() {
             setDayGreeting(`Happy ${dayName}, friend!`);
         };
 
-        setGreeting();
-
         const fetchRandomFact = async () => {
             try {
                 const response = await fetch('https://kv-fetch-random-fact.rian-db8.workers.dev/');
                 const factData = await response.json();
-                setRandomFact(factData.data); // Set the random fact
+                setRandomFact(factData.data);
             } catch (error) {
                 console.error('Error fetching random fact:', error);
                 setRandomFact('Did you know? There was an error loading a random fact.');
             }
         };
 
-        fetchRandomFact();
-
         const fetchRecentTracks = async () => {
             try {
-                console.time('fetchRecentTracks');
                 const recentTracksResponse = await fetch('https://api-lastfm-recenttracks.rian-db8.workers.dev');
                 const recentTracksData = await recentTracksResponse.json();
-                console.timeEnd('fetchRecentTracks');
                 setRecentTracksData(recentTracksData);
 
-                // Fetch the artist summary for the last artist
                 if (recentTracksData.last_artist) {
                     fetchArtistSummary(recentTracksData.last_artist);
                 }
@@ -52,6 +44,23 @@ export default function Home() {
             }
         };
 
+        const fetchArtistSummary = async (artistName) => {
+            try {
+                const summaryResponse = await fetch(`https://api-openai-artistsentence.rian-db8.workers.dev?name=${encodeURIComponent(artistName)}`);
+                const summaryData = await summaryResponse.json();
+                setArtistSummary(summaryData.data);
+            } catch (error) {
+                console.error(`Error fetching summary for ${artistName}:`, error);
+                setArtistSummary('Failed to load artist summary.');
+            }
+        };
+
+        setGreeting();
+        fetchRandomFact(); // Fetch and display random fact early
+        fetchRecentTracks(); // Fetch recent tracks and artist summary
+    }, []);
+
+    useEffect(() => {
         const fetchTopArtists = async () => {
             try {
                 const topArtistsResponse = await fetch('https://api-lastfm-topartists.rian-db8.workers.dev');
@@ -85,21 +94,9 @@ export default function Home() {
             }
         };
 
-        const fetchArtistSummary = async (artistName) => {
-            try {
-                const summaryResponse = await fetch(`https://api-openai-artistsentence.rian-db8.workers.dev?name=${encodeURIComponent(artistName)}`);
-                const summaryData = await summaryResponse.json();
-                setArtistSummary(summaryData.data);
-            } catch (error) {
-                console.error(`Error fetching summary for ${artistName}:`, error);
-                setArtistSummary('Failed to load artist summary.');
-            }
-        };
-
-        fetchRecentTracks();
         fetchTopArtists();
         fetchTopAlbums();
-    }, []);
+    }, []); // Separate useEffect for non-critical data
 
     const renderRecentTracks = () => {
         if (!recentTracksData) {
@@ -178,12 +175,12 @@ export default function Home() {
                     <p style={{ textAlign: 'center' }}>
                         <strong>The top artists I listened to in the past 7 days.</strong>
                     </p>
-                    {renderTopArtists()}  {/* Render top artists */}
+                    {renderTopArtists()}
                     <h2>🏆 Top Albums</h2>
                     <p style={{ textAlign: 'center' }}>
                         <strong>The top albums I listened to in the past 7 days.</strong>
                     </p>
-                    {renderTopAlbums()}  {/* Render top albums */}
+                    {renderTopAlbums()}
                 </section>
             </main>
         </div>
