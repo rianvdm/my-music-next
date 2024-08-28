@@ -30,6 +30,9 @@ export default function NavBar() {
           <Link href="/artist">Artists</Link>
         </li>
         <li style={liStyle}>
+          <Link href="/collection">Collection</Link>
+        </li>
+        <li style={liStyle}>
           <Link href="/about">About</Link>
         </li>
         <li style={liStyle}>
@@ -53,11 +56,11 @@ const ulStyle = {
   padding: 0,
   display: 'flex',
   justifyContent: 'center',
-  alignItems: 'center', // Ensures vertical alignment
+  alignItems: 'center',
 };
 
 const liStyle = {
-  margin: '0 1em',
+  margin: '0 0.75em',
 };
 
 const linkStyle = {

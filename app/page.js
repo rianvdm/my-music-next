@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState, useRef, Suspense } from 'react';
 import Link from 'next/link';
 
-// Component for loading Top Artists
 function TopArtists({ data }) {
     if (!data) return <p>Loading artists...</p>;
 
@@ -27,7 +26,6 @@ function TopArtists({ data }) {
     );
 }
 
-// Component for loading Top Albums
 function TopAlbums({ data }) {
     if (!data) return <p>Loading albums...</p>;
 
@@ -59,6 +57,8 @@ export default function Home() {
     const [artistSummary, setArtistSummary] = useState('');
     const [randomFact, setRandomFact] = useState('');
 
+    const fetchedRandomFact = useRef(false); // Ensure the fact is fetched only once
+
     useEffect(() => {
         const setGreeting = () => {
             const options = { weekday: 'long' };
@@ -68,6 +68,9 @@ export default function Home() {
         };
 
         const fetchRandomFact = async () => {
+            if (fetchedRandomFact.current) return;
+            fetchedRandomFact.current = true;
+
             try {
                 const response = await fetch('https://kv-fetch-random-fact.rian-db8.workers.dev/');
                 const factData = await response.json();
@@ -106,7 +109,7 @@ export default function Home() {
         setGreeting();
         fetchRandomFact(); // Fetch and display random fact early
         fetchRecentTracks(); // Fetch recent tracks and artist summary
-    }, []);
+    }, []); // Empty dependency array ensures this runs only once when the component mounts
 
     useEffect(() => {
         const fetchTopArtists = async () => {
