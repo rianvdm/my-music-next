@@ -44,7 +44,7 @@ export default function NavBar() {
       <style jsx>{`
         ul {
           display: flex;
-          flex-wrap: wrap; /* Allows items to wrap to the next line */
+          flex-wrap: wrap;
           justify-content: center;
           padding: 0;
           margin: 0;
@@ -53,7 +53,8 @@ export default function NavBar() {
 
         li {
           margin: 0 0.5em;
-          white-space: nowrap; /* Prevents text from wrapping within the item */
+          white-space: nowrap;
+          flex-shrink: 0; /* Prevents the items from shrinking too much */
         }
 
         @media (max-width: 768px) {
@@ -62,18 +63,18 @@ export default function NavBar() {
           }
 
           li {
-            flex: 1 0 auto; /* Allows items to shrink as needed but never below their content size */
+            flex: 1 0 auto; /* Allows items to use available space and wrap as needed */
             text-align: center;
           }
         }
 
         @media (max-width: 480px) {
           ul {
-            justify-content: center;
+            justify-content: space-between; /* Ensure items use available horizontal space */
           }
 
           li {
-            flex: 1 0 100%; /* Forces items to take up the full width and stack vertically on very small screens */
+            flex: 0 1 auto; /* Items will wrap as needed but won't take up full width */
           }
         }
       `}</style>
@@ -97,6 +98,7 @@ const ulStyle = {
 
 const liStyle = {
   margin: '0 0.5em',
+  flexShrink: 0, // Prevents items from shrinking too much
 };
 
 const linkStyle = {
