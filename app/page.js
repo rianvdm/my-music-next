@@ -1,7 +1,55 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
+
+// Component for loading Top Artists
+function TopArtists({ data }) {
+    if (!data) return <p>Loading artists...</p>;
+
+    return (
+        <div className="track-grid">
+            {data.map(artist => (
+                <div className="track" key={artist.name}>
+                    <Link href={`artist/${encodeURIComponent(artist.name)}`} rel="noopener noreferrer">
+                        <img src={artist.image || '/path/to/default/image.png'} className="track_image" alt={artist.name} />
+                    </Link>
+                    <div className="track_content">
+                        <h2 className="track_artist">
+                            <Link href={`artist/${encodeURIComponent(artist.name)}`} rel="noopener noreferrer">
+                                {artist.name}
+                            </Link>
+                        </h2>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+}
+
+// Component for loading Top Albums
+function TopAlbums({ data }) {
+    if (!data) return <p>Loading albums...</p>;
+
+    return (
+        <div className="track-grid">
+            {data.map(album => (
+                <div className="track" key={album.name}>
+                    <a href={album.albumUrl} target="_blank" rel="noopener noreferrer">
+                        <img src={album.image} className="track_image" alt={album.name} />
+                    </a>
+                    <div className="track_content">
+                        <p className="track_name"><strong>{album.name}</strong></p>
+                        <p className="track_artist">
+                            <Link href={`artist/${encodeURIComponent(album.artist)}`} rel="noopener noreferrer">
+                                {album.artist}
+                            </Link></p>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+}
 
 export default function Home() {
     const [recentTracksData, setRecentTracksData] = useState(null);
@@ -113,56 +161,6 @@ export default function Home() {
         );
     };
 
-    const renderTopArtists = () => {
-        if (!topArtistsData) {
-            return <p>Loading artists...</p>;
-        }
-
-        return (
-            <div className="track-grid">
-                {topArtistsData.map(artist => (
-                    <div className="track" key={artist.name}>
-                        <Link href={`artist/${encodeURIComponent(artist.name)}`} rel="noopener noreferrer">
-                            <img src={artist.image || '/path/to/default/image.png'} className="track_image" alt={artist.name} />
-                        </Link>
-                        <div className="track_content">
-                            <h2 className="track_artist">
-                                <Link href={`artist/${encodeURIComponent(artist.name)}`} rel="noopener noreferrer">
-                                    {artist.name}
-                                </Link>
-                            </h2>
-                        </div>
-                    </div>
-                ))}
-            </div>
-        );
-    };
-
-    const renderTopAlbums = () => {
-        if (!topAlbumsData) {
-            return <p>Loading albums...</p>;
-        }
-
-        return (
-            <div className="track-grid">
-                {topAlbumsData.map(album => (
-                    <div className="track" key={album.name}>
-                        <a href={album.albumUrl} target="_blank" rel="noopener noreferrer">
-                            <img src={album.image} className="track_image" alt={album.name} />
-                        </a>
-                        <div className="track_content">
-                            <p className="track_name"><strong>{album.name}</strong></p>
-                            <p className="track_artist">
-                                <Link href={`artist/${encodeURIComponent(album.artist)}`} rel="noopener noreferrer">
-                                    {album.artist}
-                                </Link></p>
-                        </div>
-                    </div>
-                ))}
-            </div>
-        );
-    };
-
     return (
         <div>
             <header>
@@ -175,12 +173,16 @@ export default function Home() {
                     <p style={{ textAlign: 'center' }}>
                         <strong>The top artists I listened to in the past 7 days.</strong>
                     </p>
-                    {renderTopArtists()}
+                    <Suspense fallback={<p>Loading artists...</p>}>
+                        <TopArtists data={topArtistsData} />
+                    </Suspense>
                     <h2>🏆 Top Albums</h2>
                     <p style={{ textAlign: 'center' }}>
                         <strong>The top albums I listened to in the past 7 days.</strong>
                     </p>
-                    {renderTopAlbums()}
+                    <Suspense fallback={<p>Loading albums...</p>}>
+                        <TopAlbums data={topAlbumsData} />
+                    </Suspense>
                 </section>
             </main>
         </div>
