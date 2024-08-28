@@ -33,7 +33,7 @@ export default function NavBar() {
           <Link href="/about">About</Link>
         </li>
         <li style={liStyle}>
-          <a href="#" onClick={toggleTheme} style={linkStyle}>
+          <a role="button" onClick={toggleTheme} style={linkStyle}>
             {theme === 'light' ? '☀️/🌙' : '☀️/🌙'}
           </a>
         </li>
