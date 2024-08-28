@@ -7,7 +7,6 @@ export default function NavBar() {
   const [theme, setTheme] = useState('light');
 
   useEffect(() => {
-    // Load the user's theme preference from localStorage
     const savedTheme = localStorage.getItem('theme') || 'light';
     setTheme(savedTheme);
     document.documentElement.setAttribute('data-theme', savedTheme);
@@ -17,7 +16,7 @@ export default function NavBar() {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
     document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme); // Save user's theme preference
+    localStorage.setItem('theme', newTheme);
   };
 
   return (
@@ -41,6 +40,43 @@ export default function NavBar() {
           </a>
         </li>
       </ul>
+
+      <style jsx>{`
+        ul {
+          display: flex;
+          flex-wrap: wrap; /* Allows items to wrap to the next line */
+          justify-content: center;
+          padding: 0;
+          margin: 0;
+          list-style: none;
+        }
+
+        li {
+          margin: 0 0.5em;
+          white-space: nowrap; /* Prevents text from wrapping within the item */
+        }
+
+        @media (max-width: 768px) {
+          ul {
+            justify-content: space-between;
+          }
+
+          li {
+            flex: 1 0 auto; /* Allows items to shrink as needed but never below their content size */
+            text-align: center;
+          }
+        }
+
+        @media (max-width: 480px) {
+          ul {
+            justify-content: center;
+          }
+
+          li {
+            flex: 1 0 100%; /* Forces items to take up the full width and stack vertically on very small screens */
+          }
+        }
+      `}</style>
     </nav>
   );
 }
@@ -60,7 +96,7 @@ const ulStyle = {
 };
 
 const liStyle = {
-  margin: '0 0.75em',
+  margin: '0 0.5em',
 };
 
 const linkStyle = {
