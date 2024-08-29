@@ -161,7 +161,7 @@ export default function Home() {
                     Anyway, most recently I listened to <Link href={`artist/${encodeURIComponent(recentTracksData.last_artist)}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}
                 </p>
                 <p>
-                    If you're looking for something new to listen to, you should go <strong><a href="/recommendations">get rec'd</a></strong>.
+                    If you're looking for something new to listen to, you should <strong><a href="/recommendations">get rec’d</a></strong>.
                 </p>
             </>
         );
