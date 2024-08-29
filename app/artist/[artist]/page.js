@@ -133,8 +133,8 @@ export default function ArtistPage({ params }) {
                             style={{ maxWidth: '100%', width: '220px', height: 'auto' }} 
                         />
                         <div className="no-wrap-text">
-                            <p><strong>My playcount:</strong> {formattedPlaycount} tracks</p>
-                            <p><strong>Genres:</strong> {artistDetails.tags?.join(', ') || 'No genres found'}</p>
+                            <p><strong>My playcount:</strong> {formattedPlaycount} plays</p>
+                            <p><strong>Genre:</strong> {artistDetails.tags[0] || 'No genres found'}</p>
 
                             <p style={{ marginBottom: '0.2em' }}><strong>Top 3 Albums:</strong></p>
                             <ul style={{ listStyleType: 'none', paddingLeft: '0', marginTop: '0' }}>
@@ -158,7 +158,7 @@ export default function ArtistPage({ params }) {
                             </li>
                         ))}
                     </ul>
-                    <strong>Artist Summary:</strong>
+                    <strong>Overview:</strong>
                     {renderOpenAISummary(openAISummary)}
                 </section>
             </main>

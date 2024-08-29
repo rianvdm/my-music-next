@@ -62,7 +62,7 @@ export default function ArtistPage() {
     return (
         <div>
             <header>
-                <h1>Artists</h1>
+                <h1>👩‍🎤 Artists</h1>
             </header>
             <main>
                 <div id="search-form">
