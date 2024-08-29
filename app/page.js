@@ -156,12 +156,12 @@ export default function Home() {
 
         return (
             <>
-                <p>{randomFact}</p>
+                <p>🧠 {randomFact}</p>
                 <p>
-                    Anyway, most recently I listened to <Link href={`artist/${encodeURIComponent(recentTracksData.last_artist)}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}
+                    🎧 Most recently I listened to <strong>{recentTracksData.last_album}</strong> by <Link href={`artist/${encodeURIComponent(recentTracksData.last_artist)}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}
                 </p>
                 <p>
-                    If you're looking for something new to listen to, you should <strong><a href="/recommendations">get rec’d</a></strong>.
+                    ✨ If you're looking for something new to listen to, you should <strong><a href="/recommendations">get rec’d</a></strong>.
                 </p>
             </>
         );
