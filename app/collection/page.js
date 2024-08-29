@@ -31,7 +31,7 @@ export default function CollectionPage() {
                 {albums.map((release) => (
                     <div className="track" key={release.discogsUrl}>
                         <a href={release.discogsUrl} target="_blank" rel="noopener noreferrer">
-                            <img src={release.imageUrl} className="track_image" alt={release.title} />
+                            <img src={release.imageUrl} className="track_image" alt={release.title} style={imageStyle} />
                         </a>
                         <div className="track_content">
                             <h2 className="track_artist">
@@ -59,3 +59,10 @@ export default function CollectionPage() {
         </div>
     );
 }
+
+const imageStyle = {
+    width: '220px',       // Set a fixed width
+    height: '220px',      // Set a fixed height to make the image square
+    objectFit: 'cover',   // Scale the image to cover the area
+    borderRadius: '5px', 
+};
