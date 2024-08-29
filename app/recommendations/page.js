@@ -59,7 +59,7 @@ export default function RecommendationsPage() {
         <div>
             <h1>❤️ Recommended Songs</h1>
             <p style={{ textAlign: 'center' }}>
-                <strong>A selection of tracks I recently loved on Last.fm</strong> <br />
+                <strong>A selection of tracks I recently liked on Last.fm</strong> <br />
             </p>
 
             <div className="track_ul">
