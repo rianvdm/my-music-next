@@ -158,7 +158,7 @@ export default function Home() {
             <>
                 <p>{randomFact}</p>
                 <p>
-                    Anyway, the last artist I listened to was <Link href={`artist/${encodeURIComponent(recentTracksData.last_artist)}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}
+                    Anyway, most recently I listened to <Link href={`artist/${encodeURIComponent(recentTracksData.last_artist)}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}
                 </p>
             </>
         );
