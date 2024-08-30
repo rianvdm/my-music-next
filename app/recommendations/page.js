@@ -111,8 +111,8 @@ export default function RecommendationsPage() {
                             </p>
                             <p>
                                 {spotifyLinks[`${track.title}_${track.artist}`]
-                                    ? <a href={spotifyLinks[`${track.title}_${track.artist}`]} target="_blank" rel="noopener noreferrer">Stream on Spotify ↗</a>
-                                    : "Loading Spotify link..."}
+                                    ? <a href={spotifyLinks[`${track.title}_${track.artist}`]} target="_blank" rel="noopener noreferrer">Spotify ↗</a>
+                                    : "Loading..."}
                             </p>
                         </div>
                     </div>
