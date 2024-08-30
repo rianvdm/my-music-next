@@ -114,17 +114,17 @@ export default function RecommendationsPage() {
                             <p>
                                 {spotifyLinks[`${track.title}_${track.artist}`]?.spotifyUrl ? (
                                     <>
-                                        {spotifyLinks[`${track.title}_${track.artist}`]?.previewUrl ? (
+{/*                                        {spotifyLinks[`${track.title}_${track.artist}`]?.previewUrl ? (
                                             <audio controls>
                                                 <source src={spotifyLinks[`${track.title}_${track.artist}`]?.previewUrl} type="audio/mpeg" />
                                                 Your browser does not support the audio element.
                                             </audio>
                                         ) : (
                                             <p>No preview available</p>
-                                        )}
-{/*                                        <p>
+                                        )}*/}
+                                        <p>
                                             <a href={spotifyLinks[`${track.title}_${track.artist}`]?.spotifyUrl} target="_blank" rel="noopener noreferrer">Spotify ↗</a>
-                                        </p>*/}
+                                        </p>
                                     </>
                                 ) : "Loading..."}
                             </p>
