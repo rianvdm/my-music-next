@@ -45,19 +45,21 @@ export default function RecommendationsPage() {
                         [track.artist]: artistDetailData.image
                     }));
 
-                    // Fetch Spotify link for the track using combined title and artist query
+                    // Fetch Spotify link and preview for the track using combined title and artist query
                     const spotifyQuery = `track:"${track.title}" artist:"${track.artist}"`;
                     const spotifyResponse = await fetch(`https://api-spotify-search.rian-db8.workers.dev/?q=${encodeURIComponent(spotifyQuery)}&type=track`);
                     const spotifyData = await spotifyResponse.json();
                     console.log(`Spotify data fetched for ${track.title} by ${track.artist}:`, spotifyData);
 
-                    // Extract the Spotify link from the response
+                    // Extract the Spotify link and preview URL from the response
                     const spotifyUrl = spotifyData?.data?.[0]?.url || null;
+                    const previewUrl = spotifyData?.data?.[0]?.preview || null;
                     console.log(`Spotify link for ${track.title} by ${track.artist}:`, spotifyUrl);
+                    console.log(`Preview URL for ${track.title} by ${track.artist}:`, previewUrl);
 
                     setSpotifyLinks(prevLinks => ({
                         ...prevLinks,
-                        [`${track.title}_${track.artist}`]: spotifyUrl
+                        [`${track.title}_${track.artist}`]: { spotifyUrl, previewUrl }
                     }));
                 } catch (error) {
                     console.error(`Error fetching data for ${track.title} by ${track.artist}:`, error);
@@ -110,9 +112,21 @@ export default function RecommendationsPage() {
                                     : "Loading..."}
                             </p>
                             <p>
-                                {spotifyLinks[`${track.title}_${track.artist}`]
-                                    ? <a href={spotifyLinks[`${track.title}_${track.artist}`]} target="_blank" rel="noopener noreferrer">Spotify ↗</a>
-                                    : "Loading..."}
+                                {spotifyLinks[`${track.title}_${track.artist}`]?.spotifyUrl ? (
+                                    <>
+                                        {spotifyLinks[`${track.title}_${track.artist}`]?.previewUrl ? (
+                                            <audio controls>
+                                                <source src={spotifyLinks[`${track.title}_${track.artist}`]?.previewUrl} type="audio/mpeg" />
+                                                Your browser does not support the audio element.
+                                            </audio>
+                                        ) : (
+                                            <p>No preview available</p>
+                                        )}
+{/*                                        <p>
+                                            <a href={spotifyLinks[`${track.title}_${track.artist}`]?.spotifyUrl} target="_blank" rel="noopener noreferrer">Spotify ↗</a>
+                                        </p>*/}
+                                    </>
+                                ) : "Loading..."}
                             </p>
                         </div>
                     </div>
