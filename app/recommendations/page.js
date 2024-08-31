@@ -131,7 +131,7 @@ export default function RecommendationsPage() {
             </div>
             {loading && (
                 <div className="track_ul">
-                    <p>Loading... (No seriously, it's loading. Just count to 10.)</p>
+                    <p>Loading... (No look I promise, it really <em>is</em> loading. Just count to 10. It's going to be fine.)</p>
                     <br/>
                 </div>
             )}
