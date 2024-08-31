@@ -8,6 +8,10 @@ export default function RecommendationsPage() {
     const [trackSummaries, setTrackSummaries] = useState({});
     const [artistImages, setArtistImages] = useState({});
     const [spotifyLinks, setSpotifyLinks] = useState({});
+    const [album, setAlbum] = useState('');
+    const [artist, setArtist] = useState('');
+    const [recommendation, setRecommendation] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchLovedTracks = async () => {
@@ -27,8 +31,6 @@ export default function RecommendationsPage() {
         lovedTracks.forEach((track) => {
             const fetchTrackData = async () => {
                 try {
-                    console.log(`Fetching data for track: ${track.title} by ${track.artist}`);
-
                     const summaryResponse = await fetch(`https://api-openai-songrec.rian-db8.workers.dev/?title=${encodeURIComponent(track.title)}&artist=${encodeURIComponent(track.artist)}`);
                     const summaryData = await summaryResponse.json();
                     setTrackSummaries(prevSummaries => ({
@@ -70,12 +72,71 @@ export default function RecommendationsPage() {
         }
     };
 
+    const handleSearch = async () => {
+        if (!album || !artist) {
+            alert('Please enter both album and artist.');
+            return;
+        }
+
+        setLoading(true);
+        setRecommendation('');
+
+        try {
+            const response = await fetch(`https://api-openai-albumrecs.rian-db8.workers.dev/?album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}`);
+            const data = await response.json();
+
+            // Replace ** with <strong> for bold text
+            const formattedRecommendation = data.data.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+            setRecommendation(formattedRecommendation);
+        } catch (error) {
+            console.error('Error fetching album recommendations:', error);
+            setRecommendation('Failed to load recommendations. Please try again later.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div>
+            <h1>Album Recommendations</h1>
+            <div style={{ textAlign: 'center' }}>
+                <strong>Looking for something fresh? Look up an album you recently enjoyed, and ChatGPT will do the rest.</strong>
+            </div>
+            <div id="search-form">
+                <input 
+                    id="album-name" 
+                    type="text" 
+                    value={album} 
+                    onChange={(e) => setAlbum(e.target.value)} 
+                    placeholder="Enter album name..." 
+                />
+                <input 
+                    id="artist-name" 
+                    type="text" 
+                    value={artist} 
+                    onChange={(e) => setArtist(e.target.value)} 
+                    placeholder="Enter artist name..." 
+                />
+                <button className="button" onClick={handleSearch}>Search</button>
+            </div>
+            {loading && (
+                <div className="track_ul">
+                    <p>Loading... (No seriously, it's loading. Just count to 10.)</p>
+                    <br/><br/>
+                </div>
+            )}
+            {recommendation && (
+                <div className="track_ul">
+                    <div dangerouslySetInnerHTML={{ __html: recommendation.replace(/\n/g, '<br/>') }} />
+                    <br/><br/>
+                </div>
+            )}
+
             <h1>❤️ Recommended Songs</h1>
-            <p style={{ textAlign: 'center' }}>
-                <strong>A selection of tracks I recently liked on Last.fm</strong> <br />
-            </p>
+            <div style={{ textAlign: 'center' }}>
+                <strong>A selection of tracks I recently liked on Last.fm</strong>
+            </div>
 
             <div className="track_ul">
                 {lovedTracks.map((track, index) => (
@@ -94,20 +155,22 @@ export default function RecommendationsPage() {
                             )}
                         </div>
                         <div className="no-wrap-text">
-                            <strong>{track.title}</strong> by <strong>
+                            <p>
+                                <strong>{track.title}</strong> by <strong>
                                 <Link href={`/artist/${encodeURIComponent(track.artist)}`}>{track.artist}</Link>
-                            </strong> (liked on {track.dateLiked}).
+                                </strong> (liked on {track.dateLiked}).
+                            </p>
                             <div>
                                 {trackSummaries[`${track.title}_${track.artist}`]
-                                    ? trackSummaries[`${track.title}_${track.artist}`]
-                                    : "Loading..."}
+                                    ? <p>{trackSummaries[`${track.title}_${track.artist}`]}</p>
+                                    : <p>Loading...</p>}
                             </div>
                             <div>
                                 {spotifyLinks[`${track.title}_${track.artist}`]?.spotifyUrl ? (
-                                    <>
+                                    <p>
                                         <a href={spotifyLinks[`${track.title}_${track.artist}`]?.spotifyUrl} target="_blank" rel="noopener noreferrer">Spotify ↗</a>
-                                    </>
-                                ) : "Loading..."}
+                                    </p>
+                                ) : <p>Loading...</p>}
                             </div>
                         </div>
                     </div>
