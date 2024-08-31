@@ -85,7 +85,6 @@ export default function RecommendationsPage() {
             const response = await fetch(`https://api-openai-albumrecs.rian-db8.workers.dev/?album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}`);
             const data = await response.json();
 
-            // Replace ** with <strong> for bold text
             const formattedRecommendation = data.data.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
             setRecommendation(formattedRecommendation);
@@ -94,6 +93,12 @@ export default function RecommendationsPage() {
             setRecommendation('Failed to load recommendations. Please try again later.');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            handleSearch();
         }
     };
 
@@ -110,6 +115,8 @@ export default function RecommendationsPage() {
                     value={album} 
                     onChange={(e) => setAlbum(e.target.value)} 
                     placeholder="Enter album name..." 
+                    onKeyDown={handleKeyDown} 
+                    className="input-field"
                 />
                 <input 
                     id="artist-name" 
@@ -117,21 +124,25 @@ export default function RecommendationsPage() {
                     value={artist} 
                     onChange={(e) => setArtist(e.target.value)} 
                     placeholder="Enter artist name..." 
+                    onKeyDown={handleKeyDown} 
+                    className="input-field"
                 />
                 <button className="button" onClick={handleSearch}>Search</button>
             </div>
             {loading && (
                 <div className="track_ul">
                     <p>Loading... (No seriously, it's loading. Just count to 10.)</p>
-                    <br/><br/>
+                    <br/>
                 </div>
             )}
             {recommendation && (
                 <div className="track_ul">
                     <div dangerouslySetInnerHTML={{ __html: recommendation.replace(/\n/g, '<br/>') }} />
-                    <br/><br/>
+                    <br/>
                 </div>
             )}
+
+            <div style={{ marginTop: '30px' }}></div>
 
             <h1>❤️ Recommended Songs</h1>
             <div style={{ textAlign: 'center' }}>

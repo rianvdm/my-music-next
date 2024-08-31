@@ -381,8 +381,19 @@ img.center-image {
   max-width: 300px;
 }
 
+/* Focus styles for input fields */
 #artist-name:focus, #album-name:focus, #song-name:focus, #lastFmUsername:focus {
-  border-color: rgba(var(--c-accent), 0.6);
+  border-color: var(--c-accent); /* Use the accent color for focused border */
+  outline: none; /* Remove the default outline */
+  box-shadow: 0 0 5px var(--c-accent); /* Optional: Add a subtle glow around the input when focused */
+  transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth transition for focus effects */
+}
+
+/* Ensure input fields have a default border for non-focus state */
+#artist-name, #album-name, #song-name, #lastFmUsername {
+  border: 2px solid #ccc; /* Default border color */
+  padding: 8px; /* Ensure padding is consistent */
+  border-radius: 4px; /* Rounded corners */
 }
 
 #search-form button {
