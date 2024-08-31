@@ -142,9 +142,9 @@ export default function RecommendationsPage() {
                 </div>
             )}
 
-            <div style={{ marginTop: '30px' }}></div>
+            <div style={{ marginTop: '40px' }}></div>
 
-            <h1>❤️ Recommended Songs</h1>
+            <h1>Song Recommendations</h1>
             <div style={{ textAlign: 'center' }}>
                 <strong>A selection of tracks I recently liked on Last.fm</strong>
             </div>
