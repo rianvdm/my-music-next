@@ -94,33 +94,21 @@ export default function RecommendationsPage() {
                             )}
                         </div>
                         <div className="no-wrap-text">
-                            <strong>
-                                {track.title}
-                            </strong> by <strong>
+                            <strong>{track.title}</strong> by <strong>
                                 <Link href={`/artist/${encodeURIComponent(track.artist)}`}>{track.artist}</Link>
                             </strong> (liked on {track.dateLiked}).
-                            <p>
+                            <div>
                                 {trackSummaries[`${track.title}_${track.artist}`]
                                     ? trackSummaries[`${track.title}_${track.artist}`]
                                     : "Loading..."}
-                            </p>
-                            <p>
+                            </div>
+                            <div>
                                 {spotifyLinks[`${track.title}_${track.artist}`]?.spotifyUrl ? (
                                     <>
-{/*                                        {spotifyLinks[`${track.title}_${track.artist}`]?.previewUrl ? (
-                                            <audio controls>
-                                                <source src={spotifyLinks[`${track.title}_${track.artist}`]?.previewUrl} type="audio/mpeg" />
-                                                Your browser does not support the audio element.
-                                            </audio>
-                                        ) : (
-                                            <p>No preview available</p>
-                                        )}*/}
-                                        <p>
-                                            <a href={spotifyLinks[`${track.title}_${track.artist}`]?.spotifyUrl} target="_blank" rel="noopener noreferrer">Spotify ↗</a>
-                                        </p>
+                                        <a href={spotifyLinks[`${track.title}_${track.artist}`]?.spotifyUrl} target="_blank" rel="noopener noreferrer">Spotify ↗</a>
                                     </>
                                 ) : "Loading..."}
-                            </p>
+                            </div>
                         </div>
                     </div>
                 ))}
