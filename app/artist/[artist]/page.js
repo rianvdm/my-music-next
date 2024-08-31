@@ -136,7 +136,7 @@ export default function ArtistPage({ params }) {
                             <p><strong>My playcount:</strong> {formattedPlaycount} plays</p>
                             <p><strong>Genre:</strong> {artistDetails.tags[0] || 'No genres found'}</p>
 
-                            <p style={{ marginBottom: '0.2em' }}><strong>Top 3 Albums:</strong></p>
+                            <p style={{ marginBottom: '0.2em' }}><strong>Popular Albums:</strong></p>
                             <ul style={{ listStyleType: 'none', paddingLeft: '0', marginTop: '0' }}>
                                 {topAlbums.map((album, index) => (
                                     <li key={index}>
