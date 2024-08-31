@@ -29,7 +29,6 @@ export default function RecommendationsPage() {
                 try {
                     console.log(`Fetching data for track: ${track.title} by ${track.artist}`);
 
-                    // Fetch track summary from OpenAI/KV Worker
                     const summaryResponse = await fetch(`https://api-openai-songrec.rian-db8.workers.dev/?title=${encodeURIComponent(track.title)}&artist=${encodeURIComponent(track.artist)}`);
                     const summaryData = await summaryResponse.json();
                     setTrackSummaries(prevSummaries => ({
@@ -37,7 +36,6 @@ export default function RecommendationsPage() {
                         [`${track.title}_${track.artist}`]: summaryData.data
                     }));
 
-                    // Fetch artist details (including image) from Last.fm Worker
                     const artistDetailResponse = await fetch(`https://api-lastfm-artistdetail.rian-db8.workers.dev?artist=${encodeURIComponent(track.artist)}`);
                     const artistDetailData = await artistDetailResponse.json();
                     setArtistImages(prevImages => ({
@@ -45,17 +43,12 @@ export default function RecommendationsPage() {
                         [track.artist]: artistDetailData.image
                     }));
 
-                    // Fetch Spotify link and preview for the track using combined title and artist query
                     const spotifyQuery = `track:"${track.title}" artist:"${track.artist}"`;
                     const spotifyResponse = await fetch(`https://api-spotify-search.rian-db8.workers.dev/?q=${encodeURIComponent(spotifyQuery)}&type=track`);
                     const spotifyData = await spotifyResponse.json();
-                    console.log(`Spotify data fetched for ${track.title} by ${track.artist}:`, spotifyData);
 
-                    // Extract the Spotify link and preview URL from the response
                     const spotifyUrl = spotifyData?.data?.[0]?.url || null;
                     const previewUrl = spotifyData?.data?.[0]?.preview || null;
-                    console.log(`Spotify link for ${track.title} by ${track.artist}:`, spotifyUrl);
-                    console.log(`Preview URL for ${track.title} by ${track.artist}:`, previewUrl);
 
                     setSpotifyLinks(prevLinks => ({
                         ...prevLinks,
@@ -86,7 +79,7 @@ export default function RecommendationsPage() {
 
             <div className="track_ul">
                 {lovedTracks.map((track, index) => (
-                    <div key={index} className="track_item">
+                    <div key={index} className="track_item track_item_responsive">
                         <div className="artist_image_wrapper">
                             {artistImages[track.artist] ? (
                                 <img
