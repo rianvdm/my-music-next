@@ -33,11 +33,11 @@ function TopAlbums({ data }) {
         <div className="track-grid">
             {data.map(album => (
                 <div className="track" key={album.name}>
-                    <a href={album.albumUrl} target="_blank" rel="noopener noreferrer">
+                    <a href={`/album/${encodeURIComponent(album.artist)}_${encodeURIComponent(album.name)}`}>
                         <img src={album.image} className="track_image" alt={album.name} />
                     </a>
                     <div className="track_content">
-                        <p className="track_name"><strong>{album.name}</strong></p>
+                        <p className="track_name"><a href={`/album/${encodeURIComponent(album.artist)}_${encodeURIComponent(album.name)}`}><strong>{album.name}</strong></a></p>
                         <p className="track_artist">
                             <Link href={`artist/${encodeURIComponent(album.artist)}`} rel="noopener noreferrer">
                                 {album.artist}
@@ -157,7 +157,7 @@ export default function Home() {
         return (
             <>
                 <p>
-                    🎧 Most recently I listened to <strong>{recentTracksData.last_album}</strong> by <Link href={`artist/${encodeURIComponent(recentTracksData.last_artist)}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}
+                    🎧 Most recently I listened to <Link href={`album/${encodeURIComponent(recentTracksData.last_artist)}_${encodeURIComponent(recentTracksData.last_album)}`} rel="noopener noreferrer"><strong>{recentTracksData.last_album}</strong></Link> by <Link href={`artist/${encodeURIComponent(recentTracksData.last_artist)}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}
                 </p>
                 <p>🧠 {randomFact}</p>
                 <p>
