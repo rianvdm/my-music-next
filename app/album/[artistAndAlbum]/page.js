@@ -34,8 +34,8 @@ export default function AlbumPage({ params }) {
                         throw new Error('Album not found');
                     }
 
-                    if (albumData.wiki) {
-                        albumData.wiki = albumData.wiki.replace(
+                    if (albumData.bio) {
+                        albumData.bio = albumData.bio.replace(
                             /User-contributed text is available under the Creative Commons By-SA License; additional terms may apply\./g,
                             ''
                         ).trim();
@@ -93,12 +93,6 @@ export default function AlbumPage({ params }) {
         return <p>Loading...</p>;
     }
 
-    const renderWikiContent = (content) => {
-        return content.split('\n\n').map((paragraph, index) => (
-            <p key={index} dangerouslySetInnerHTML={{ __html: paragraph.replace(/\n/g, '<br />') }} />
-        ));
-    };
-
     const renderOpenAISummary = (summary) => {
         return summary.split('\n\n').map((paragraph, index) => (
             <p key={index}>{paragraph}</p>
@@ -125,6 +119,12 @@ export default function AlbumPage({ params }) {
                     </div>
                     <strong>Overview:</strong>
                     {renderOpenAISummary(openAISummary)}
+                    <br /><strong>LastFM summary:</strong>
+                    {albumDetails.bio ? (
+                        <div style={{ marginTop: '1em' }} dangerouslySetInnerHTML={{ __html: albumDetails.bio.replace(/\n/g, '<br />') }} />
+                    ) : (
+                        <p>No wiki entry for this album.</p>
+                    )}
                 </section>
             </main>
         </div>
