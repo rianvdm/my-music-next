@@ -8,7 +8,8 @@ export default function AlbumPage({ params }) {
     const { artistAndAlbum } = params;
     const [albumDetails, setAlbumDetails] = useState(null);
     const [spotifyUrl, setSpotifyUrl] = useState('');
-    const [spotifyLoading, setSpotifyLoading] = useState(true);
+    const [releaseYear, setReleaseYear] = useState('Loading...');
+    const [trackCount, setTrackCount] = useState('Loading...');
     const [openAISummary, setOpenAISummary] = useState('Loading ChatGPT summary...');
     const [error, setError] = useState(null);
     const fetchedOpenAISummary = useRef(false);
@@ -57,17 +58,26 @@ export default function AlbumPage({ params }) {
                         document.head.appendChild(metaTag);
                     }
 
-                    // Fetch Spotify URL
+                    // Fetch Spotify URL and additional data
                     const spotifyResponse = await fetch(
                         `https://api-spotify-search.rian-db8.workers.dev/?q=${encodeURIComponent(decodedAlbum)}&type=album`
                     );
                     const spotifyData = await spotifyResponse.json();
 
                     if (spotifyData.data && spotifyData.data.length > 0) {
-                        setSpotifyUrl(spotifyData.data[0].url);
+                        const spotifyAlbum = spotifyData.data[0];
+                        setSpotifyUrl(spotifyAlbum.url);
+                        
+                        // Extract and set the release year
+                        const releaseDate = spotifyAlbum.releaseDate;
+                        if (releaseDate) {
+                            setReleaseYear(releaseDate.split('-')[0]); // Only take the year part
+                        }
+
+                        // Set the track count
+                        setTrackCount(spotifyAlbum.tracks || 'Unknown');
                     }
 
-                    setSpotifyLoading(false); // Set loading to false after fetching
                 } catch (error) {
                     console.error('Error fetching album data:', error);
                     setError(error.message);
@@ -129,6 +139,8 @@ export default function AlbumPage({ params }) {
                         <div className="no-wrap-text">
                             <p><strong>My playcount:</strong> {albumDetails.userplaycount}</p>
                             <p><strong>Genre:</strong> {albumDetails.tags[0] || 'No tags found'}</p>
+                            <p><strong>Released in:</strong> {releaseYear}</p>
+                            <p><strong>Tracks:</strong> {trackCount}</p>
                             <p><strong>Streaming:</strong> {spotifyUrl ? <a href={spotifyUrl} target="_blank" rel="noopener noreferrer">Spotify ↗</a> : 'Loading...'}</p>
                         </div>
                     </div>

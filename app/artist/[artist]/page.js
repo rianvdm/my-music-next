@@ -140,7 +140,7 @@ export default function ArtistPage({ params }) {
                             <ul style={{ listStyleType: 'none', paddingLeft: '0', marginTop: '0' }}>
                                 {topAlbums.map((album, index) => (
                                     <li key={index}>
-                                        <a href={album.url} target="_blank" rel="noopener noreferrer">
+                                        <a href={`/album/${artistDetails.name}_${album.name}`}>
                                             {album.name}
                                         </a>
                                     </li>
