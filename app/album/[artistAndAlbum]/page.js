@@ -22,12 +22,10 @@ export default function AlbumPage({ params }) {
         if (artist && album) {
             async function fetchAlbumData() {
                 try {
-                    const decodedArtist = decodeURIComponent(artist);
-                    const decodedAlbum = decodeURIComponent(album);
 
                     // Fetch album details from Last.fm
                     const albumResponse = await fetch(
-                        `https://api-lastfm-albumdetail.rian-db8.workers.dev?album=${encodeURIComponent(decodedAlbum)}&artist=${encodeURIComponent(decodedArtist)}`
+                        `https://api-lastfm-albumdetail.rian-db8.workers.dev?album=${album}&artist=${artist}`
                     );
                     if (!albumResponse.ok) {
                         throw new Error('Album not found');
@@ -47,20 +45,20 @@ export default function AlbumPage({ params }) {
 
                     setAlbumDetails(albumData);
 
-                    document.title = `${albumData.name} by ${decodedArtist} - Album Details`;
+                    document.title = `${albumData.name} by ${artist} - Album Details`;
 
                     const metaDescription = document.querySelector('meta[name="description"]');
                     if (metaDescription) {
-                        metaDescription.setAttribute('content', `Details about the album ${albumData.name} by ${decodedArtist}`);
+                        metaDescription.setAttribute('content', `Details about the album ${albumData.name} by ${artist}`);
                     } else {
                         const metaTag = document.createElement('meta');
                         metaTag.name = 'description';
-                        metaTag.content = `Details about the album ${albumData.name} by ${decodedArtist}`;
+                        metaTag.content = `Details about the album ${albumData.name} by ${artist}`;
                         document.head.appendChild(metaTag);
                     }
 
                     // Fetch Spotify URL and additional data
-                    const searchQuery = `${encodeURIComponent(decodedAlbum)} ${encodeURIComponent(decodedArtist)}`;
+                    const searchQuery = `${album} ${artist}`;
                     const spotifyResponse = await fetch(
                         `https://api-spotify-search.rian-db8.workers.dev/?q=${searchQuery}&type=album`
                     );
@@ -95,10 +93,8 @@ export default function AlbumPage({ params }) {
 
             async function fetchOpenAISummary() {
                 try {
-                    const decodedArtist = decodeURIComponent(artist);
-                    const decodedAlbum = decodeURIComponent(album);
                     const summaryResponse = await fetch(
-                        `https://api-openai-albumdetail.rian-db8.workers.dev?album=${encodeURIComponent(decodedAlbum)}&artist=${encodeURIComponent(decodedArtist)}`
+                        `https://api-openai-albumdetail.rian-db8.workers.dev?album=${album}&artist=${artist}`
                     );
                     const summaryData = await summaryResponse.json();
                     setOpenAISummary(summaryData.data);
@@ -135,7 +131,7 @@ export default function AlbumPage({ params }) {
     return (
         <div>
             <header>
-                <h1>{albumDetails.name} by <a href={`/artist/${encodeURIComponent(albumDetails.artist)}`}>{albumDetails.artist}</a></h1>
+                <h1>{albumDetails.name} by <a href={`/artist/${albumDetails.artist}`}>{albumDetails.artist}</a></h1>
             </header>
             <main>
                 <section className="track_ul2">

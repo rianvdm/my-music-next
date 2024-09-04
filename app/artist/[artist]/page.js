@@ -19,11 +19,10 @@ export default function ArtistPage({ params }) {
         if (artist) {
             async function fetchArtistData() {
                 try {
-                    const decodedArtist = decodeURIComponent(artist);
 
                     // Fetch artist details from Last.fm
                     const artistResponse = await fetch(
-                        `https://api-lastfm-artistdetail.rian-db8.workers.dev?artist=${encodeURIComponent(decodedArtist)}`
+                        `https://api-lastfm-artistdetail.rian-db8.workers.dev?artist=${artist}`
                     );
                     if (!artistResponse.ok) {
                         throw new Error('Artist not found');
@@ -47,7 +46,7 @@ export default function ArtistPage({ params }) {
 
                     // Fetch top albums for the artist
                     const albumsResponse = await fetch(
-                        `https://api-lastfm-artisttopalbums.rian-db8.workers.dev?artist=${encodeURIComponent(decodedArtist)}`
+                        `https://api-lastfm-artisttopalbums.rian-db8.workers.dev?artist=${artist}`
                     );
                     const albumsData = await albumsResponse.json();
 
@@ -81,9 +80,8 @@ export default function ArtistPage({ params }) {
 
             async function fetchOpenAISummary() {
                 try {
-                    const decodedArtist = decodeURIComponent(artist);
                     const summaryResponse = await fetch(
-                        `https://api-openai-artistdetail.rian-db8.workers.dev?name=${encodeURIComponent(decodedArtist)}`
+                        `https://api-openai-artistdetail.rian-db8.workers.dev?name=${artist}`
                     );
                     const summaryData = await summaryResponse.json();
                     setOpenAISummary(summaryData.data);
@@ -152,7 +150,7 @@ export default function ArtistPage({ params }) {
                     <ul style={{ listStyleType: 'none', paddingLeft: '0', marginTop: '0' }}>
                         {artistDetails.similar.map((artist, index) => (
                             <li key={index}>
-                                <Link href={`/artist/${encodeURIComponent(artist)}`} rel="noopener noreferrer">
+                                <Link href={`/artist/${artist}`} rel="noopener noreferrer">
                                     {artist}
                                 </Link>
                             </li>
