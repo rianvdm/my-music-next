@@ -539,3 +539,12 @@ img.center-image {
         text-align: left; /* Align text to the left */
     }
 }
+
+.loading-placeholder {
+    min-height: 12em; /* Adjust based on font size to ensure enough space */
+    line-height: 1.5; /* Adjust as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
