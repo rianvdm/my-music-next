@@ -134,7 +134,7 @@ export default function AlbumPage({ params }) {
     return (
         <div>
             <header>
-                <h1>{albumDetails.name} by {albumDetails.artist}</h1>
+                <h1>{albumDetails.name} by <a href={`/artist/${encodeURIComponent(albumDetails.artist)}`}>{albumDetails.artist}</a></h1>
             </header>
             <main>
                 <section className="track_ul2">
@@ -146,7 +146,7 @@ export default function AlbumPage({ params }) {
                         />
                         <div className="no-wrap-text">
                             <p><strong>My playcount:</strong> {albumDetails.userplaycount}</p>
-                            <p><strong>Genre:</strong> {albumDetails.tags[0] || 'No tags found'}</p>
+                            <p><strong>Genre:</strong> {(albumDetails.tags && albumDetails.tags[0]) || 'No tags found'}</p>
                             <p><strong>Released in:</strong> {releaseYear}</p>
                             <p><strong>Tracks:</strong> {trackCount}</p>
                             <p><strong>Streaming:</strong> {spotifyUrl ? <a href={spotifyUrl} target="_blank" rel="noopener noreferrer">Spotify ↗</a> : 'Loading...'}</p>
