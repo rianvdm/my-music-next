@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, Suspense } from 'react';
 import Link from 'next/link';
 
 function TopArtists({ data }) {
-    if (!data) return <p className="loading-placeholder">Loading artists...</p>;
+    if (!data) return <p>Loading artists...</p>;
 
     return (
         <div className="track-grid">
@@ -27,7 +27,7 @@ function TopArtists({ data }) {
 }
 
 function TopAlbums({ data }) {
-    if (!data) return <p className="loading-placeholder">Loading albums...</p>;
+    if (!data) return <p>Loading albums...</p>;
 
     return (
         <div className="track-grid">
@@ -56,7 +56,6 @@ export default function Home() {
     const [dayGreeting, setDayGreeting] = useState('');
     const [artistSummary, setArtistSummary] = useState('');
     const [randomFact, setRandomFact] = useState('');
-    const [loading, setLoading] = useState(true); // Combined loading state
 
     const fetchedRandomFact = useRef(false); // Ensure the fact is fetched only once
 
@@ -89,7 +88,7 @@ export default function Home() {
                 setRecentTracksData(recentTracksData);
 
                 if (recentTracksData.last_artist) {
-                    await fetchArtistSummary(recentTracksData.last_artist);
+                    fetchArtistSummary(recentTracksData.last_artist);
                 }
             } catch (error) {
                 console.error('Error fetching recent tracks data:', error);
@@ -107,16 +106,10 @@ export default function Home() {
             }
         };
 
-        // Fetch all data and update the loading state when done
-        const fetchData = async () => {
-            setLoading(true);
-            await setGreeting();
-            await fetchRecentTracks();
-            await fetchRandomFact();
-            setLoading(false); // Data has finished loading
-        };
+        setGreeting();
+        fetchRecentTracks();
+        fetchRandomFact();
 
-        fetchData();
     }, []); // Empty dependency array ensures this runs only once when the component mounts
 
     useEffect(() => {
@@ -158,9 +151,8 @@ export default function Home() {
     }, []); // Separate useEffect for non-critical data
 
     const renderRecentTracks = () => {
-        // Show loading message until all the data is loaded
-        if (loading) {
-            return <p className="loading-placeholder">Loading...</p>;
+        if (!recentTracksData) {
+            return <p>Loading...</p>;
         }
 
         return (
@@ -188,12 +180,16 @@ export default function Home() {
                     <p style={{ textAlign: 'center' }}>
                         <strong>The top artists I listened to in the past 7 days.</strong>
                     </p>
-                    {topArtistsData ? <TopArtists data={topArtistsData} /> : <p className="loading-placeholder">Loading artists...</p>}
+                    <Suspense fallback={<p>Loading artists...</p>}>
+                        <TopArtists data={topArtistsData} />
+                    </Suspense>
                     <h2>🏆 Top Albums</h2>
                     <p style={{ textAlign: 'center' }}>
                         <strong>The top albums I listened to in the past 7 days.</strong>
                     </p>
-                    {topAlbumsData ? <TopAlbums data={topAlbumsData} /> : <p className="loading-placeholder">Loading albums...</p>}
+                    <Suspense fallback={<p>Loading albums...</p>}>
+                        <TopAlbums data={topAlbumsData} />
+                    </Suspense>
                 </section>
             </main>
         </div>
