@@ -3,6 +3,7 @@
 export const runtime = 'edge';
 
 import { useEffect, useState, useRef } from 'react';
+import Link from 'next/link';  // Import the Link component
 
 export default function AlbumPage({ params }) {
     const { artistAndAlbum } = params;
@@ -80,7 +81,7 @@ export default function AlbumPage({ params }) {
 
                 } catch (error) {
                     console.error('Error fetching album data:', error);
-                    setError(error.message);
+                    setError('Album not found. Please ');
                 }
             }
             fetchAlbumData();
@@ -110,7 +111,14 @@ export default function AlbumPage({ params }) {
     }, [artist, album]);
 
     if (error) {
-        return <p>{error}</p>;
+        return (
+            <p>
+                {error}{' '}
+                <Link href="/album">
+                    search again.
+                </Link>
+            </p>
+        );
     }
 
     if (!albumDetails) {

@@ -107,8 +107,9 @@ export default function Home() {
         };
 
         setGreeting();
-        fetchRandomFact(); // Fetch and display random fact early
-        fetchRecentTracks(); // Fetch recent tracks and artist summary
+        fetchRecentTracks();
+        fetchRandomFact();
+
     }, []); // Empty dependency array ensures this runs only once when the component mounts
 
     useEffect(() => {
