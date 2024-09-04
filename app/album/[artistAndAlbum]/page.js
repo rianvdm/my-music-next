@@ -146,7 +146,7 @@ export default function AlbumPage({ params }) {
                         />
                         <div className="no-wrap-text">
                             <p><strong>My playcount:</strong> {albumDetails.userplaycount}</p>
-                            <p><strong>Genre:</strong> {(albumDetails.tags && albumDetails.tags[0]) || 'No tags found'}</p>
+                            <p><strong>Genre:</strong> {(Array.isArray(albumDetails.tags) && albumDetails.tags[0]) || 'Unknown'}</p>
                             <p><strong>Released in:</strong> {releaseYear}</p>
                             <p><strong>Tracks:</strong> {trackCount}</p>
                             <p><strong>Streaming:</strong> {spotifyUrl ? <a href={spotifyUrl} target="_blank" rel="noopener noreferrer">Spotify ↗</a> : 'Loading...'}</p>
