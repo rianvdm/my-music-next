@@ -160,7 +160,7 @@ export default function AlbumPage({ params }) {
                             <p><strong>Streaming:</strong><br /> 
                                 {spotifyUrl ? <a href={spotifyUrl} target="_blank" rel="noopener noreferrer">Spotify ↗</a> : 'Loading...'}
                                 <br />
-                                {songLinkUrl ? <a href={songLinkUrl} target="_blank" rel="noopener noreferrer">SongLink ↗</a> : 'Loading...'}
+                                {songLinkUrl ? <a href={songLinkUrl} target="_blank" rel="noopener noreferrer">Songlink ↗</a> : 'Loading...'}
                             </p>
                         </div>
                     </div>
@@ -176,4 +176,4 @@ export default function AlbumPage({ params }) {
             </main>
         </div>
     );
-}
+}I
