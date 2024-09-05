@@ -144,7 +144,7 @@ export default function ArtistPage({ params }) {
                             <ul style={{ listStyleType: 'none', paddingLeft: '0', marginTop: '0' }}>
                                 {topAlbums.map((album, index) => (
                                     <li key={index}>
-                                        <a href={`/album/${encodeURIComponent(artistDetails.name.replace(/ /g, '-'))}_${encodeURIComponent(album.name.replace(/ /g, '-'))}`}>
+                                        <a href={`/album/${encodeURIComponent(artistDetails.name.replace(/ /g, '-').toLowerCase())}_${encodeURIComponent(album.name.replace(/ /g, '-').toLowerCase())}`}>
                                             {album.name}
                                         </a>
                                     </li>
@@ -156,7 +156,7 @@ export default function ArtistPage({ params }) {
                     <ul style={{ listStyleType: 'none', paddingLeft: '0', marginTop: '0' }}>
                         {artistDetails.similar.map((similarArtist, index) => (
                             <li key={index}>
-                                <Link href={`/artist/${encodeURIComponent(similarArtist.replace(/ /g, '-'))}`} rel="noopener noreferrer">
+                                <Link href={`/artist/${encodeURIComponent(similarArtist.replace(/ /g, '-').toLowerCase())}`} rel="noopener noreferrer">
                                     {similarArtist}
                                 </Link>
                             </li>

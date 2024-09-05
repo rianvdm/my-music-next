@@ -49,7 +49,7 @@ export default function ArtistPage() {
 
     const handleSearch = () => {
         if (searchTerm.trim() !== '') {
-            const formattedArtist = encodeURIComponent(searchTerm.trim().replace(/ /g, '-'));
+            const formattedArtist = encodeURIComponent(searchTerm.trim().replace(/ /g, '-').toLowerCase());
             router.push(`/artist/${formattedArtist}`);
         }
     };

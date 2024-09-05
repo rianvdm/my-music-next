@@ -10,12 +10,12 @@ function TopArtists({ data }) {
         <div className="track-grid">
             {data.map(artist => (
                 <div className="track" key={artist.name}>
-                    <Link href={`artist/${encodeURIComponent(artist.name.replace(/ /g, '-'))}`} rel="noopener noreferrer">
+                    <Link href={`artist/${encodeURIComponent(artist.name.replace(/ /g, '-').toLowerCase())}`} rel="noopener noreferrer">
                         <img src={artist.image || '/path/to/default/image.png'} className="track_image" alt={artist.name} />
                     </Link>
                     <div className="track_content">
                         <h2 className="track_artist">
-                            <Link href={`artist/${encodeURIComponent(artist.name.replace(/ /g, '-'))}`} rel="noopener noreferrer">
+                            <Link href={`artist/${encodeURIComponent(artist.name.replace(/ /g, '-').toLowerCase())}`} rel="noopener noreferrer">
                                 {artist.name}
                             </Link>
                         </h2>
@@ -33,13 +33,13 @@ function TopAlbums({ data }) {
         <div className="track-grid">
             {data.map(album => (
                 <div className="track" key={album.name}>
-                    <a href={`/album/${encodeURIComponent(album.artist.replace(/ /g, '-'))}_${encodeURIComponent(album.name.replace(/ /g, '-'))}`}>
+                    <a href={`/album/${encodeURIComponent(album.artist.replace(/ /g, '-').toLowerCase())}_${encodeURIComponent(album.name.replace(/ /g, '-').toLowerCase())}`}>
                         <img src={album.image} className="track_image" alt={album.name} />
                     </a>
                     <div className="track_content">
-                        <p className="track_name"><a href={`/album/${encodeURIComponent(album.artist.replace(/ /g, '-'))}_${encodeURIComponent(album.name.replace(/ /g, '-'))}`}><strong>{album.name}</strong></a></p>
+                        <p className="track_name"><a href={`/album/${encodeURIComponent(album.artist.replace(/ /g, '-').toLowerCase())}_${encodeURIComponent(album.name.replace(/ /g, '-').toLowerCase())}`}><strong>{album.name}</strong></a></p>
                         <p className="track_artist">
-                            <Link href={`artist/${encodeURIComponent(album.artist.replace(/ /g, '-'))}`} rel="noopener noreferrer">
+                            <Link href={`artist/${encodeURIComponent(album.artist.replace(/ /g, '-').toLowerCase())}`} rel="noopener noreferrer">
                                 {album.artist}
                             </Link></p>
                     </div>
@@ -158,7 +158,7 @@ export default function Home() {
         return (
             <>
                 <p>
-                    🎧 Most recently I listened to <Link href={`album/${encodeURIComponent(recentTracksData.last_artist.replace(/ /g, '-'))}_${encodeURIComponent(recentTracksData.last_album.replace(/ /g, '-'))}`} rel="noopener noreferrer"><strong>{recentTracksData.last_album}</strong></Link> by <Link href={`artist/${encodeURIComponent(recentTracksData.last_artist.replace(/ /g, '-'))}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}
+                    🎧 Most recently I listened to <Link href={`album/${encodeURIComponent(recentTracksData.last_artist.replace(/ /g, '-').toLowerCase())}_${encodeURIComponent(recentTracksData.last_album.replace(/ /g, '-').toLowerCase())}`} rel="noopener noreferrer"><strong>{recentTracksData.last_album}</strong></Link> by <Link href={`artist/${encodeURIComponent(recentTracksData.last_artist.replace(/ /g, '-').toLowerCase())}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}
                 </p>
                 <p>🧠 {randomFact}</p>
                 <p>

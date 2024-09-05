@@ -50,8 +50,8 @@ export default function AlbumSearchPage() {
 
     const handleSearch = () => {
         if (album.trim() !== '' && artist.trim() !== '') {
-            const formattedArtist = encodeURIComponent(artist.trim().replace(/ /g, '-'));
-            const formattedAlbum = encodeURIComponent(album.trim().replace(/ /g, '-'));
+            const formattedArtist = encodeURIComponent(artist.trim().replace(/ /g, '-').toLowerCase());
+            const formattedAlbum = encodeURIComponent(album.trim().replace(/ /g, '-').toLowerCase());
             router.push(`/album/${formattedArtist}_${formattedAlbum}`);
         }
     };

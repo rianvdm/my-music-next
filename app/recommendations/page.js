@@ -168,7 +168,7 @@ export default function RecommendationsPage() {
                         <div className="no-wrap-text">
                             <p>
                                 <strong>{track.title}</strong> by <strong>
-                                <Link href={`/artist/${encodeURIComponent(track.artist.replace(/ /g, '-'))}`}>{track.artist}</Link>
+                                <Link href={`/artist/${encodeURIComponent(track.artist.replace(/ /g, '-').toLowerCase())}`}>{track.artist}</Link>
                                 </strong> (liked on {track.dateLiked}).
                             </p>
                             <div>
