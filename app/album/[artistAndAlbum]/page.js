@@ -9,6 +9,7 @@ export default function AlbumPage({ params }) {
     const { artistAndAlbum } = params;
     const [albumDetails, setAlbumDetails] = useState(null);
     const [spotifyUrl, setSpotifyUrl] = useState('');
+    const [songLinkUrl, setSongLinkUrl] = useState('');
     const [releaseYear, setReleaseYear] = useState('Loading...');
     const [trackCount, setTrackCount] = useState('Loading...');
     const [openAISummary, setOpenAISummary] = useState('Loading ChatGPT summary...');
@@ -80,6 +81,13 @@ export default function AlbumPage({ params }) {
 
                         // Set the track count
                         setTrackCount(spotifyAlbum.tracks || 'Unknown');
+
+                        // Fetch SongLink URL
+                        const songLinkResponse = await fetch(
+                            `https://api-songlink.rian-db8.workers.dev/?url=${encodeURIComponent(spotifyAlbum.url)}`
+                        );
+                        const songLinkData = await songLinkResponse.json();
+                        setSongLinkUrl(songLinkData.pageUrl);
                     }
 
                 } catch (error) {
@@ -149,7 +157,11 @@ export default function AlbumPage({ params }) {
                             <p><strong>My playcount:</strong> {albumDetails.userplaycount}</p>
                             <p><strong>Genre:</strong> {(Array.isArray(albumDetails.tags) && albumDetails.tags[0]) || 'Unknown'}</p>
                             <p><strong>Released in:</strong> {releaseYear}</p>
-                            <p><strong>Streaming:</strong><br /> {spotifyUrl ? <a href={spotifyUrl} target="_blank" rel="noopener noreferrer">Spotify ↗</a> : 'Loading...'}</p>
+                            <p><strong>Streaming:</strong><br /> 
+                                {spotifyUrl ? <a href={spotifyUrl} target="_blank" rel="noopener noreferrer">Spotify ↗</a> : 'Loading...'}
+                                <br />
+                                {songLinkUrl ? <a href={songLinkUrl} target="_blank" rel="noopener noreferrer">SongLink ↗</a> : 'Loading...'}
+                            </p>
                         </div>
                     </div>
                     <strong>Overview:</strong>
