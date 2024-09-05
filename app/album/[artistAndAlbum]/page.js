@@ -143,7 +143,7 @@ export default function AlbumPage({ params }) {
     return (
         <div>
             <header>
-                <h1>{albumDetails.name} by <a href={`/artist/${albumDetails.artist}`}>{albumDetails.artist}</a></h1>
+                <h1>{albumDetails.name} by <a href={`/artist/${albumDetails.artist.toLowerCase()}`}>{albumDetails.artist}</a></h1>
             </header>
             <main>
                 <section className="track_ul2">
