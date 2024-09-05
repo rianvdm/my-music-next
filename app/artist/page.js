@@ -49,7 +49,8 @@ export default function ArtistPage() {
 
     const handleSearch = () => {
         if (searchTerm.trim() !== '') {
-            router.push(`/artist/${encodeURIComponent(searchTerm.trim())}`);
+            const formattedArtist = encodeURIComponent(searchTerm.trim().replace(/ /g, '-'));
+            router.push(`/artist/${formattedArtist}`);
         }
     };
 

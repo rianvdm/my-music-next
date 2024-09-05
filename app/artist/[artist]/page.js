@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 export default function ArtistPage({ params }) {
-    const { artist } = params;
+    const { artist: prettyArtist } = params;
     const [artistDetails, setArtistDetails] = useState(null);
     const [topAlbums, setTopAlbums] = useState([]);
     const [openAISummary, setOpenAISummary] = useState('Loading ChatGPT summary...');
@@ -15,11 +15,17 @@ export default function ArtistPage({ params }) {
     const router = useRouter();
     const fetchedOpenAISummary = useRef(false); // Track whether the OpenAI summary has been fetched
 
+    // Function to convert "pretty URL" to original format
+    const decodePrettyUrl = (prettyUrl) => {
+        return decodeURIComponent(prettyUrl.replace(/-/g, ' '));
+    };
+
+    const artist = decodePrettyUrl(prettyArtist);
+
     useEffect(() => {
         if (artist) {
             async function fetchArtistData() {
                 try {
-
                     // Fetch artist details from Last.fm
                     const artistResponse = await fetch(
                         `https://api-lastfm-artistdetail.rian-db8.workers.dev?artist=${artist}`
@@ -138,7 +144,7 @@ export default function ArtistPage({ params }) {
                             <ul style={{ listStyleType: 'none', paddingLeft: '0', marginTop: '0' }}>
                                 {topAlbums.map((album, index) => (
                                     <li key={index}>
-                                        <a href={`/album/${artistDetails.name}_${album.name}`}>
+                                        <a href={`/album/${encodeURIComponent(artistDetails.name.replace(/ /g, '-'))}_${encodeURIComponent(album.name.replace(/ /g, '-'))}`}>
                                             {album.name}
                                         </a>
                                     </li>
@@ -148,10 +154,10 @@ export default function ArtistPage({ params }) {
                     </div>
                     <p style={{ marginBottom: '0.2em' }}><strong>Similar Artists:</strong></p>
                     <ul style={{ listStyleType: 'none', paddingLeft: '0', marginTop: '0' }}>
-                        {artistDetails.similar.map((artist, index) => (
+                        {artistDetails.similar.map((similarArtist, index) => (
                             <li key={index}>
-                                <Link href={`/artist/${artist}`} rel="noopener noreferrer">
-                                    {artist}
+                                <Link href={`/artist/${encodeURIComponent(similarArtist.replace(/ /g, '-'))}`} rel="noopener noreferrer">
+                                    {similarArtist}
                                 </Link>
                             </li>
                         ))}

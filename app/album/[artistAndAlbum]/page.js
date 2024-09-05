@@ -3,7 +3,7 @@
 export const runtime = 'edge';
 
 import { useEffect, useState, useRef } from 'react';
-import Link from 'next/link';  // Import the Link component
+import Link from 'next/link';
 
 export default function AlbumPage({ params }) {
     const { artistAndAlbum } = params;
@@ -15,14 +15,18 @@ export default function AlbumPage({ params }) {
     const [error, setError] = useState(null);
     const fetchedOpenAISummary = useRef(false);
 
+    // Function to convert "pretty URL" to original format
+    const decodePrettyUrl = (prettyUrl) => {
+        return decodeURIComponent(prettyUrl.replace(/-/g, ' '));
+    };
+
     // Split the artist and album names
-    const [artist, album] = artistAndAlbum.split('_');
+    const [artist, album] = decodePrettyUrl(artistAndAlbum).split('_');
 
     useEffect(() => {
         if (artist && album) {
             async function fetchAlbumData() {
                 try {
-
                     // Fetch album details from Last.fm
                     const albumResponse = await fetch(
                         `https://api-lastfm-albumdetail.rian-db8.workers.dev?album=${album}&artist=${artist}`
