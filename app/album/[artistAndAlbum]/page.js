@@ -176,4 +176,4 @@ export default function AlbumPage({ params }) {
             </main>
         </div>
     );
-}I
+}
