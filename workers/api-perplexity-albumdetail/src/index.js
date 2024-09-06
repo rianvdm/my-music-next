@@ -72,11 +72,11 @@ export default {
             const perplexityJsonResponse = await perplexityResponse.json();
             albumSummary = perplexityJsonResponse.choices[0].message.content;
 
-            // Set expiration for 6 months (180 days)
-            const sixMonthsInSeconds = 180 * 24 * 60 * 60;
+            // Set expiration for days * hours * minutes * seconds
+            const expiration = 60 * 24 * 60 * 60;
 
             // Store the new summary in KV for future requests with expiration
-            await env.ALBUM_SUMMARIES_P.put(kvKey, albumSummary, { expirationTtl: sixMonthsInSeconds });
+            await env.ALBUM_SUMMARIES_P.put(kvKey, albumSummary, { expirationTtl: expiration });
 
             // Return the album summary
             return new Response(JSON.stringify({ data: albumSummary }), {
