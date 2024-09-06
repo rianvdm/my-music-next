@@ -1,5 +1,7 @@
 'use client';
 
+export const runtime = 'edge';
+
 import { useEffect, useState, useRef, Suspense } from 'react';
 import Link from 'next/link';
 
