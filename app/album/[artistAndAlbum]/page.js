@@ -155,7 +155,9 @@ const renderOpenAISummary = (summary) => {
                         <p><strong>Streaming:</strong><br /> 
                             {spotifyUrl ? <a href={spotifyUrl} target="_blank" rel="noopener noreferrer">Spotify ↗</a> : 'Loading...'}
                             <br />
-                            {appleMusicUrl ? (
+                            {appleMusicUrl === '' ? (
+                                'Loading...'
+                            ) : appleMusicUrl ? (
                                 <a href={appleMusicUrl} target="_blank" rel="noopener noreferrer">Apple Music ↗</a>
                             ) : (
                                 'Not available on Apple Music'
@@ -163,14 +165,7 @@ const renderOpenAISummary = (summary) => {
                         </p>
                     </div>
                 </div>
-                {/*<strong>Overview:</strong>*/}
                 {renderOpenAISummary(openAISummary)}
-                {/* <br /><strong>LastFM summary:</strong>
-                {albumDetails.bio ? (
-                    <div style={{ marginTop: '1em' }} dangerouslySetInnerHTML={{ __html: albumDetails.bio.replace(/\n/g, '<br />') }} />
-                ) : (
-                    <p>No wiki entry for this album.</p>
-                )} */}
             </section>
         </main>
         </div>
