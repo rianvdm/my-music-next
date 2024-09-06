@@ -204,7 +204,7 @@ export default function Home() {
 
         const metaTwitterCard = document.querySelector('meta[name="twitter:card"]') || document.createElement('meta');
         metaTwitterCard.setAttribute('name', 'twitter:card');
-        metaTwitterCard.setAttribute('content', 'summary');
+        metaTwitterCard.setAttribute('content', 'summary_large_image');
         document.head.appendChild(metaTwitterCard);
     }, []);
 
