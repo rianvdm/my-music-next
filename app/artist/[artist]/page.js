@@ -100,67 +100,6 @@ export default function ArtistPage({ params }) {
         }
     }, [artist]);
 
-    // Dynamic SEO and social sharing meta tags
-    useEffect(() => {
-        if (artistDetails) {
-            // Set the document title dynamically
-            document.title = `${artistDetails.name} - Artist Details`;
-
-            // Set meta description dynamically
-            const metaDescription = document.querySelector('meta[name="description"]');
-            if (metaDescription) {
-                metaDescription.setAttribute('content', `Learn more about ${artistDetails.name} including bio, popular albums, and similar artists.`);
-            } else {
-                const metaTag = document.createElement('meta');
-                metaTag.name = 'description';
-                metaTag.content = `Learn more about ${artistDetails.name} including bio, popular albums, and similar artists.`;
-                document.head.appendChild(metaTag);
-            }
-
-            // Create or update Open Graph meta tags
-            const metaOGTitle = document.querySelector('meta[property="og:title"]') || document.createElement('meta');
-            metaOGTitle.setAttribute('property', 'og:title');
-            metaOGTitle.setAttribute('content', `${artistDetails.name} - Artist Details`);
-            document.head.appendChild(metaOGTitle);
-
-            const metaOGDescription = document.querySelector('meta[property="og:description"]') || document.createElement('meta');
-            metaOGDescription.setAttribute('property', 'og:description');
-            metaOGDescription.setAttribute('content', `Explore details about ${artistDetails.name}.`);
-            document.head.appendChild(metaOGDescription);
-
-            const metaOGImage = document.querySelector('meta[property="og:image"]') || document.createElement('meta');
-            metaOGImage.setAttribute('property', 'og:image');
-            metaOGImage.setAttribute('content', artistDetails.image);
-            document.head.appendChild(metaOGImage);
-
-            const metaOGUrl = document.querySelector('meta[property="og:url"]') || document.createElement('meta');
-            metaOGUrl.setAttribute('property', 'og:url');
-            metaOGUrl.setAttribute('content', window.location.href);
-            document.head.appendChild(metaOGUrl);
-
-            // Create or update Twitter meta tags
-            const metaTwitterTitle = document.querySelector('meta[name="twitter:title"]') || document.createElement('meta');
-            metaTwitterTitle.setAttribute('name', 'twitter:title');
-            metaTwitterTitle.setAttribute('content', `${artistDetails.name} - Artist Details`);
-            document.head.appendChild(metaTwitterTitle);
-
-            const metaTwitterDescription = document.querySelector('meta[name="twitter:description"]') || document.createElement('meta');
-            metaTwitterDescription.setAttribute('name', 'twitter:description');
-            metaTwitterDescription.setAttribute('content', `Discover more about ${artistDetails.name} including bio, albums, and similar artists.`);
-            document.head.appendChild(metaTwitterDescription);
-
-            const metaTwitterImage = document.querySelector('meta[name="twitter:image"]') || document.createElement('meta');
-            metaTwitterImage.setAttribute('name', 'twitter:image');
-            metaTwitterImage.setAttribute('content', artistDetails.image);
-            document.head.appendChild(metaTwitterImage);
-
-            const metaTwitterCard = document.querySelector('meta[name="twitter:card"]') || document.createElement('meta');
-            metaTwitterCard.setAttribute('name', 'twitter:card');
-            metaTwitterCard.setAttribute('content', 'summary_large_image');
-            document.head.appendChild(metaTwitterCard);
-        }
-    }, [artistDetails]);
-
     if (error) {
         return <p>{error}</p>; // Display error message if artist not found
     }
