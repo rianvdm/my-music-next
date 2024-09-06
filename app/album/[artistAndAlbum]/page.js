@@ -50,18 +50,6 @@ export default function AlbumPage({ params }) {
 
                     setAlbumDetails(albumData);
 
-                    document.title = `${albumData.name} by ${artist} - Album Details`;
-
-                    const metaDescription = document.querySelector('meta[name="description"]');
-                    if (metaDescription) {
-                        metaDescription.setAttribute('content', `Details about the album ${albumData.name} by ${artist}`);
-                    } else {
-                        const metaTag = document.createElement('meta');
-                        metaTag.name = 'description';
-                        metaTag.content = `Details about the album ${albumData.name} by ${artist}`;
-                        document.head.appendChild(metaTag);
-                    }
-
                     // Fetch Spotify URL and additional data
                     const searchQuery = `${album} ${artist}`;
                     const spotifyResponse = await fetch(
