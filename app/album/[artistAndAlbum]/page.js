@@ -176,12 +176,12 @@ const renderOpenAISummary = (summary) => {
                     </div>
                     <strong>Overview:</strong>
                     {renderOpenAISummary(openAISummary)}
-                    <br /><strong>LastFM summary:</strong>
+{/*                    <br /><strong>LastFM summary:</strong>
                     {albumDetails.bio ? (
                         <div style={{ marginTop: '1em' }} dangerouslySetInnerHTML={{ __html: albumDetails.bio.replace(/\n/g, '<br />') }} />
                     ) : (
                         <p>No wiki entry for this album.</p>
-                    )}
+                    )}*/}
                 </section>
             </main>
         </div>

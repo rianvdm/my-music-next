@@ -34,7 +34,7 @@ export default {
             }
 
             // If not found in KV, generate it using Perplexity API
-            const prompt = `I’m listening to “${albumName}” by “${artistName}” for the first time. Give me a two-paragraph summary of the history, genre/style, cultural significance (if any), what I should pay attention to, and critical reception of the album.`;
+            const prompt = `I’m listening to “${albumName}” by ${artistName} for the first time. Provide a 2-3 paragraph summary of the album's history, genre/style, cultural significance (if any), and critical reception.`;
 
             console.log("Getting new summary from Perplexity API");
             const perplexityResponse = await fetch("https://api.perplexity.ai/chat/completions", {
@@ -49,6 +49,8 @@ export default {
                         { role: "system", content: "You use succinct, plain language focused on accuracy and professionalism." },
                         { role: "user", content: prompt }
                     ],
+                    max_tokens: 800,
+                    return_citations: true,
                 }),
             });
 
