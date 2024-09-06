@@ -12,7 +12,7 @@ export default function AlbumPage({ params }) {
     const [songLinkUrl, setSongLinkUrl] = useState('');
     const [releaseYear, setReleaseYear] = useState('Loading...');
     const [trackCount, setTrackCount] = useState('Loading...');
-    const [openAISummary, setOpenAISummary] = useState('Loading ChatGPT summary...');
+    const [openAISummary, setOpenAISummary] = useState('Loading summary...');
     const [error, setError] = useState(null);
     const fetchedOpenAISummary = useRef(false);
 
@@ -106,7 +106,8 @@ export default function AlbumPage({ params }) {
             async function fetchOpenAISummary() {
                 try {
                     const summaryResponse = await fetch(
-                        `https://api-openai-albumdetail.rian-db8.workers.dev?album=${album}&artist=${artist}`
+                    //    `https://api-openai-albumdetail.rian-db8.workers.dev?album=${album}&artist=${artist}`
+                        `https://api-perplexity-albumdetail.rian-db8.workers.dev?album=${album}&artist=${artist}`
                     );
                     const summaryData = await summaryResponse.json();
                     setOpenAISummary(summaryData.data);
@@ -134,11 +135,20 @@ export default function AlbumPage({ params }) {
         return <p>Loading...</p>;
     }
 
-    const renderOpenAISummary = (summary) => {
-        return summary.split('\n\n').map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
-        ));
-    };
+const renderOpenAISummary = (summary) => {
+    // Split summary into paragraphs and handle bold text within ** **
+    return summary.split('\n\n').map((paragraph, index) => (
+        <p key={index}>
+            {paragraph.split(/(\*\*.*?\*\*)/g).map((part, i) => 
+                part.startsWith('**') && part.endsWith('**') ? (
+                    <strong key={i}>{part.slice(2, -2)}</strong>
+                ) : (
+                    part
+                )
+            )}
+        </p>
+    ));
+};
 
     return (
         <div>
