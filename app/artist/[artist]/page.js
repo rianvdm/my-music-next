@@ -11,11 +11,10 @@ export default function ArtistPage({ params }) {
     const [artistDetails, setArtistDetails] = useState(null);
     const [topAlbums, setTopAlbums] = useState([]);
     const [openAISummary, setOpenAISummary] = useState('Loading ChatGPT summary...');
-    const [error, setError] = useState(null); // State to track errors
+    const [error, setError] = useState(null);
     const router = useRouter();
-    const fetchedOpenAISummary = useRef(false); // Track whether the OpenAI summary has been fetched
+    const fetchedOpenAISummary = useRef(false);
 
-    // Function to convert "pretty URL" to original format
     const decodePrettyUrl = (prettyUrl) => {
         return decodeURIComponent(prettyUrl.replace(/-/g, ' '));
     };
@@ -26,7 +25,6 @@ export default function ArtistPage({ params }) {
         if (artist) {
             async function fetchArtistData() {
                 try {
-                    // Fetch artist details from Last.fm
                     const artistResponse = await fetch(
                         `https://api-lastfm-artistdetail.rian-db8.workers.dev?artist=${artist}`
                     );
@@ -35,12 +33,10 @@ export default function ArtistPage({ params }) {
                     }
                     let artistData = await artistResponse.json();
 
-                    // Check if artistData is undefined or has an error property
                     if (!artistData || artistData.error) {
                         throw new Error('Artist not found');
                     }
 
-                    // Clean up the bio text
                     if (artistData.bio) {
                         artistData.bio = artistData.bio.replace(
                             /User-contributed text is available under the Creative Commons By-SA License; additional terms may apply\./g,
@@ -50,29 +46,17 @@ export default function ArtistPage({ params }) {
 
                     setArtistDetails(artistData);
 
-                    // Fetch top albums for the artist
                     const albumsResponse = await fetch(
                         `https://api-lastfm-artisttopalbums.rian-db8.workers.dev?artist=${artist}`
                     );
                     const albumsData = await albumsResponse.json();
 
-                    setTopAlbums(albumsData.topAlbums.slice(0, 3)); // Limit to top 3 albums
+                    setTopAlbums(albumsData.topAlbums.slice(0, 3));
 
-                    // Set the document title and meta description dynamically
-                    document.title = `${artistData.name} - Artist Details`;
-
-                    const metaDescription = document.querySelector('meta[name="description"]');
-                    if (metaDescription) {
-                        metaDescription.setAttribute('content', `Details about ${artistData.name}`);
-                    } else {
-                        const metaTag = document.createElement('meta');
-                        metaTag.name = 'description';
-                        metaTag.content = `Details about ${artistData.name}`;
-                        document.head.appendChild(metaTag);
-                    }
+                    // Remove metadata-setting code
                 } catch (error) {
                     console.error('Error fetching artist data:', error);
-                    setError(error.message); // Set error state
+                    setError(error.message);
                 }
             }
             fetchArtistData();
@@ -82,7 +66,7 @@ export default function ArtistPage({ params }) {
     // Fetch OpenAI summary independently
     useEffect(() => {
         if (artist && !fetchedOpenAISummary.current) {
-            fetchedOpenAISummary.current = true; // Set to true to prevent subsequent fetches
+            fetchedOpenAISummary.current = true;
 
             async function fetchOpenAISummary() {
                 try {
@@ -101,18 +85,12 @@ export default function ArtistPage({ params }) {
     }, [artist]);
 
     if (error) {
-        return <p>{error}</p>; // Display error message if artist not found
+        return <p>{error}</p>;
     }
 
     if (!artistDetails) {
         return <p>Loading...</p>;
     }
-
-    const renderBioContent = (content) => {
-        return content.split('\n\n').map((paragraph, index) => (
-            <p key={index} dangerouslySetInnerHTML={{ __html: paragraph.replace(/\n/g, '<br />') }} />
-        ));
-    };
 
     const renderOpenAISummary = (summary) => {
         return summary.split('\n\n').map((paragraph, index) => (
@@ -120,7 +98,6 @@ export default function ArtistPage({ params }) {
         ));
     };
 
-    // Format the user playcount with commas
     const formattedPlaycount = new Intl.NumberFormat().format(artistDetails.userplaycount);
 
     return (
