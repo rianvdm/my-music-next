@@ -16,13 +16,15 @@ export default function AlbumPage({ params }) {
     const [error, setError] = useState(null);
     const fetchedOpenAISummary = useRef(false);
 
-    // Function to convert "pretty URL" to original format
+    // Update the decodePrettyUrl function
     const decodePrettyUrl = (prettyUrl) => {
         return decodeURIComponent(prettyUrl.replace(/-/g, ' '));
     };
 
     // Split the artist and album names
-    const [artist, album] = decodePrettyUrl(artistAndAlbum).split('_');
+    const [prettyArtist, prettyAlbum] = artistAndAlbum.split('_');
+    const artist = decodePrettyUrl(prettyArtist);
+    const album = decodePrettyUrl(prettyAlbum);
 
     useEffect(() => {
         if (artist && album) {
@@ -141,7 +143,7 @@ const renderOpenAISummary = (summary) => {
     return (
         <div>
             <header>
-                <h1>{albumDetails.name} by <a href={`/artist/${albumDetails.artist.toLowerCase()}`}>{albumDetails.artist}</a></h1>
+                <h1>{albumDetails.name} by <Link href={`/artist/${prettyArtist}`}>{albumDetails.artist}</Link></h1>
             </header>
             <main>
                 <section className="track_ul2">
