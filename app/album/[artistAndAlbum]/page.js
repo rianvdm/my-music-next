@@ -11,6 +11,7 @@ export default function AlbumPage({ params }) {
     const [albumDetails, setAlbumDetails] = useState(null);
     const [spotifyUrl, setSpotifyUrl] = useState('');
     const [songLinkUrl, setSongLinkUrl] = useState('');
+    const [appleMusicUrl, setAppleMusicUrl] = useState('');
     const [releaseYear, setReleaseYear] = useState('Loading...');
     const [trackCount, setTrackCount] = useState('Loading...');
     const [openAISummary, setOpenAISummary] = useState('Loading summary...');
@@ -79,6 +80,7 @@ export default function AlbumPage({ params }) {
                         );
                         const songLinkData = await songLinkResponse.json();
                         setSongLinkUrl(songLinkData.pageUrl);
+                        setAppleMusicUrl(songLinkData.appleUrl);
                     }
 
                 } catch (error) {
@@ -153,7 +155,7 @@ const renderOpenAISummary = (summary) => {
                             <p><strong>Streaming:</strong><br /> 
                                 {spotifyUrl ? <a href={spotifyUrl} target="_blank" rel="noopener noreferrer">Spotify ↗</a> : 'Loading...'}
                                 <br />
-                                {songLinkUrl ? <a href={songLinkUrl} target="_blank" rel="noopener noreferrer">Songlink ↗</a> : 'Loading...'}
+                                {appleMusicUrl ? <a href={appleMusicUrl} target="_blank" rel="noopener noreferrer">Apple Music ↗</a> : 'Loading...'}
                             </p>
                         </div>
                     </div>
