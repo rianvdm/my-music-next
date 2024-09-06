@@ -164,7 +164,7 @@ const renderOpenAISummary = (summary) => {
                             </p>
                         </div>
                     </div>
-                    <strong>Overview:</strong>
+                    {/*<strong>Overview:</strong>*/}
                     {renderOpenAISummary(openAISummary)}
 {/*                    <br /><strong>LastFM summary:</strong>
                     {albumDetails.bio ? (
