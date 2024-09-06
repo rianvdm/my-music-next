@@ -18,7 +18,7 @@ export default {
             }
 
             // Generate a new track summary using OpenAI
-            const prompt = `I enjoyed the album "${albumTitle}" by "${artistName}". What are 2-3 other albums I should listen to if I enjoy that genre and style? Avoid albums that are very popular and mainstream, instead recommending what could be considered "hidden gems". If you don't have verifiable information about the album being asked about, inform the user that the album name is not valid.`;
+            const prompt = `I enjoyed the album "${albumTitle}" by "${artistName}". What are 2-3 other albums I should listen to if I enjoy that genre and style? Avoid albums that are very popular and mainstream, instead recommending what could be considered "hidden gems". If you don't have verifiable information about the album being asked about, inform the user that the album name is not valid. Use Markdown for formatting. Link each album name to the URL "https://music.rianvdm.com/album/<artist name>_<album name>" inline, replacing spaces with - and special character with their encoded values in the album and artist names.`;
             const max_tokens = 400;
 
             console.log("Getting summary from OpenAI");
