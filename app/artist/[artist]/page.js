@@ -156,7 +156,7 @@ export default function ArtistPage({ params }) {
 
             const metaTwitterCard = document.querySelector('meta[name="twitter:card"]') || document.createElement('meta');
             metaTwitterCard.setAttribute('name', 'twitter:card');
-            metaTwitterCard.setAttribute('content', 'summary_large_image');
+            metaTwitterCard.setAttribute('content', 'summary');
             document.head.appendChild(metaTwitterCard);
         }
     }, [artistDetails]);
