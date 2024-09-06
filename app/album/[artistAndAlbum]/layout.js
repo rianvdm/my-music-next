@@ -14,13 +14,13 @@ export async function generateMetadata({ params }) {
       openGraph: {
         title: `${albumData.name} by ${albumData.artist}`,
         description: `Album details for ${albumData.name} by ${albumData.artist}`,
-        images: [`/album/${artistAndAlbum}/opengraph-image`],
+        images: [albumData.image],
       },
       twitter: {
         card: 'summary_large_image',
         title: `${albumData.name} by ${albumData.artist}`,
         description: `Album details for ${albumData.name} by ${albumData.artist}`,
-        images: [`/album/${artistAndAlbum}/opengraph-image`],
+        images: [albumData.image],
       },
     }
   }
