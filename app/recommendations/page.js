@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { marked } from 'marked';
 import Link from 'next/link';
 
 export default function RecommendationsPage() {
@@ -137,11 +138,10 @@ export default function RecommendationsPage() {
             )}
             {recommendation && (
                 <div className="track_ul">
-                    <div dangerouslySetInnerHTML={{ __html: recommendation.replace(/\n/g, '<br/>') }} />
+                    <div dangerouslySetInnerHTML={{ __html: marked(recommendation) }} />
                     <br/>
                 </div>
             )}
-
             <div style={{ marginTop: '40px' }}></div>
 
             <h1>Song Recommendations</h1>
