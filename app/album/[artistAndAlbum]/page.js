@@ -119,6 +119,67 @@ export default function AlbumPage({ params }) {
         }
     }, [artist, album]);
 
+    // Dynamic SEO and social sharing meta tags
+    useEffect(() => {
+        if (albumDetails) {
+            // Set the document title dynamically
+            document.title = `${albumDetails.name} by ${albumDetails.artist} - Album Details`;
+
+            // Set meta description dynamically
+            const metaDescription = document.querySelector('meta[name="description"]');
+            if (metaDescription) {
+                metaDescription.setAttribute('content', `Learn more about the album ${albumDetails.name} by ${albumDetails.artist}.`);
+            } else {
+                const metaTag = document.createElement('meta');
+                metaTag.name = 'description';
+                metaTag.content = `Learn more about the album ${albumDetails.name} by ${albumDetails.artist}.`;
+                document.head.appendChild(metaTag);
+            }
+
+            // Create or update Open Graph meta tags
+            const metaOGTitle = document.querySelector('meta[property="og:title"]') || document.createElement('meta');
+            metaOGTitle.setAttribute('property', 'og:title');
+            metaOGTitle.setAttribute('content', `${albumDetails.name} by ${albumDetails.artist} - Album Details`);
+            document.head.appendChild(metaOGTitle);
+
+            const metaOGDescription = document.querySelector('meta[property="og:description"]') || document.createElement('meta');
+            metaOGDescription.setAttribute('property', 'og:description');
+            metaOGDescription.setAttribute('content', `Explore details about the album ${albumDetails.name} by ${albumDetails.artist}.`);
+            document.head.appendChild(metaOGDescription);
+
+            const metaOGImage = document.querySelector('meta[property="og:image"]') || document.createElement('meta');
+            metaOGImage.setAttribute('property', 'og:image');
+            metaOGImage.setAttribute('content', albumDetails.image);
+            document.head.appendChild(metaOGImage);
+
+            const metaOGUrl = document.querySelector('meta[property="og:url"]') || document.createElement('meta');
+            metaOGUrl.setAttribute('property', 'og:url');
+            metaOGUrl.setAttribute('content', window.location.href);
+            document.head.appendChild(metaOGUrl);
+
+            // Create or update Twitter meta tags
+            const metaTwitterTitle = document.querySelector('meta[name="twitter:title"]') || document.createElement('meta');
+            metaTwitterTitle.setAttribute('name', 'twitter:title');
+            metaTwitterTitle.setAttribute('content', `${albumDetails.name} by ${albumDetails.artist} - Album Details`);
+            document.head.appendChild(metaTwitterTitle);
+
+            const metaTwitterDescription = document.querySelector('meta[name="twitter:description"]') || document.createElement('meta');
+            metaTwitterDescription.setAttribute('name', 'twitter:description');
+            metaTwitterDescription.setAttribute('content', `Discover more about the album ${albumDetails.name} by ${albumDetails.artist}.`);
+            document.head.appendChild(metaTwitterDescription);
+
+            const metaTwitterImage = document.querySelector('meta[name="twitter:image"]') || document.createElement('meta');
+            metaTwitterImage.setAttribute('name', 'twitter:image');
+            metaTwitterImage.setAttribute('content', albumDetails.image);
+            document.head.appendChild(metaTwitterImage);
+
+            const metaTwitterCard = document.querySelector('meta[name="twitter:card"]') || document.createElement('meta');
+            metaTwitterCard.setAttribute('name', 'twitter:card');
+            metaTwitterCard.setAttribute('content', 'summary_large_image');
+            document.head.appendChild(metaTwitterCard);
+        }
+    }, [albumDetails]);
+
     if (error) {
         return (
             <p>

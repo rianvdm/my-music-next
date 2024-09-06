@@ -150,6 +150,64 @@ export default function Home() {
         fetchTopAlbums();
     }, []); // Separate useEffect for non-critical data
 
+    useEffect(() => {
+        // Add dynamic metadata for the homepage
+        document.title = "Rian's Music - Real-time listening data and music recommendations";
+
+        // Set meta description dynamically
+        const metaDescription = document.querySelector('meta[name="description"]');
+        if (metaDescription) {
+            metaDescription.setAttribute('content', 'Real-time listening data and music recommendations.');
+        } else {
+            const metaTag = document.createElement('meta');
+            metaTag.name = 'description';
+            metaTag.content = 'Real-time listening data and music recommendations.';
+            document.head.appendChild(metaTag);
+        }
+
+        // Open Graph meta tags
+        const metaOGTitle = document.querySelector('meta[property="og:title"]') || document.createElement('meta');
+        metaOGTitle.setAttribute('property', 'og:title');
+        metaOGTitle.setAttribute('content', "Rian's Music");
+        document.head.appendChild(metaOGTitle);
+
+        const metaOGDescription = document.querySelector('meta[property="og:description"]') || document.createElement('meta');
+        metaOGDescription.setAttribute('property', 'og:description');
+        metaOGDescription.setAttribute('content', 'Real-time listening data and music recommendations.');
+        document.head.appendChild(metaOGDescription);
+
+        const metaOGImage = document.querySelector('meta[property="og:image"]') || document.createElement('meta');
+        metaOGImage.setAttribute('property', 'og:image');
+        metaOGImage.setAttribute('content', 'https://files.elezea.com/alberto-bigoni-4-DeS5a-hAM-unsplash.jpg');
+        document.head.appendChild(metaOGImage);
+
+        const metaOGUrl = document.querySelector('meta[property="og:url"]') || document.createElement('meta');
+        metaOGUrl.setAttribute('property', 'og:url');
+        metaOGUrl.setAttribute('content', 'https://music.rianvdm.com/');
+        document.head.appendChild(metaOGUrl);
+
+        // Twitter meta tags
+        const metaTwitterTitle = document.querySelector('meta[name="twitter:title"]') || document.createElement('meta');
+        metaTwitterTitle.setAttribute('name', 'twitter:title');
+        metaTwitterTitle.setAttribute('content', "Rian's Music");
+        document.head.appendChild(metaTwitterTitle);
+
+        const metaTwitterDescription = document.querySelector('meta[name="twitter:description"]') || document.createElement('meta');
+        metaTwitterDescription.setAttribute('name', 'twitter:description');
+        metaTwitterDescription.setAttribute('content', 'Real-time listening data and music recommendations.');
+        document.head.appendChild(metaTwitterDescription);
+
+        const metaTwitterImage = document.querySelector('meta[name="twitter:image"]') || document.createElement('meta');
+        metaTwitterImage.setAttribute('name', 'twitter:image');
+        metaTwitterImage.setAttribute('content', 'https://files.elezea.com/alberto-bigoni-4-DeS5a-hAM-unsplash.jpg');
+        document.head.appendChild(metaTwitterImage);
+
+        const metaTwitterCard = document.querySelector('meta[name="twitter:card"]') || document.createElement('meta');
+        metaTwitterCard.setAttribute('name', 'twitter:card');
+        metaTwitterCard.setAttribute('content', 'summary_large_image');
+        document.head.appendChild(metaTwitterCard);
+    }, []);
+
     const renderRecentTracks = () => {
         if (!recentTracksData) {
             return <p>Loading...</p>;
