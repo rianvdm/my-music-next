@@ -140,35 +140,39 @@ const renderOpenAISummary = (summary) => {
             <header>
                 <h1>{albumDetails.name} by <Link href={`/artist/${prettyArtist}`}>{albumDetails.artist}</Link></h1>
             </header>
-            <main>
-                <section className="track_ul2">
-                    <div className="image-text-wrapper">
-                        <img 
-                            src={albumDetails.image} 
-                            alt={albumDetails.name} 
-                            style={{ maxWidth: '100%', width: '220px', height: 'auto' }} 
-                        />
-                        <div className="no-wrap-text">
-                            <p><strong>My playcount:</strong> {albumDetails.userplaycount}</p>
-                            <p><strong>Genre:</strong> {(Array.isArray(albumDetails.tags) && albumDetails.tags[0]) || 'Unknown'}</p>
-                            <p><strong>Released in:</strong> {releaseYear}</p>
-                            <p><strong>Streaming:</strong><br /> 
-                                {spotifyUrl ? <a href={spotifyUrl} target="_blank" rel="noopener noreferrer">Spotify ↗</a> : 'Loading...'}
-                                <br />
-                                {appleMusicUrl ? <a href={appleMusicUrl} target="_blank" rel="noopener noreferrer">Apple Music ↗</a> : 'Loading...'}
-                            </p>
-                        </div>
+        <main>
+            <section className="track_ul2">
+                <div className="image-text-wrapper">
+                    <img 
+                        src={albumDetails.image} 
+                        alt={albumDetails.name} 
+                        style={{ maxWidth: '100%', width: '220px', height: 'auto' }} 
+                    />
+                    <div className="no-wrap-text">
+                        <p><strong>My playcount:</strong> {albumDetails.userplaycount}</p>
+                        <p><strong>Genre:</strong> {(Array.isArray(albumDetails.tags) && albumDetails.tags[0]) || 'Unknown'}</p>
+                        <p><strong>Released in:</strong> {releaseYear}</p>
+                        <p><strong>Streaming:</strong><br /> 
+                            {spotifyUrl ? <a href={spotifyUrl} target="_blank" rel="noopener noreferrer">Spotify ↗</a> : 'Loading...'}
+                            <br />
+                            {appleMusicUrl ? (
+                                <a href={appleMusicUrl} target="_blank" rel="noopener noreferrer">Apple Music ↗</a>
+                            ) : (
+                                'Not available on Apple Music'
+                            )}
+                        </p>
                     </div>
-                    {/*<strong>Overview:</strong>*/}
-                    {renderOpenAISummary(openAISummary)}
-{/*                    <br /><strong>LastFM summary:</strong>
-                    {albumDetails.bio ? (
-                        <div style={{ marginTop: '1em' }} dangerouslySetInnerHTML={{ __html: albumDetails.bio.replace(/\n/g, '<br />') }} />
-                    ) : (
-                        <p>No wiki entry for this album.</p>
-                    )}*/}
-                </section>
-            </main>
+                </div>
+                {/*<strong>Overview:</strong>*/}
+                {renderOpenAISummary(openAISummary)}
+                {/* <br /><strong>LastFM summary:</strong>
+                {albumDetails.bio ? (
+                    <div style={{ marginTop: '1em' }} dangerouslySetInnerHTML={{ __html: albumDetails.bio.replace(/\n/g, '<br />') }} />
+                ) : (
+                    <p>No wiki entry for this album.</p>
+                )} */}
+            </section>
+        </main>
         </div>
     );
 }
