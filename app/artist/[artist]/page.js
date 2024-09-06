@@ -3,8 +3,8 @@
 export const runtime = 'edge';
 
 import { useEffect, useState, useRef } from 'react';
+import { marked } from 'marked';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 export default function ArtistPage({ params }) {
     const { artist: prettyArtist } = params;
@@ -12,7 +12,6 @@ export default function ArtistPage({ params }) {
     const [topAlbums, setTopAlbums] = useState([]);
     const [openAISummary, setOpenAISummary] = useState('Loading ChatGPT summary...');
     const [error, setError] = useState(null);
-    const router = useRouter();
     const fetchedOpenAISummary = useRef(false);
 
     const decodePrettyUrl = (prettyUrl) => {
@@ -93,9 +92,10 @@ export default function ArtistPage({ params }) {
     }
 
     const renderOpenAISummary = (summary) => {
-        return summary.split('\n\n').map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
-        ));
+        // Use the `marked` library to convert the Markdown summary into HTML
+        return (
+            <div dangerouslySetInnerHTML={{ __html: marked(summary) }} />
+        );
     };
 
     const formattedPlaycount = new Intl.NumberFormat().format(artistDetails.userplaycount);
