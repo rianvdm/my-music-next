@@ -1,13 +1,47 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import NavBar from './navbar';
+import { headers } from 'next/headers';
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata = {
-  title: "Rian’s Music",
-  description: "Tracking my Last.fm music listening habits.",
-};
+export async function generateMetadata() {
+  const headersList = headers();
+  const pathname = headersList.get('x-invoke-path') || '';
+
+  // Check if the current path is for an album or artist
+  if (pathname.startsWith('/album/') || pathname.startsWith('/artist/')) {
+    // Return an empty object to use the specific metadata defined in those pages
+    return {};
+  }
+
+  // Default metadata for other pages
+  return {
+    title: "Rian's Music",
+    description: "Real-time listening data and music recommendations.",
+    openGraph: {
+      title: "Rian's music",
+      description: "Real-time listening data and music recommendations.",
+      url: "https://music.rianvdm.com/",
+      siteName: "Rian's Music",
+      images: [
+        {
+          url: "https://files.elezea.com/alberto-bigoni-4-DeS5a-hAM-unsplash.jpg",
+          width: 1200,
+          height: 630,
+        },
+      ],
+      locale: "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Rian's music",
+      description: "Real-time listening data and music recommendations.",
+      images: ["https://files.elezea.com/alberto-bigoni-4-DeS5a-hAM-unsplash.jpg"],
+    },
+  };
+}
 
 export default function RootLayout({ children }) {
   return (
@@ -21,7 +55,6 @@ export default function RootLayout({ children }) {
         <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" />
-
       </head>
       <body className={inter.className}>
         <NavBar />
@@ -29,7 +62,7 @@ export default function RootLayout({ children }) {
         <div className="footer">
           <p>
             <a href="https://youtu.be/cNtprycno14?t=9036" target="_blank">
-              There’s a fire that’s been burning right outside my door.
+              There's a fire that's been burning right outside my door.
             </a>
           </p>
         </div>
