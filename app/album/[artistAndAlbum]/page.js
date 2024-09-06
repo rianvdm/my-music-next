@@ -3,6 +3,7 @@
 export const runtime = 'edge';
 
 import { useEffect, useState, useRef } from 'react';
+import { marked } from 'marked';
 import Link from 'next/link';
 
 export default function AlbumPage({ params }) {
@@ -126,18 +127,10 @@ export default function AlbumPage({ params }) {
     }
 
 const renderOpenAISummary = (summary) => {
-    // Split summary into paragraphs and handle bold text within ** **
-    return summary.split('\n\n').map((paragraph, index) => (
-        <p key={index}>
-            {paragraph.split(/(\*\*.*?\*\*)/g).map((part, i) => 
-                part.startsWith('**') && part.endsWith('**') ? (
-                    <strong key={i}>{part.slice(2, -2)}</strong>
-                ) : (
-                    part
-                )
-            )}
-        </p>
-    ));
+    // Use the `marked` library to convert the Markdown summary into HTML
+    return (
+        <div dangerouslySetInnerHTML={{ __html: marked(summary) }} />
+    );
 };
 
     return (
