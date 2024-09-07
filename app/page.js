@@ -4,6 +4,8 @@ export const runtime = 'edge';
 
 import { useEffect, useState, useRef, Suspense } from 'react';
 import Link from 'next/link';
+import { marked } from 'marked';
+import matter from 'gray-matter';
 
 function TopArtists({ data }) {
     if (!data) return <p>Loading artists...</p>;
@@ -58,8 +60,9 @@ export default function Home() {
     const [dayGreeting, setDayGreeting] = useState('');
     const [artistSummary, setArtistSummary] = useState('');
     const [randomFact, setRandomFact] = useState('');
+    const [newAlbumsContent, setNewAlbumsContent] = useState(''); // New state for markdown content
 
-    const fetchedRandomFact = useRef(false); // Ensure the fact is fetched only once
+    const fetchedRandomFact = useRef(false);
 
     useEffect(() => {
         const setGreeting = () => {
@@ -108,11 +111,26 @@ export default function Home() {
             }
         };
 
+        // Fetch New Albums from Markdown
+        const fetchNewAlbumsContent = async () => {
+            try {
+                const response = await fetch('/content/new-albums.md'); // Fetch from public directory
+                const markdown = await response.text(); // Get the text content of the file
+                const htmlContent = marked(markdown); // Convert markdown to HTML
+                setNewAlbumsContent(htmlContent); // Set the HTML content
+            } catch (error) {
+                console.error('Error fetching new albums content:', error);
+                setNewAlbumsContent('<p>Failed to load new albums content.</p>');
+            }
+        };
+
+
         setGreeting();
         fetchRecentTracks();
         fetchRandomFact();
+        fetchNewAlbumsContent(); // Fetch new albums markdown content
 
-    }, []); // Empty dependency array ensures this runs only once when the component mounts
+    }, []); 
 
     useEffect(() => {
         const fetchTopArtists = async () => {
@@ -150,7 +168,7 @@ export default function Home() {
 
         fetchTopArtists();
         fetchTopAlbums();
-    }, []); // Separate useEffect for non-critical data
+    }, []);
 
     const renderRecentTracks = () => {
         if (!recentTracksData) {
@@ -161,7 +179,7 @@ export default function Home() {
             <>
                 <p>🧠 {randomFact}</p>
                 <p>
-                    🎧 Most recently I listened to <Link href={`album/${encodeURIComponent(recentTracksData.last_artist.replace(/ /g, '-').toLowerCase())}_${encodeURIComponent(recentTracksData.last_album.replace(/ /g, '-').toLowerCase())}`} rel="noopener noreferrer"><strong>{recentTracksData.last_album}</strong></Link> by <Link href={`artist/${encodeURIComponent(recentTracksData.last_artist.replace(/ /g, '-').toLowerCase())}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}
+                    🎧 I recently listened to <Link href={`album/${encodeURIComponent(recentTracksData.last_artist.replace(/ /g, '-').toLowerCase())}_${encodeURIComponent(recentTracksData.last_album.replace(/ /g, '-').toLowerCase())}`} rel="noopener noreferrer"><strong>{recentTracksData.last_album}</strong></Link> by <Link href={`artist/${encodeURIComponent(recentTracksData.last_artist.replace(/ /g, '-').toLowerCase())}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}
                 </p>
                 <p>
                     ✨ If you're looking for something new to listen to, you should <strong><a href="/recommendations">get rec’d</a></strong>.
@@ -178,6 +196,11 @@ export default function Home() {
             <main>
                 <section id="lastfm-stats">
                     {renderRecentTracks()}
+
+                    {/* New Albums Section */}
+                    <h2 style={{ marginBottom: 0 }}>🎵 New Releases to Check Out</h2>
+                    <div className="track_ul2" dangerouslySetInnerHTML={{ __html: newAlbumsContent }} />
+
                     <h2>👩‍🎤 Top Artists</h2>
                     <p style={{ textAlign: 'center' }}>
                         <strong>The top artists I listened to in the past 7 days.</strong>
@@ -185,6 +208,7 @@ export default function Home() {
                     <Suspense fallback={<p>Loading artists...</p>}>
                         <TopArtists data={topArtistsData} />
                     </Suspense>
+
                     <h2>🏆 Top Albums</h2>
                     <p style={{ textAlign: 'center' }}>
                         <strong>The top albums I listened to in the past 7 days.</strong>
