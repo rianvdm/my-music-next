@@ -17,13 +17,13 @@ export default function AlbumPage({ params }) {
     const [openAISummary, setOpenAISummary] = useState('Loading summary...');
     const [error, setError] = useState(null);
     const fetchedOpenAISummary = useRef(false);
+    const [recommendation, setRecommendation] = useState('');
+    const [loadingRecommendation, setLoadingRecommendation] = useState(false);
 
-    // Update the decodePrettyUrl function
     const decodePrettyUrl = (prettyUrl) => {
         return decodeURIComponent(prettyUrl.replace(/-/g, ' '));
     };
 
-    // Split the artist and album names
     const [prettyArtist, prettyAlbum] = artistAndAlbum.split('_');
     const artist = decodePrettyUrl(prettyArtist);
     const album = decodePrettyUrl(prettyAlbum);
@@ -32,49 +32,26 @@ export default function AlbumPage({ params }) {
         if (artist && album) {
             async function fetchAlbumData() {
                 try {
-                    // Fetch album details from Last.fm
                     const albumResponse = await fetch(
                         `https://api-lastfm-albumdetail.rian-db8.workers.dev?album=${album}&artist=${artist}`
                     );
-                    if (!albumResponse.ok) {
-                        throw new Error('Album not found');
-                    }
+                    if (!albumResponse.ok) throw new Error('Album not found');
                     let albumData = await albumResponse.json();
-
-                    if (!albumData || albumData.error) {
-                        throw new Error('Album not found');
-                    }
-
-                    if (albumData.bio) {
-                        albumData.bio = albumData.bio.replace(
-                            /User-contributed text is available under the Creative Commons By-SA License; additional terms may apply\./g,
-                            ''
-                        ).trim();
-                    }
-
+                    if (!albumData || albumData.error) throw new Error('Album not found');
                     setAlbumDetails(albumData);
 
-                    // Fetch Spotify URL and additional data
                     const searchQuery = `${album} ${artist}`;
                     const spotifyResponse = await fetch(
                         `https://api-spotify-search.rian-db8.workers.dev/?q=${searchQuery}&type=album`
                     );
                     const spotifyData = await spotifyResponse.json();
-
                     if (spotifyData.data && spotifyData.data.length > 0) {
                         const spotifyAlbum = spotifyData.data[0];
                         setSpotifyUrl(spotifyAlbum.url);
-                        
-                        // Extract and set the release year
                         const releaseDate = spotifyAlbum.releaseDate;
-                        if (releaseDate) {
-                            setReleaseYear(releaseDate.split('-')[0]); // Only take the year part
-                        }
-
-                        // Set the track count
+                        if (releaseDate) setReleaseYear(releaseDate.split('-')[0]);
                         setTrackCount(spotifyAlbum.tracks || 'Unknown');
 
-                        // Fetch SongLink URL
                         const songLinkResponse = await fetch(
                             `https://api-songlink.rian-db8.workers.dev/?url=${encodeURIComponent(spotifyAlbum.url)}`
                         );
@@ -85,7 +62,7 @@ export default function AlbumPage({ params }) {
 
                 } catch (error) {
                     console.error('Error fetching album data:', error);
-                    setError('Album not found. Please ');
+                    setError('Album not found.');
                 }
             }
             fetchAlbumData();
@@ -95,32 +72,45 @@ export default function AlbumPage({ params }) {
     useEffect(() => {
         if (artist && album && !fetchedOpenAISummary.current) {
             fetchedOpenAISummary.current = true;
-
             async function fetchOpenAISummary() {
                 try {
                     const summaryResponse = await fetch(
-                    //    `https://api-openai-albumdetail.rian-db8.workers.dev?album=${album}&artist=${artist}`
                         `https://api-perplexity-albumdetail.rian-db8.workers.dev?album=${album}&artist=${artist}`
                     );
                     const summaryData = await summaryResponse.json();
                     setOpenAISummary(summaryData.data);
                 } catch (error) {
                     console.error('Error fetching OpenAI summary:', error);
-                    setOpenAISummary('Failed to load ChatGPT summary.');
+                    setOpenAISummary('Failed to load summary.');
                 }
             }
             fetchOpenAISummary();
         }
     }, [artist, album]);
 
+    const renderOpenAISummary = (summary) => {
+        return <div dangerouslySetInnerHTML={{ __html: marked(summary) }} />;
+    };
+
+    const handleRecommendation = async () => {
+        setLoadingRecommendation(true);
+        try {
+            const response = await fetch(
+                `https://api-openai-albumrecs.rian-db8.workers.dev/?album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}`
+            );
+            const data = await response.json();
+            setRecommendation(marked(data.data));  // Using `marked` to convert recommendation markdown
+        } catch (error) {
+            console.error('Error fetching recommendations:', error);
+            setRecommendation('Failed to load recommendations.');
+        } finally {
+            setLoadingRecommendation(false);
+        }
+    };
+
     if (error) {
         return (
-            <p>
-                {error}{' '}
-                <Link href="/album">
-                    search again.
-                </Link>
-            </p>
+            <p>{error} <Link href="/album">search again.</Link></p>
         );
     }
 
@@ -128,46 +118,48 @@ export default function AlbumPage({ params }) {
         return <p>Loading...</p>;
     }
 
-const renderOpenAISummary = (summary) => {
-    // Use the `marked` library to convert the Markdown summary into HTML
-    return (
-        <div dangerouslySetInnerHTML={{ __html: marked(summary) }} />
-    );
-};
-
     return (
         <div>
             <header>
                 <h1>{albumDetails.name} by <Link href={`/artist/${prettyArtist}`}>{albumDetails.artist}</Link></h1>
             </header>
-        <main>
-            <section className="track_ul2">
-                <div className="image-text-wrapper">
-                    <img 
-                        src={albumDetails.image} 
-                        alt={albumDetails.name} 
-                        style={{ maxWidth: '100%', width: '220px', height: 'auto' }} 
-                    />
-                    <div className="no-wrap-text">
-                        <p><strong>My playcount:</strong> {albumDetails.userplaycount}</p>
-                        <p><strong>Genre:</strong> {(Array.isArray(albumDetails.tags) && albumDetails.tags[0]) || 'Unknown'}</p>
-                        <p><strong>Released in:</strong> {releaseYear}</p>
-                        <p><strong>Streaming:</strong><br /> 
-                            {spotifyUrl ? <a href={spotifyUrl} target="_blank" rel="noopener noreferrer">Spotify ↗</a> : 'Loading...'}
-                            <br />
-                            {appleMusicUrl === '' ? (
-                                'Loading...'
-                            ) : appleMusicUrl ? (
-                                <a href={appleMusicUrl} target="_blank" rel="noopener noreferrer">Apple Music ↗</a>
-                            ) : (
-                                'Not available on Apple Music'
-                            )}
-                        </p>
+            <main>
+                <section className="track_ul2">
+                    <div className="image-text-wrapper">
+                        <img 
+                            src={albumDetails.image} 
+                            alt={albumDetails.name} 
+                            style={{ maxWidth: '100%', width: '220px', height: 'auto' }} 
+                        />
+                        <div className="no-wrap-text">
+                            <p><strong>My playcount:</strong> {albumDetails.userplaycount}</p>
+                            <p><strong>Genre:</strong> {(Array.isArray(albumDetails.tags) && albumDetails.tags[0]) || 'Unknown'}</p>
+                            <p><strong>Released in:</strong> {releaseYear}</p>
+                            <p><strong>Streaming:</strong><br /> 
+                                {spotifyUrl ? <a href={spotifyUrl} target="_blank" rel="noopener noreferrer">Spotify ↗</a> : 'Loading...'}
+                                <br />
+                                {appleMusicUrl === '' ? (
+                                    'Loading...'
+                                ) : appleMusicUrl ? (
+                                    <a href={appleMusicUrl} target="_blank" rel="noopener noreferrer">Apple Music ↗</a>
+                                ) : (
+                                    'Not available on Apple Music'
+                                )}
+                            </p>
+                        </div>
                     </div>
-                </div>
-                {renderOpenAISummary(openAISummary)}
-            </section>
-        </main>
+                    {renderOpenAISummary(openAISummary)}
+                    <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                        <h3>Want a recommendation for similar albums to check out?</h3> 
+                        <button className="button" onClick={handleRecommendation} disabled={loadingRecommendation}>
+                            {loadingRecommendation ? 'Loading...' : 'Get rec’d'}
+                        </button>
+                    </div>
+                    {recommendation && (
+                        <div style={{ marginTop: '20px' }} dangerouslySetInnerHTML={{ __html: recommendation }} />
+                    )}
+                </section>
+            </main>
         </div>
     );
 }
