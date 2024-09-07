@@ -88,9 +88,7 @@ export default function RecommendationsPage() {
             const response = await fetch(`https://api-openai-albumrecs.rian-db8.workers.dev/?album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}`);
             const data = await response.json();
 
-            const formattedRecommendation = data.data.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-            setRecommendation(formattedRecommendation);
+            setRecommendation(data.data);
         } catch (error) {
             console.error('Error fetching album recommendations:', error);
             setRecommendation('Failed to load recommendations. Please try again later.');
