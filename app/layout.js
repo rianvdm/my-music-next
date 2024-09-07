@@ -25,7 +25,7 @@ export async function generateMetadata() {
       title: "Listen To More",
       description: "Learn some trivia, dig deep into an artist or album, find your next listen.",
       url: "https://listentomore.com/",
-      siteName: "Rian's Music",
+      siteName: "Listen To More",
       images: [
         {
           url: "https://file.elezea.com/listen_to_more_card.png",
