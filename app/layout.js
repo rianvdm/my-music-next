@@ -28,7 +28,7 @@ export async function generateMetadata() {
       siteName: "Listen To More",
       images: [
         {
-          url: "https://file.elezea.com/listen_to_more_card.png",
+          url: "https://file.elezea.com/listen_to_more_card2.png",
           width: 1200,
           height: 630,
         },
@@ -40,7 +40,7 @@ export async function generateMetadata() {
       card: "summary_large_image",
       title: "Listen To More",
       description: "Learn some trivia, dig deep into an artist or album, find your next listen.",
-      images: ["https://file.elezea.com/listen_to_more_card.png"],
+      images: ["https://file.elezea.com/listen_to_more_card2.png"],
     },
   };
 }
