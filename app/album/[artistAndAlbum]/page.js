@@ -97,6 +97,7 @@ export default function AlbumPage({ params }) {
         try {
             const response = await fetch(
                 `https://api-openai-albumrecs.rian-db8.workers.dev/?album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}`
+             //   `https://api-perplexity-albumrecs.rian-db8.workers.dev/?album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}`
             );
             const data = await response.json();
             setRecommendation(marked(data.data));  // Using `marked` to convert recommendation markdown
