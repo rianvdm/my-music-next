@@ -1,5 +1,19 @@
 export default {
     async fetch(request, env) {
+        const allowedOrigins = ['https://listentomore.com']; // Add your allowed domains here
+        const origin = request.headers.get('Origin');
+
+        // Check if the origin is allowed, if not, return a 403 response
+        if (!allowedOrigins.includes(origin)) {
+            return new Response('Unauthorized', {
+                status: 403,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': 'null', // Set to 'null' to prevent access
+                },
+            });
+        }
+
         try {
             const url = new URL(request.url);
             const artistName = url.searchParams.get('artist')?.toLowerCase();
@@ -12,7 +26,9 @@ export default {
                     status: 400,
                     headers: {
                         'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Origin': origin,
+                        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+                        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
                     },
                 });
             }
@@ -28,7 +44,9 @@ export default {
                     status: 200,
                     headers: {
                         'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Origin': origin,
+                        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+                        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
                     },
                 });
             }
@@ -63,7 +81,9 @@ export default {
                     status: perplexityResponse.status,
                     headers: {
                         'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Origin': origin,
+                        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+                        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
                     },
                 });
             }
@@ -83,7 +103,9 @@ export default {
                 status: 200,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Origin': origin,
+                    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
                 },
             });
         } catch (error) {
@@ -93,7 +115,9 @@ export default {
                 status: 500,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Origin': origin,
+                    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
                 },
             });
         }
