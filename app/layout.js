@@ -19,16 +19,16 @@ export async function generateMetadata() {
 
   // Default metadata for other pages
   return {
-    title: "Rian's Music",
-    description: "Real-time listening data and music recommendations.",
+    title: "Listen To More",
+    description: "Learn some trivia, dig deep into an artist or album, find your next listen.",
     openGraph: {
-      title: "Rian's music",
-      description: "Real-time listening data and music recommendations.",
-      url: "https://music.rianvdm.com/",
+      title: "Listen To More",
+      description: "Learn some trivia, dig deep into an artist or album, find your next listen.",
+      url: "https://listentomore.com/",
       siteName: "Rian's Music",
       images: [
         {
-          url: "https://files.elezea.com/alberto-bigoni-4-DeS5a-hAM-unsplash.jpg",
+          url: "https://file.elezea.com/listen_to_more_card.png",
           width: 1200,
           height: 630,
         },
@@ -38,9 +38,9 @@ export async function generateMetadata() {
     },
     twitter: {
       card: "summary_large_image",
-      title: "Rian's music",
-      description: "Real-time listening data and music recommendations.",
-      images: ["https://files.elezea.com/alberto-bigoni-4-DeS5a-hAM-unsplash.jpg"],
+      title: "Listen To More",
+      description: "Learn some trivia, dig deep into an artist or album, find your next listen.",
+      images: ["https://file.elezea.com/listen_to_more_card.png"],
     },
   };
 }
