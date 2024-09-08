@@ -12,6 +12,7 @@ export default function AlbumPage({ params }) {
     const [spotifyUrl, setSpotifyUrl] = useState('');
     const [songLinkUrl, setSongLinkUrl] = useState('');
     const [appleMusicUrl, setAppleMusicUrl] = useState('');
+    const [youtubeUrl, setyoutubeUrl] = useState('');
     const [releaseYear, setReleaseYear] = useState('Loading...');
     const [trackCount, setTrackCount] = useState('Loading...');
     const [openAISummary, setOpenAISummary] = useState('Loading summary...');
@@ -58,6 +59,7 @@ export default function AlbumPage({ params }) {
                         const songLinkData = await songLinkResponse.json();
                         setSongLinkUrl(songLinkData.pageUrl);
                         setAppleMusicUrl(songLinkData.appleUrl);
+                        setyoutubeUrl(songLinkData.youtubeUrl);
                     }
 
                 } catch (error) {
@@ -145,6 +147,14 @@ export default function AlbumPage({ params }) {
                                     <a href={appleMusicUrl} target="_blank" rel="noopener noreferrer">Apple Music ↗</a>
                                 ) : (
                                     'Not available on Apple Music'
+                                )}
+                                <br />
+                                {youtubeUrl === '' ? (
+                                    'Loading...'
+                                ) : youtubeUrl ? (
+                                    <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">YouTube ↗</a>
+                                ) : (
+                                    'Not available on YouTube'
                                 )}
                             </p>
                         </div>

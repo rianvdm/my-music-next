@@ -56,7 +56,8 @@ export default {
             // Extract the pageUrl
             const pageUrl = data.pageUrl;
             const appleUrl = data.linksByPlatform?.appleMusic?.url || null;
-            const resultJson = JSON.stringify({ pageUrl, appleUrl });
+            const youtubeUrl = data.linksByPlatform?.youtube?.url || null;
+            const resultJson = JSON.stringify({ pageUrl, appleUrl, youtubeUrl });
 
             // Store the result in KV for future requests
             await env.SONGLINK_KV.put(cacheKey, resultJson, { expirationTtl: 30 * 24 * 60 * 60 }); // Cache for 30 days

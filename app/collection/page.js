@@ -42,9 +42,7 @@ export default function CollectionPage() {
                                 </a>
                             </h2>
                             <p className="track_name">
-                                <Link href={`/artist/${encodeURIComponent(release.artist)}`}>
                                     {release.artist}
-                                </Link>
                             </p>
                             <p className="track_album">{release.format} added on {new Date(release.addedDate).toLocaleDateString()}.</p>
                             <p className="track_album">{release.genre} album on the {release.label} label, {release.year ? `released in ${release.year}.` : `unknown release date.`}</p>

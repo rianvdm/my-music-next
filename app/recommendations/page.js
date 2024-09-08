@@ -121,7 +121,7 @@ export default function RecommendationsPage() {
 
     return (
         <div>
-            <h1>New Releases to Check Out</h1>
+            <h1 style={{ marginBottom:0 }}>New Releases to Check Out</h1>
                 <div className="track_ul2" dangerouslySetInnerHTML={{ __html: newAlbumsContent }} />
             <h1>Song Recommendations</h1>
             <div style={{ textAlign: 'center' }}>
