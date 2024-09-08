@@ -159,13 +159,9 @@ export default function Home() {
 
         return (
             <>
+                <p>✨ If you're looking for something new to listen to, you should <strong><a href="/recommendations">get rec’d</a></strong>.</p>
                 <p>🧠 {randomFact}</p>
-                <p>
-                    🎧 I recently listened to <Link href={`album/${encodeURIComponent(recentTracksData.last_artist.replace(/ /g, '-').toLowerCase())}_${encodeURIComponent(recentTracksData.last_album.replace(/ /g, '-').toLowerCase())}`} rel="noopener noreferrer"><strong>{recentTracksData.last_album}</strong></Link> by <Link href={`artist/${encodeURIComponent(recentTracksData.last_artist.replace(/ /g, '-').toLowerCase())}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}
-                </p>
-                <p>
-                    ✨ If you're looking for something new to listen to, you should <strong><a href="/recommendations">get rec’d</a></strong>.
-                </p>
+                <p>🎧 As for me, I recently listened to <Link href={`album/${encodeURIComponent(recentTracksData.last_artist.replace(/ /g, '-').toLowerCase())}_${encodeURIComponent(recentTracksData.last_album.replace(/ /g, '-').toLowerCase())}`} rel="noopener noreferrer"><strong>{recentTracksData.last_album}</strong></Link> by <Link href={`artist/${encodeURIComponent(recentTracksData.last_artist.replace(/ /g, '-').toLowerCase())}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}</p>
             </>
         );
     };
