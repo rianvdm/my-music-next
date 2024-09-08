@@ -145,7 +145,6 @@ export default function AlbumPage({ params }) {
                             style={{ maxWidth: '100%', width: '220px', height: 'auto' }} 
                         />
                         <div className="no-wrap-text">
-                            <p><strong>My playcount:</strong> {albumDetails.userplaycount}</p>
                             <p><strong>Genre:</strong> {(Array.isArray(albumDetails.tags) && albumDetails.tags[0]) || 'Unknown'}</p>
                             <p><strong>Released in:</strong> {releaseYear}</p>
                             <p><strong>Streaming:</strong><br /> 
