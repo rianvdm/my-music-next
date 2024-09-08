@@ -30,7 +30,7 @@ export default {
             }
 
             // If not found in KV, generate it using OpenAI
-            const prompt = `Write a summary of the artist ${artistName}. Include verifiable facts about the artist’s history, genres, and styles. Include one or two interesting facts about them (without stating that it's an interesting fact). Also recommend similar artists to check out if one likes their music. Write no more than two paragraphs.`;
+            const prompt = `Write a summary of the artist ${artistName}. Include verifiable facts about the artist’s history, genres, and styles. Include one or two interesting facts about them (without stating that it's an interesting fact). Also recommend similar artists to check out if one likes their music. Write no more than two paragraphs. If no verifiable facts are available for the artist, don't make something up. Simply state "I don't have any information about this artist".`;
             const max_tokens = 300;
 
             console.log("Getting new summary from OpenAI");
