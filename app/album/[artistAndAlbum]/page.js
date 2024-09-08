@@ -146,7 +146,7 @@ export default function AlbumPage({ params }) {
                         />
                         <div className="no-wrap-text">
                             <p><strong>Genre:</strong> {(Array.isArray(albumDetails.tags) && albumDetails.tags[0]) || 'Unknown'}</p>
-                            <p><strong>Released in:</strong> {releaseYear}</p>
+                            {/*<p><strong>Released in:</strong> {releaseYear}</p>*/}
                             <p><strong>Streaming:</strong><br /> 
                                 {streamingUrls.spotify ? <a href={streamingUrls.spotify} target="_blank" rel="noopener noreferrer">Spotify ↗</a> : 'Loading...'}
                                 <br />
