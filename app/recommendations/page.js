@@ -4,6 +4,7 @@ export const runtime = 'edge';
 
 import { useEffect, useState } from 'react';
 import { marked } from 'marked';
+import matter from 'gray-matter';
 import Link from 'next/link';
 
 export default function RecommendationsPage() {
@@ -14,6 +15,7 @@ export default function RecommendationsPage() {
     const [album, setAlbum] = useState('');
     const [artist, setArtist] = useState('');
     const [recommendation, setRecommendation] = useState('');
+    const [newAlbumsContent, setNewAlbumsContent] = useState('');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -27,7 +29,21 @@ export default function RecommendationsPage() {
             }
         };
 
+        const fetchNewAlbumsContent = async () => {
+            try {
+                const response = await fetch('/content/new-albums.md'); // Fetch from public directory
+                const markdown = await response.text(); // Get the text content of the file
+                const htmlContent = marked(markdown); // Convert markdown to HTML
+                setNewAlbumsContent(htmlContent); // Set the HTML content
+            } catch (error) {
+                console.error('Error fetching new albums content:', error);
+                setNewAlbumsContent('<p>Failed to load new albums content.</p>');
+            }
+        };
+
+        fetchNewAlbumsContent(); 
         fetchLovedTracks();
+
     }, []);
 
     useEffect(() => {
@@ -105,7 +121,9 @@ export default function RecommendationsPage() {
 
     return (
         <div>
-            <h1>Album Recommendations</h1>
+            <h1>New Releases to Check Out</h1>
+                <div className="track_ul2" dangerouslySetInnerHTML={{ __html: newAlbumsContent }} />
+{/*            <h1>Album Recommendations</h1>
             <div style={{ textAlign: 'center' }}>
                 <strong>Looking for something fresh? Look up an album you recently enjoyed, and ChatGPT will do the rest.</strong>
             </div>
@@ -142,11 +160,11 @@ export default function RecommendationsPage() {
                     <br/>
                 </div>
             )}
-            <div style={{ marginTop: '40px' }}></div>
+            <div style={{ marginTop: '40px' }}></div>*/}
 
             <h1>Song Recommendations</h1>
             <div style={{ textAlign: 'center' }}>
-                <strong>A selection of tracks I recently liked on Last.fm</strong>
+                <p><strong>A selection of tracks I recently liked on Last.fm</strong></p>
             </div>
 
             <div className="track_ul">

@@ -4,8 +4,6 @@ export const runtime = 'edge';
 
 import { useEffect, useState, useRef, Suspense } from 'react';
 import Link from 'next/link';
-import { marked } from 'marked';
-import matter from 'gray-matter';
 
 function TopArtists({ data }) {
     if (!data) return <p>Loading artists...</p>;
@@ -60,7 +58,6 @@ export default function Home() {
     const [dayGreeting, setDayGreeting] = useState('');
     const [artistSummary, setArtistSummary] = useState('');
     const [randomFact, setRandomFact] = useState('');
-    const [newAlbumsContent, setNewAlbumsContent] = useState(''); // New state for markdown content
 
     const fetchedRandomFact = useRef(false);
 
@@ -111,24 +108,9 @@ export default function Home() {
             }
         };
 
-        // Fetch New Albums from Markdown
-        const fetchNewAlbumsContent = async () => {
-            try {
-                const response = await fetch('/content/new-albums.md'); // Fetch from public directory
-                const markdown = await response.text(); // Get the text content of the file
-                const htmlContent = marked(markdown); // Convert markdown to HTML
-                setNewAlbumsContent(htmlContent); // Set the HTML content
-            } catch (error) {
-                console.error('Error fetching new albums content:', error);
-                setNewAlbumsContent('<p>Failed to load new albums content.</p>');
-            }
-        };
-
-
         setGreeting();
         fetchRecentTracks();
         fetchRandomFact();
-        fetchNewAlbumsContent(); // Fetch new albums markdown content
 
     }, []); 
 
@@ -196,11 +178,7 @@ export default function Home() {
             <main>
                 <section id="lastfm-stats">
                     {renderRecentTracks()}
-
-                    {/* New Albums Section */}
-                    <h2 style={{ marginBottom: 0 }}>🎵 New Releases to Check Out</h2>
-                    <div className="track_ul2" dangerouslySetInnerHTML={{ __html: newAlbumsContent }} />
-
+                    
                     <h2>👩‍🎤 Top Artists</h2>
                     <p style={{ textAlign: 'center' }}>
                         <strong>The top artists I listened to in the past 7 days.</strong>

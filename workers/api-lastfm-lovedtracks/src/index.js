@@ -4,7 +4,7 @@ export default {
         const lastFMUser = env.LASTFM_USERNAME;
 
         // Hardcoded limit
-        const limit = 10;
+        const limit = 5;
 
         // Construct the API URL
         const apiUrl = `http://ws.audioscrobbler.com/2.0/?method=user.getlovedtracks&user=${lastFMUser}&api_key=${lastFMToken}&format=json&limit=${limit}`;
