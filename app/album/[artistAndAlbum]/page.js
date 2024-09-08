@@ -9,10 +9,12 @@ import Link from 'next/link';
 export default function AlbumPage({ params }) {
     const { artistAndAlbum } = params;
     const [albumDetails, setAlbumDetails] = useState(null);
-    const [spotifyUrl, setSpotifyUrl] = useState('');
-    const [songLinkUrl, setSongLinkUrl] = useState('');
-    const [appleMusicUrl, setAppleMusicUrl] = useState('');
-    const [youtubeUrl, setyoutubeUrl] = useState('');
+    const [streamingUrls, setStreamingUrls] = useState({
+        spotify: '',
+        appleMusic: '',
+        youtube: '',
+        songLink: '',
+    });
     const [releaseYear, setReleaseYear] = useState('Loading...');
     const [trackCount, setTrackCount] = useState('Loading...');
     const [openAISummary, setOpenAISummary] = useState('Loading summary...');
@@ -37,7 +39,7 @@ export default function AlbumPage({ params }) {
                         `https://api-lastfm-albumdetail.rian-db8.workers.dev?album=${album}&artist=${artist}`
                     );
                     if (!albumResponse.ok) throw new Error('Album not found');
-                    let albumData = await albumResponse.json();
+                    const albumData = await albumResponse.json();
                     if (!albumData || albumData.error) throw new Error('Album not found');
                     setAlbumDetails(albumData);
 
@@ -48,7 +50,11 @@ export default function AlbumPage({ params }) {
                     const spotifyData = await spotifyResponse.json();
                     if (spotifyData.data && spotifyData.data.length > 0) {
                         const spotifyAlbum = spotifyData.data[0];
-                        setSpotifyUrl(spotifyAlbum.url);
+                        setStreamingUrls((prevUrls) => ({
+                            ...prevUrls,
+                            spotify: spotifyAlbum.url,
+                        }));
+
                         const releaseDate = spotifyAlbum.releaseDate;
                         if (releaseDate) setReleaseYear(releaseDate.split('-')[0]);
                         setTrackCount(spotifyAlbum.tracks || 'Unknown');
@@ -57,11 +63,13 @@ export default function AlbumPage({ params }) {
                             `https://api-songlink.rian-db8.workers.dev/?url=${encodeURIComponent(spotifyAlbum.url)}`
                         );
                         const songLinkData = await songLinkResponse.json();
-                        setSongLinkUrl(songLinkData.pageUrl);
-                        setAppleMusicUrl(songLinkData.appleUrl);
-                        setyoutubeUrl(songLinkData.youtubeUrl);
+                        setStreamingUrls((prevUrls) => ({
+                            ...prevUrls,
+                            songLink: songLinkData.pageUrl,
+                            appleMusic: songLinkData.appleUrl,
+                            youtube: songLinkData.youtubeUrl,
+                        }));
                     }
-
                 } catch (error) {
                     console.error('Error fetching album data:', error);
                     setError('Album not found.');
@@ -99,10 +107,9 @@ export default function AlbumPage({ params }) {
         try {
             const response = await fetch(
                 `https://api-openai-albumrecs.rian-db8.workers.dev/?album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}`
-             //   `https://api-perplexity-albumrecs.rian-db8.workers.dev/?album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}`
             );
             const data = await response.json();
-            setRecommendation(marked(data.data));  // Using `marked` to convert recommendation markdown
+            setRecommendation(marked(data.data));
         } catch (error) {
             console.error('Error fetching recommendations:', error);
             setRecommendation('Failed to load recommendations.');
@@ -139,20 +146,20 @@ export default function AlbumPage({ params }) {
                             <p><strong>Genre:</strong> {(Array.isArray(albumDetails.tags) && albumDetails.tags[0]) || 'Unknown'}</p>
                             <p><strong>Released in:</strong> {releaseYear}</p>
                             <p><strong>Streaming:</strong><br /> 
-                                {spotifyUrl ? <a href={spotifyUrl} target="_blank" rel="noopener noreferrer">Spotify ↗</a> : 'Loading...'}
+                                {streamingUrls.spotify ? <a href={streamingUrls.spotify} target="_blank" rel="noopener noreferrer">Spotify ↗</a> : 'Loading...'}
                                 <br />
-                                {appleMusicUrl === '' ? (
+                                {streamingUrls.appleMusic === '' ? (
                                     'Loading...'
-                                ) : appleMusicUrl ? (
-                                    <a href={appleMusicUrl} target="_blank" rel="noopener noreferrer">Apple Music ↗</a>
+                                ) : streamingUrls.appleMusic ? (
+                                    <a href={streamingUrls.appleMusic} target="_blank" rel="noopener noreferrer">Apple Music ↗</a>
                                 ) : (
                                     'Not available on Apple Music'
                                 )}
                                 <br />
-                                {youtubeUrl === '' ? (
+                                {streamingUrls.youtube === '' ? (
                                     'Loading...'
-                                ) : youtubeUrl ? (
-                                    <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">YouTube ↗</a>
+                                ) : streamingUrls.youtube ? (
+                                    <a href={streamingUrls.youtube} target="_blank" rel="noopener noreferrer">YouTube ↗</a>
                                 ) : (
                                     'Not available on YouTube'
                                 )}

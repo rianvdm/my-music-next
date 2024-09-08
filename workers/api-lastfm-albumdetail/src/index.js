@@ -33,11 +33,11 @@ export default {
 
         const albumInfo = data.album;
 
-        // Check if tags exist and are an array, then filter out the "seen live" tag and any tag that is only numbers,
+        // Check if tags exist and are an array, then filter out the "seen live" tag and any tag that contains a number,
         // and capitalize the first letter of each tag
         const filteredTags = Array.isArray(albumInfo.tags?.tag)
             ? albumInfo.tags.tag
-                  .filter(tag => tag.name.toLowerCase() !== 'seen live' && !/^\d+$/.test(tag.name))
+                  .filter(tag => tag.name.toLowerCase() !== 'seen live' && !/\d/.test(tag.name)) // filter out any tag with a number
                   .slice(0, 3)
                   .map(tag => tag.name.charAt(0).toUpperCase() + tag.name.slice(1))
             : [];
