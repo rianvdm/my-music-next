@@ -52,7 +52,6 @@ export default function ArtistPage({ params }) {
 
                     setTopAlbums(albumsData.topAlbums.slice(0, 3));
 
-                    // Remove metadata-setting code
                 } catch (error) {
                     console.error('Error fetching artist data:', error);
                     setError(error.message);
@@ -92,13 +91,13 @@ export default function ArtistPage({ params }) {
     }
 
     const renderOpenAISummary = (summary) => {
-        // Use the `marked` library to convert the Markdown summary into HTML
-        return (
-            <div dangerouslySetInnerHTML={{ __html: marked(summary) }} />
-        );
+        return <div dangerouslySetInnerHTML={{ __html: marked(summary) }} />;
     };
 
     const formattedPlaycount = new Intl.NumberFormat().format(artistDetails.userplaycount);
+
+    // Use the fallback image if artistDetails.image is an empty string
+    const artistImage = artistDetails.image || 'https://file.elezea.com/noun-no-image.png';
 
     return (
         <div>
@@ -109,7 +108,7 @@ export default function ArtistPage({ params }) {
                 <section className="track_ul2">
                     <div className="image-text-wrapper">
                         <img 
-                            src={artistDetails.image} 
+                            src={artistImage} 
                             alt={artistDetails.name} 
                             style={{ maxWidth: '100%', width: '220px', height: 'auto' }} 
                         />

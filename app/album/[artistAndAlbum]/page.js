@@ -128,6 +128,9 @@ export default function AlbumPage({ params }) {
         return <p>Loading...</p>;
     }
 
+    // Use the fallback image if albumDetails.image is an empty string
+    const albumImage = albumDetails.image || 'https://file.elezea.com/noun-no-image.png';
+
     return (
         <div>
             <header>
@@ -137,7 +140,7 @@ export default function AlbumPage({ params }) {
                 <section className="track_ul2">
                     <div className="image-text-wrapper">
                         <img 
-                            src={albumDetails.image} 
+                            src={albumImage} 
                             alt={albumDetails.name} 
                             style={{ maxWidth: '100%', width: '220px', height: 'auto' }} 
                         />
