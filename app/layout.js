@@ -12,7 +12,7 @@ export async function generateMetadata() {
   const pathname = headersList.get('x-invoke-path') || '';
 
   // Check if the current path is for an album or artist
-  if (pathname.startsWith('/album/') || pathname.startsWith('/artist/')) {
+  if (pathname.startsWith('/album/') || pathname.startsWith('/artist/') || pathname.startsWith('/recommendations')) {
     // Return an empty object to use the specific metadata defined in those pages
     return {};
   }
