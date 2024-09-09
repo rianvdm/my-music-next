@@ -65,7 +65,8 @@ export default function RootLayout({ children }) {
           <p>
             <a href="https://youtu.be/cNtprycno14?t=9036" target="_blank">
               There's a fire that's been burning right outside my door.
-            </a>
+            </a><br />
+            Something not right? <a href="https://github.com/rianvdm/my-music-next/issues" target="_blank">Submit a bug report</a>.
           </p>
         </div>
       </body>
