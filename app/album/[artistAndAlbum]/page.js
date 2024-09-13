@@ -15,8 +15,8 @@ export default function AlbumPage({ params }) {
         youtube: '',
         songLink: '',
     });
-    const [releaseYear, setReleaseYear] = useState('Loading...');
-    const [trackCount, setTrackCount] = useState('Loading...');
+    // const [releaseYear, setReleaseYear] = useState('Loading...');
+    // const [trackCount, setTrackCount] = useState('Loading...');
     const [openAISummary, setOpenAISummary] = useState('Loading summary...');
     const [error, setError] = useState(null);
     const fetchedOpenAISummary = useRef(false);
@@ -145,8 +145,8 @@ export default function AlbumPage({ params }) {
                             style={{ maxWidth: '100%', width: '220px', height: 'auto' }} 
                         />
                         <div className="no-wrap-text">
-                            {/*<p><strong>Genre:</strong> {(Array.isArray(albumDetails.tags) && albumDetails.tags[0]) || 'Unknown'}</p>*/}
-                            <p><strong>Released:</strong> {releaseYear}</p>
+                            {/*<p><strong>Genre:</strong> {(Array.isArray(albumDetails.tags) && albumDetails.tags[0]) || 'Unknown'}</p>
+                            <p><strong>Released:</strong> {releaseYear}</p>*/}
                             <p><strong>Streaming:</strong><br /> 
                                 {streamingUrls.spotify ? <a href={streamingUrls.spotify} target="_blank" rel="noopener noreferrer">Spotify ↗</a> : 'Loading...'}
                                 <br />
