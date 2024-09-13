@@ -15,8 +15,8 @@ export default function AlbumPage({ params }) {
         youtube: '',
         songLink: '',
     });
-    // const [releaseYear, setReleaseYear] = useState('Loading...');
-    // const [trackCount, setTrackCount] = useState('Loading...');
+    const [releaseYear, setReleaseYear] = useState('Loading...');
+    const [trackCount, setTrackCount] = useState('Loading...');
     const [openAISummary, setOpenAISummary] = useState('Loading summary...');
     const [error, setError] = useState(null);
     const fetchedOpenAISummary = useRef(false);
