@@ -17,19 +17,15 @@ export default function AlbumPage({ params }) {
     });
     const [releaseYear, setReleaseYear] = useState('Loading...');
     const [trackCount, setTrackCount] = useState('Loading...');
+    const [genres, setGenres] = useState('Loading...'); // New state for genres
     const [openAISummary, setOpenAISummary] = useState('Loading summary...');
     const [error, setError] = useState(null);
     const fetchedOpenAISummary = useRef(false);
     const [recommendation, setRecommendation] = useState('');
     const [loadingRecommendation, setLoadingRecommendation] = useState(false);
 
-    const decodePrettyUrl = (prettyUrl) => {
-        return decodeURIComponent(prettyUrl.replace(/-/g, ' '));
-    };
-
-    const encodePrettyUrl = (str) => {
-        return encodeURIComponent(str.toLowerCase().replace(/\s+/g, '-'));
-    };
+    const decodePrettyUrl = (prettyUrl) => decodeURIComponent(prettyUrl.replace(/-/g, ' '));
+    const encodePrettyUrl = (str) => encodeURIComponent(str.toLowerCase().replace(/\s+/g, '-'));
 
     const [prettyArtist, prettyAlbum] = artistAndAlbum.split('_');
     const artist = decodePrettyUrl(prettyArtist);
@@ -72,6 +68,20 @@ export default function AlbumPage({ params }) {
                             appleMusic: songLinkData.appleUrl,
                             youtube: songLinkData.youtubeUrl,
                         }));
+
+                        // Fetch artist genres using the artist ID from the search result
+                        if (spotifyAlbum.artistIds && spotifyAlbum.artistIds.length > 0) {
+                            const artistId = spotifyAlbum.artistIds[0]; // Using the first artist ID
+
+                            const artistDetailsResponse = await fetch(
+                                `https://api-spotify-artists.rian-db8.workers.dev/?id=${artistId}`
+                            );
+                            const artistDetailsData = await artistDetailsResponse.json();
+                            const fetchedGenres = artistDetailsData.data.genres || [];
+
+                            // Update genres state with up to 3 genres
+                            setGenres(fetchedGenres.slice(0, 3).join(', ') || 'Unknown');
+                        }
                     } else {
                         throw new Error('Album not found');
                     }
@@ -159,6 +169,9 @@ export default function AlbumPage({ params }) {
                         <div className="no-wrap-text">
                             <p>
                                 <strong>Released:</strong> {releaseYear}
+                            </p>
+                            <p>
+                                <strong>Genres:</strong> {genres}
                             </p>
                             <p>
                                 <strong>Streaming:</strong>
