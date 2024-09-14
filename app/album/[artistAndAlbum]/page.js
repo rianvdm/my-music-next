@@ -5,8 +5,10 @@ export const runtime = 'edge';
 import { useEffect, useState, useRef } from 'react';
 import { marked } from 'marked';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation'; // Adjust the import path as needed
 
 export default function AlbumPage({ params }) {
+    const router = useRouter();
     const { artistAndAlbum } = params;
     const [albumDetails, setAlbumDetails] = useState(null);
     const [streamingUrls, setStreamingUrls] = useState({
@@ -20,6 +22,7 @@ export default function AlbumPage({ params }) {
     const [openAISummary, setOpenAISummary] = useState('Loading summary...');
     const [error, setError] = useState(null);
     const fetchedOpenAISummary = useRef(false);
+    const urlUpdated = useRef(false); // To prevent infinite loops
     const [recommendation, setRecommendation] = useState('');
     const [loadingRecommendation, setLoadingRecommendation] = useState(false);
 
@@ -28,7 +31,7 @@ export default function AlbumPage({ params }) {
     };
 
     const encodePrettyUrl = (str) => {
-      return encodeURIComponent(str.toLowerCase().replace(/\s+/g, '-'));
+        return encodeURIComponent(str.toLowerCase().replace(/\s+/g, '-'));
     };
 
     const [prettyArtist, prettyAlbum] = artistAndAlbum.split('_');
@@ -36,13 +39,15 @@ export default function AlbumPage({ params }) {
     const album = decodePrettyUrl(prettyAlbum);
 
     useEffect(() => {
-        if (artist && album) {
+        if (artist && album && !urlUpdated.current) {
             async function fetchAlbumData() {
                 try {
                     // Fetch album details from Spotify
                     const spotifyQuery = `album:"${album}" artist:"${artist}"`;
                     const spotifyResponse = await fetch(
-                        `https://api-spotify-search.rian-db8.workers.dev/?q=${encodeURIComponent(spotifyQuery)}&type=album`
+                        `https://api-spotify-search.rian-db8.workers.dev/?q=${encodeURIComponent(
+                            spotifyQuery
+                        )}&type=album`
                     );
                     const spotifyData = await spotifyResponse.json();
 
@@ -51,6 +56,16 @@ export default function AlbumPage({ params }) {
 
                         // Set albumDetails using Spotify data
                         setAlbumDetails(spotifyAlbum);
+
+                        // Update the URL to reflect the correct artist and album names
+                        const formattedArtist = encodePrettyUrl(spotifyAlbum.artist);
+                        const formattedAlbum = encodePrettyUrl(spotifyAlbum.name);
+                        const newUrl = `/album/${formattedArtist}_${formattedAlbum}`;
+
+                        if (router.asPath !== newUrl) {
+                            router.replace(newUrl);
+                            urlUpdated.current = true;
+                        }
 
                         // Set streaming URLs
                         setStreamingUrls((prevUrls) => ({
@@ -65,7 +80,9 @@ export default function AlbumPage({ params }) {
 
                         // Fetch additional streaming URLs via SongLink
                         const songLinkResponse = await fetch(
-                            `https://api-songlink.rian-db8.workers.dev/?url=${encodeURIComponent(spotifyAlbum.url)}`
+                            `https://api-songlink.rian-db8.workers.dev/?url=${encodeURIComponent(
+                                spotifyAlbum.url
+                            )}`
                         );
                         const songLinkData = await songLinkResponse.json();
                         setStreamingUrls((prevUrls) => ({
@@ -84,7 +101,7 @@ export default function AlbumPage({ params }) {
             }
             fetchAlbumData();
         }
-    }, [artist, album]);
+    }, [artist, album, router]);
 
     useEffect(() => {
         if (artist && album && !fetchedOpenAISummary.current) {
