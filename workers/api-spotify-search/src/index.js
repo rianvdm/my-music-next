@@ -108,13 +108,13 @@ export default {
                     releaseDate: item.release_date,
                     tracks: item.total_tracks,
                     url: item.external_urls.spotify,
-                    image: item.images[0]?.url // Use the first image from the album
+                    image: item.images[0]?.url
                 }));
             } else if (dataType === 'artist') {
                 resultData = jsonResponse.artists.items.map(item => ({
                     name: item.name,
                     url: item.external_urls.spotify,
-                    image: item.images[0]?.url // Use the first image from the artist
+                    image: item.images[0]?.url
                 }));
             }
 

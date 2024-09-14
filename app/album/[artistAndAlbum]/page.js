@@ -35,30 +35,31 @@ export default function AlbumPage({ params }) {
         if (artist && album) {
             async function fetchAlbumData() {
                 try {
-                    const albumResponse = await fetch(
-                        `https://api-lastfm-albumdetail.rian-db8.workers.dev?album=${album}&artist=${artist}`
-                    );
-                    if (!albumResponse.ok) throw new Error('Album not found');
-                    const albumData = await albumResponse.json();
-                    if (!albumData || albumData.error) throw new Error('Album not found');
-                    setAlbumDetails(albumData);
-
-                    const searchQuery = `${album} ${artist}`;
+                    // Fetch album details from Spotify
+                    const spotifyQuery = `album:"${album}" artist:"${artist}"`;
                     const spotifyResponse = await fetch(
-                        `https://api-spotify-search.rian-db8.workers.dev/?q=${searchQuery}&type=album`
+                        `https://api-spotify-search.rian-db8.workers.dev/?q=${encodeURIComponent(spotifyQuery)}&type=album`
                     );
                     const spotifyData = await spotifyResponse.json();
+
                     if (spotifyData.data && spotifyData.data.length > 0) {
                         const spotifyAlbum = spotifyData.data[0];
+
+                        // Set albumDetails using Spotify data
+                        setAlbumDetails(spotifyAlbum);
+
+                        // Set streaming URLs
                         setStreamingUrls((prevUrls) => ({
                             ...prevUrls,
                             spotify: spotifyAlbum.url,
                         }));
 
+                        // Set release year and track count
                         const releaseDate = spotifyAlbum.releaseDate;
                         if (releaseDate) setReleaseYear(releaseDate.split('-')[0]);
                         setTrackCount(spotifyAlbum.tracks || 'Unknown');
 
+                        // Fetch additional streaming URLs via SongLink
                         const songLinkResponse = await fetch(
                             `https://api-songlink.rian-db8.workers.dev/?url=${encodeURIComponent(spotifyAlbum.url)}`
                         );
@@ -69,6 +70,8 @@ export default function AlbumPage({ params }) {
                             appleMusic: songLinkData.appleUrl,
                             youtube: songLinkData.youtubeUrl,
                         }));
+                    } else {
+                        throw new Error('Album not found');
                     }
                 } catch (error) {
                     console.error('Error fetching album data:', error);
@@ -85,7 +88,7 @@ export default function AlbumPage({ params }) {
             async function fetchOpenAISummary() {
                 try {
                     const summaryResponse = await fetch(
-                        `https://api-perplexity-albumdetail.rian-db8.workers.dev?album=${album}&artist=${artist}`
+                        `https://api-perplexity-albumdetail.rian-db8.workers.dev?album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}`
                     );
                     const summaryData = await summaryResponse.json();
                     setOpenAISummary(summaryData.data);
@@ -120,7 +123,9 @@ export default function AlbumPage({ params }) {
 
     if (error) {
         return (
-            <p>{error} <Link href="/album">search again.</Link></p>
+            <p>
+                {error} <Link href="/album">search again.</Link>
+            </p>
         );
     }
 
@@ -134,26 +139,48 @@ export default function AlbumPage({ params }) {
     return (
         <div>
             <header>
-                <h1>{albumDetails.name} by <Link href={`/artist/${prettyArtist}`}>{albumDetails.artist}</Link></h1>
+                <h1>
+                    {albumDetails.name} by{' '}
+                    <Link href={`/artist/${prettyArtist}`}>{albumDetails.artist}</Link>
+                </h1>
             </header>
             <main>
                 <section className="track_ul2">
                     <div className="image-text-wrapper">
-                        <img 
-                            src={albumImage} 
-                            alt={albumDetails.name} 
-                            style={{ maxWidth: '100%', width: '220px', height: 'auto' }} 
+                        <img
+                            src={albumImage}
+                            alt={albumDetails.name}
+                            style={{ maxWidth: '100%', width: '220px', height: 'auto' }}
                         />
                         <div className="no-wrap-text">
-                            {/*<p><strong>Genre:</strong> {(Array.isArray(albumDetails.tags) && albumDetails.tags[0]) || 'Unknown'}</p>
-                            <p><strong>Released:</strong> {releaseYear}</p>*/}
-                            <p><strong>Streaming:</strong><br /> 
-                                {streamingUrls.spotify ? <a href={streamingUrls.spotify} target="_blank" rel="noopener noreferrer">Spotify ↗</a> : 'Loading...'}
+                            <p>
+                                <strong>Released:</strong> {releaseYear}
+                            </p>
+                            <p>
+                                <strong>Streaming:</strong>
+                                <br />
+                                {streamingUrls.spotify ? (
+                                    <a
+                                        href={streamingUrls.spotify}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        Spotify ↗
+                                    </a>
+                                ) : (
+                                    'Loading...'
+                                )}
                                 <br />
                                 {streamingUrls.appleMusic === '' ? (
                                     'Loading...'
                                 ) : streamingUrls.appleMusic ? (
-                                    <a href={streamingUrls.appleMusic} target="_blank" rel="noopener noreferrer">Apple Music ↗</a>
+                                    <a
+                                        href={streamingUrls.appleMusic}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        Apple Music ↗
+                                    </a>
                                 ) : (
                                     'Not available on Apple Music'
                                 )}
@@ -161,22 +188,49 @@ export default function AlbumPage({ params }) {
                                 {streamingUrls.youtube === '' ? (
                                     'Loading...'
                                 ) : streamingUrls.youtube ? (
-                                    <a href={streamingUrls.youtube} target="_blank" rel="noopener noreferrer">YouTube ↗</a>
+                                    <a
+                                        href={streamingUrls.youtube}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        YouTube ↗
+                                    </a>
                                 ) : (
                                     'Not available on YouTube'
+                                )}
+                                <br />
+                                {streamingUrls.songLink === '' ? (
+                                    'Loading...'
+                                ) : streamingUrls.songLink ? (
+                                    <a
+                                        href={streamingUrls.songLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        Other ↗
+                                    </a>
+                                ) : (
+                                    'Not available on Songlink'
                                 )}
                             </p>
                         </div>
                     </div>
                     {renderOpenAISummary(openAISummary)}
                     <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                        <h3>Want a recommendation for similar albums to check out?</h3> 
-                        <button className="button" onClick={handleRecommendation} disabled={loadingRecommendation}>
+                        <h3>Want a recommendation for similar albums to check out?</h3>
+                        <button
+                            className="button"
+                            onClick={handleRecommendation}
+                            disabled={loadingRecommendation}
+                        >
                             {loadingRecommendation ? 'Loading...' : 'Get rec’d'}
                         </button>
                     </div>
                     {recommendation && (
-                        <div style={{ marginTop: '20px' }} dangerouslySetInnerHTML={{ __html: recommendation }} />
+                        <div
+                            style={{ marginTop: '20px' }}
+                            dangerouslySetInnerHTML={{ __html: recommendation }}
+                        />
                     )}
                 </section>
             </main>
