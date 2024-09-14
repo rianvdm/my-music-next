@@ -9,6 +9,8 @@ export default function AlbumSearchPage() {
     const [album, setAlbum] = useState('');
     const [artist, setArtist] = useState('');
     const [randomFact, setRandomFact] = useState('Did you know ...');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
     const router = useRouter();
     let fetchController = null; // Controller for aborting previous fetch
 
@@ -19,7 +21,7 @@ export default function AlbumSearchPage() {
         if (fetchController) {
             fetchController.abort();
         }
-        
+
         // Create a new AbortController for this request
         fetchController = new AbortController();
 
@@ -50,11 +52,39 @@ export default function AlbumSearchPage() {
         };
     }, []); // Empty dependency array ensures this effect runs only once
 
-    const handleSearch = () => {
-        if (album.trim() !== '' && artist.trim() !== '') {
-            const formattedArtist = encodeURIComponent(artist.trim().replace(/ /g, '-').toLowerCase());
-            const formattedAlbum = encodeURIComponent(album.trim().replace(/ /g, '-').toLowerCase());
-            router.push(`/album/${formattedArtist}_${formattedAlbum}`);
+    const handleSearch = async () => {
+        if (album.trim() === '' || artist.trim() === '') {
+            setError('Please enter both album and artist names.');
+            return;
+        }
+
+        setLoading(true);
+        setError('');
+
+        try {
+            // Perform Spotify search
+            const query = `album: "${album}" artist:"${artist}"`;
+            const spotifyResponse = await fetch(
+                `https://api-spotify-search.rian-db8.workers.dev/?q=${encodeURIComponent(query)}&type=album`
+            );
+            const spotifyData = await spotifyResponse.json();
+
+            if (spotifyData.data && spotifyData.data.length > 0) {
+                // Use the first result to get the correct album and artist names
+                const spotifyAlbum = spotifyData.data[0];
+                const formattedArtist = encodeURIComponent(spotifyAlbum.artist.replace(/ /g, '-').toLowerCase());
+                const formattedAlbum = encodeURIComponent(spotifyAlbum.name.replace(/ /g, '-').toLowerCase());
+
+                // Push the user to the correct URL
+                router.push(`/album/${formattedArtist}_${formattedAlbum}`);
+            } else {
+                setError('No album found for the given artist and album.');
+            }
+        } catch (error) {
+            console.error('Error fetching from Spotify:', error);
+            setError('An error occurred while fetching album data.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -71,23 +101,26 @@ export default function AlbumSearchPage() {
             </header>
             <main>
                 <div id="search-form">
-                    <input 
-                        id="album-name" 
-                        type="text" 
-                        value={album} 
-                        onChange={(e) => setAlbum(e.target.value)} 
+                    <input
+                        id="album-name"
+                        type="text"
+                        value={album}
+                        onChange={(e) => setAlbum(e.target.value)}
                         onKeyDown={handleKeyDown} // Listen for Enter key press
-                        placeholder="Enter album name..." 
+                        placeholder="Enter album name..."
                     />
-                    <input 
-                        id="artist-name" 
-                        type="text" 
-                        value={artist} 
-                        onChange={(e) => setArtist(e.target.value)} 
+                    <input
+                        id="artist-name"
+                        type="text"
+                        value={artist}
+                        onChange={(e) => setArtist(e.target.value)}
                         onKeyDown={handleKeyDown} // Listen for Enter key press
-                        placeholder="Enter artist name..." 
+                        placeholder="Enter artist name..."
                     />
-                    <button className="button" onClick={handleSearch}>Search</button>
+                    <button className="button" onClick={handleSearch} disabled={loading} style={{ width: '100px' }}>
+                        {loading ? 'Searching...' : 'Search'}
+                    </button>
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
                 </div>
                 <p>{randomFact}</p>
             </main>
