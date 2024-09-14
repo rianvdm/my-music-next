@@ -27,6 +27,10 @@ export default function AlbumPage({ params }) {
         return decodeURIComponent(prettyUrl.replace(/-/g, ' '));
     };
 
+    const encodePrettyUrl = (str) => {
+      return encodeURIComponent(str.toLowerCase().replace(/\s+/g, '-'));
+    };
+
     const [prettyArtist, prettyAlbum] = artistAndAlbum.split('_');
     const artist = decodePrettyUrl(prettyArtist);
     const album = decodePrettyUrl(prettyAlbum);
@@ -133,6 +137,8 @@ export default function AlbumPage({ params }) {
         return <p>Loading...</p>;
     }
 
+    const prettySpotifyArtist = encodePrettyUrl(albumDetails.artist);
+
     // Use the fallback image if albumDetails.image is an empty string
     const albumImage = albumDetails.image || 'https://file.elezea.com/noun-no-image.png';
 
@@ -141,7 +147,7 @@ export default function AlbumPage({ params }) {
             <header>
                 <h1>
                     {albumDetails.name} by{' '}
-                    <Link href={`/artist/${prettyArtist}`}>{albumDetails.artist}</Link>
+                    <Link href={`/artist/${prettySpotifyArtist}`}>{albumDetails.artist}</Link>
                 </h1>
             </header>
             <main>
