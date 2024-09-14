@@ -32,8 +32,12 @@ export default {
 
         const artistInfo = data.artist;
 
-        // Filter out the "seen live" tag and select the top 3 tags
-        const filteredTags = artistInfo.tags?.tag.filter(tag => tag.name.toLowerCase() !== 'seen live').slice(0, 3).map(tag => tag.name) || [];
+        const filteredTags = Array.isArray(artistInfo.tags?.tag)
+            ? artistInfo.tags.tag
+                  .filter(tag => tag.name.toLowerCase() !== 'seen live' && !/\d/.test(tag.name)) // filter out any tag with a number
+                  .slice(0, 3)
+                  .map(tag => tag.name.charAt(0).toUpperCase() + tag.name.slice(1))
+            : [];
 
         // Extract relevant information
         const artistDetails = {
