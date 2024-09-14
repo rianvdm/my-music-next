@@ -20,9 +20,10 @@ export default {
             // Generate the recommendation prompt
             const prompt = `I enjoyed the album "${albumTitle}" by ${artistName}. What are 2-3 other albums I should listen to if I enjoy that genre and style? Avoid albums that are very popular and mainstream, instead recommending what could be considered "hidden gems". If you don't have verifiable information about the album being asked about, inform the user that the album name is not valid.
 
-                Use Markdown for formatting. Link each album name to the URL format: https://listentomore.com/album/<artist_name>_<album_name>. 
+                Use Markdown for formatting. Add a link to each album that says "More info" and links to https://listentomore.com/album/<artist_name>_<album_name>. 
                 - Use an underscore (_) to separate artist name and album name.
                 - Replace spaces in both artist names and album names with hyphens (-).
+                - Only use lowercase letters, no uppercase letters.
                 - Make sure the artist name and album name are formatted as "<artist-name>_<album-name>" where spaces are replaced with hyphens and the artist and album names are separated by an underscore (_).`;
 
             console.log("Getting new recommendations from Perplexity API");
