@@ -18,7 +18,12 @@ export default {
             }
 
             // Generate the recommendation prompt
-            const prompt = `I enjoyed the album "${albumTitle}" by "${artistName}". What are 2-3 other albums I should listen to if I enjoy that genre and style? Avoid albums that are very popular and mainstream, instead recommending what could be considered "hidden gems". If you don't have verifiable information about the album being asked about, inform the user that the album name is not valid. Use Markdown for formatting. Link each album name to the URL "https://listentomore.com/album/<artist name>_<album name>". Note the underscore (_) between artist name and album name. In each link replace spaces with hyphens (-).`;
+            const prompt = `I enjoyed the album "${albumTitle}" by ${artistName}. What are 2-3 other albums I should listen to if I enjoy that genre and style? Avoid albums that are very popular and mainstream, instead recommending what could be considered "hidden gems". If you don't have verifiable information about the album being asked about, inform the user that the album name is not valid.
+
+                Use Markdown for formatting. Link each album name to the URL format: https://listentomore.com/album/<artist_name>_<album_name>. 
+                - Use an underscore (_) to separate artist name and album name.
+                - Replace spaces in both artist names and album names with hyphens (-).
+                - Make sure the artist name and album name are formatted as "<artist-name>_<album-name>" where spaces are replaced with hyphens and the artist and album names are separated by an underscore (_).`;
 
             console.log("Getting new recommendations from Perplexity API");
             const perplexityResponse = await fetch("https://api.perplexity.ai/chat/completions", {
@@ -28,7 +33,7 @@ export default {
                     Authorization: `Bearer ${access_token}`,
                 },
                 body: JSON.stringify({
-                    model: "llama-3.1-sonar-small-128k-online",
+                    model: "llama-3.1-sonar-large-128k-online",
                     messages: [
                         { role: "system", content: "You use succinct, plain language focused on accuracy and professionalism." },
                         { role: "user", content: prompt }
