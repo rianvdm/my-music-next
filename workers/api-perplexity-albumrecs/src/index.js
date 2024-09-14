@@ -18,9 +18,11 @@ export default {
             }
 
             // Generate the recommendation prompt
-            const prompt = `I enjoyed the album "${albumTitle}" by ${artistName}. What are 2-3 other albums I should listen to if I enjoy that genre and style? Avoid albums that are very popular and mainstream, instead recommending what could be considered "hidden gems". If you don't have verifiable information about the album being asked about, inform the user that the album name is not valid.
+            const prompt = `I enjoyed the album "${albumTitle}" by ${artistName}. What are 2-3 other albums I should listen to that are similar in genre and style? Avoid albums that are very popular and mainstream. Instead, recommend what could be considered "hidden gems". If you don't have verifiable information about the album being asked about, inform the user that the album name is not valid, and don't provide any recommendations.
 
-                Use Markdown for formatting. Add a link to each album that says "More info" and links to https://listentomore.com/album/<artist_name>_<album_name>. 
+                Use Markdown for formatting.
+
+                Add a link to each album that says "More info" and links to https://listentomore.com/album/<artist_name>_<album_name>. 
                 - Use an underscore (_) to separate artist name and album name.
                 - Replace spaces in both artist names and album names with hyphens (-).
                 - Only use lowercase letters, no uppercase letters.
