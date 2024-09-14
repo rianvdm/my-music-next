@@ -23,7 +23,7 @@ export async function generateMetadata({ params }) {
                 description: `Information about the album ${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
                 openGraph: {
                     title: `${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
-                    description: `Information and streaming links for ${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
+                    description: `Streaming links and more info about ${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
                     images: [spotifyAlbum.image],
                     url: pageUrl,
                     type: 'music.album',
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }) {
                 twitter: {
                     card: 'summary',
                     title: `${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
-                    description: `Information and streaming links for ${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
+                    description: `Streaming links and more info about ${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
                     images: [spotifyAlbum.image],
                 },
             };
