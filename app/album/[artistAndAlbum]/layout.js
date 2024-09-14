@@ -19,7 +19,7 @@ export async function generateMetadata({ params }) {
             const pageUrl = `https://listentomore.com/album/${params.artistAndAlbum}`;
 
             return {
-                title: `${spotifyAlbum.name} by ${spotifyAlbum.artist} - Album Details`,
+                title: `${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
                 description: `Details about the album "${spotifyAlbum.name}" by ${spotifyAlbum.artist}`,
                 openGraph: {
                     title: `${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
