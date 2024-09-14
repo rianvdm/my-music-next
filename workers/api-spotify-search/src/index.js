@@ -66,9 +66,9 @@ export default {
 
             // URL templates for different data types
             const urlTemplates = {
-                track: (query) => `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=5`,
-                album: (query) => `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=album&limit=5`,
-                artist: (query) => `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=artist&limit=5`
+                track: (query) => `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=1`,
+                album: (query) => `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=album&limit=1`,
+                artist: (query) => `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=artist&limit=1`
             };
 
             apiUrl = urlTemplates[dataType](query);

@@ -5,10 +5,8 @@ export const runtime = 'edge';
 import { useEffect, useState, useRef } from 'react';
 import { marked } from 'marked';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation'; // Adjust the import path as needed
 
 export default function AlbumPage({ params }) {
-    const router = useRouter();
     const { artistAndAlbum } = params;
     const [albumDetails, setAlbumDetails] = useState(null);
     const [streamingUrls, setStreamingUrls] = useState({
@@ -22,7 +20,6 @@ export default function AlbumPage({ params }) {
     const [openAISummary, setOpenAISummary] = useState('Loading summary...');
     const [error, setError] = useState(null);
     const fetchedOpenAISummary = useRef(false);
-    const urlUpdated = useRef(false); // To prevent infinite loops
     const [recommendation, setRecommendation] = useState('');
     const [loadingRecommendation, setLoadingRecommendation] = useState(false);
 
@@ -39,10 +36,9 @@ export default function AlbumPage({ params }) {
     const album = decodePrettyUrl(prettyAlbum);
 
     useEffect(() => {
-        if (artist && album && !urlUpdated.current) {
+        if (artist && album) {
             async function fetchAlbumData() {
                 try {
-                    // Fetch album details from Spotify
                     const spotifyQuery = `album: "${album}" artist:"${artist}"`;
                     const spotifyResponse = await fetch(
                         `https://api-spotify-search.rian-db8.workers.dev/?q=${encodeURIComponent(
@@ -53,32 +49,17 @@ export default function AlbumPage({ params }) {
 
                     if (spotifyData.data && spotifyData.data.length > 0) {
                         const spotifyAlbum = spotifyData.data[0];
-
-                        // Set albumDetails using Spotify data
                         setAlbumDetails(spotifyAlbum);
 
-                        // Update the URL to reflect the correct artist and album names
-                        const formattedArtist = encodePrettyUrl(spotifyAlbum.artist);
-                        const formattedAlbum = encodePrettyUrl(spotifyAlbum.name);
-                        const newUrl = `/album/${formattedArtist}_${formattedAlbum}`;
-
-                        if (router.asPath !== newUrl) {
-                            router.replace(newUrl);
-                            urlUpdated.current = true;
-                        }
-
-                        // Set streaming URLs
                         setStreamingUrls((prevUrls) => ({
                             ...prevUrls,
                             spotify: spotifyAlbum.url,
                         }));
 
-                        // Set release year and track count
                         const releaseDate = spotifyAlbum.releaseDate;
                         if (releaseDate) setReleaseYear(releaseDate.split('-')[0]);
                         setTrackCount(spotifyAlbum.tracks || 'Unknown');
 
-                        // Fetch additional streaming URLs via SongLink
                         const songLinkResponse = await fetch(
                             `https://api-songlink.rian-db8.workers.dev/?url=${encodeURIComponent(
                                 spotifyAlbum.url
@@ -101,7 +82,7 @@ export default function AlbumPage({ params }) {
             }
             fetchAlbumData();
         }
-    }, [artist, album, router]);
+    }, [artist, album]);
 
     useEffect(() => {
         if (artist && album && !fetchedOpenAISummary.current) {
@@ -156,7 +137,6 @@ export default function AlbumPage({ params }) {
 
     const prettySpotifyArtist = encodePrettyUrl(albumDetails.artist);
 
-    // Use the fallback image if albumDetails.image is an empty string
     const albumImage = albumDetails.image || 'https://file.elezea.com/noun-no-image.png';
 
     return (
