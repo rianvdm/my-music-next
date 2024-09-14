@@ -48,9 +48,9 @@ export default function RecommendationsPage() {
         lovedTracks.forEach((track) => {
             const fetchTrackData = async () => {
                 try {
-                    // Fetch OpenAI summary
+                    // Fetch summary from Perplexity
                     const summaryResponse = await fetch(
-                        `https://api-openai-songrec.rian-db8.workers.dev/?title=${encodeURIComponent(track.title)}&artist=${encodeURIComponent(track.artist)}`
+                        `https://api-perplexity-songrec.rian-db8.workers.dev/?title=${encodeURIComponent(track.title)}&artist=${encodeURIComponent(track.artist)}`
                     );
                     const summaryData = await summaryResponse.json();
                     setTrackSummaries(prevSummaries => ({
@@ -99,7 +99,6 @@ export default function RecommendationsPage() {
             imageElement.classList.add('loaded');
         }
     };
-
 
     return (
         <div>
