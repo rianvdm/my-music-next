@@ -96,7 +96,9 @@ export default {
                 resultData = jsonResponse.tracks.items.map(item => ({
                     title: item.name,
                     artist: item.artists.map(artist => artist.name).join(', '),
+                    artistIds: item.artists.map(artist => artist.id),
                     album: item.album.name,
+                    albumId: item.album.id,
                     url: item.external_urls.spotify,
                     image: item.album.images[0]?.url,
                     preview: item.preview_url,
@@ -104,7 +106,9 @@ export default {
             } else if (dataType === 'album') {
                 resultData = jsonResponse.albums.items.map(item => ({
                     name: item.name,
+                    id: item.id,
                     artist: item.artists.map(artist => artist.name).join(', '),
+                    artistIds: item.artists.map(artist => artist.id), // Capture artist IDs
                     releaseDate: item.release_date,
                     tracks: item.total_tracks,
                     url: item.external_urls.spotify,
@@ -113,6 +117,7 @@ export default {
             } else if (dataType === 'artist') {
                 resultData = jsonResponse.artists.items.map(item => ({
                     name: item.name,
+                    id: item.id,
                     url: item.external_urls.spotify,
                     image: item.images[0]?.url
                 }));
