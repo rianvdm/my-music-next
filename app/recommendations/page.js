@@ -4,7 +4,6 @@ export const runtime = 'edge';
 
 import { useEffect, useState } from 'react';
 import { marked } from 'marked';
-import matter from 'gray-matter';
 import Link from 'next/link';
 
 export default function RecommendationsPage() {
@@ -31,50 +30,60 @@ export default function RecommendationsPage() {
 
         const fetchNewAlbumsContent = async () => {
             try {
-                const response = await fetch('/content/new-albums.md'); // Fetch from public directory
-                const markdown = await response.text(); // Get the text content of the file
-                const htmlContent = marked(markdown); // Convert markdown to HTML
-                setNewAlbumsContent(htmlContent); // Set the HTML content
+                const response = await fetch('/content/new-albums.md');
+                const markdown = await response.text();
+                const htmlContent = marked(markdown);
+                setNewAlbumsContent(htmlContent);
             } catch (error) {
                 console.error('Error fetching new albums content:', error);
                 setNewAlbumsContent('<p>Failed to load new albums content.</p>');
             }
         };
 
-        fetchNewAlbumsContent(); 
+        fetchNewAlbumsContent();
         fetchLovedTracks();
-
     }, []);
 
     useEffect(() => {
         lovedTracks.forEach((track) => {
             const fetchTrackData = async () => {
                 try {
-                    const summaryResponse = await fetch(`https://api-openai-songrec.rian-db8.workers.dev/?title=${encodeURIComponent(track.title)}&artist=${encodeURIComponent(track.artist)}`);
+                    // Fetch OpenAI summary
+                    const summaryResponse = await fetch(
+                        `https://api-openai-songrec.rian-db8.workers.dev/?title=${encodeURIComponent(track.title)}&artist=${encodeURIComponent(track.artist)}`
+                    );
                     const summaryData = await summaryResponse.json();
                     setTrackSummaries(prevSummaries => ({
                         ...prevSummaries,
                         [`${track.title}_${track.artist}`]: summaryData.data
                     }));
 
-                    const artistDetailResponse = await fetch(`https://api-lastfm-artistdetail.rian-db8.workers.dev?artist=${encodeURIComponent(track.artist)}`);
-                    const artistDetailData = await artistDetailResponse.json();
-                    setArtistImages(prevImages => ({
-                        ...prevImages,
-                        [track.artist]: artistDetailData.image
-                    }));
-
+                    // Fetch track data from Spotify
                     const spotifyQuery = `track:"${track.title}" artist:"${track.artist}"`;
-                    const spotifyResponse = await fetch(`https://api-spotify-search.rian-db8.workers.dev/?q=${encodeURIComponent(spotifyQuery)}&type=track`);
+                    const spotifyResponse = await fetch(
+                        `https://api-spotify-search.rian-db8.workers.dev/?q=${encodeURIComponent(spotifyQuery)}&type=track`
+                    );
                     const spotifyData = await spotifyResponse.json();
 
-                    const spotifyUrl = spotifyData?.data?.[0]?.url || null;
-                    const previewUrl = spotifyData?.data?.[0]?.preview || null;
+                    if (spotifyData?.data?.[0]) {
+                        const spotifyTrack = spotifyData.data[0];
+                        const spotifyUrl = spotifyTrack.url || null;
+                        const previewUrl = spotifyTrack.preview || null;
+                        const image = spotifyTrack.image || null; // Get the album image from Spotify data
 
-                    setSpotifyLinks(prevLinks => ({
-                        ...prevLinks,
-                        [`${track.title}_${track.artist}`]: { spotifyUrl, previewUrl }
-                    }));
+                        setSpotifyLinks(prevLinks => ({
+                            ...prevLinks,
+                            [`${track.title}_${track.artist}`]: { spotifyUrl, previewUrl }
+                        }));
+
+                        // Set artist image using the album image from Spotify data
+                        setArtistImages(prevImages => ({
+                            ...prevImages,
+                            [track.artist]: image
+                        }));
+                    } else {
+                        console.error(`No Spotify data found for ${track.title} by ${track.artist}`);
+                    }
                 } catch (error) {
                     console.error(`Error fetching data for ${track.title} by ${track.artist}:`, error);
                 }
@@ -91,39 +100,12 @@ export default function RecommendationsPage() {
         }
     };
 
-    const handleSearch = async () => {
-        if (!album || !artist) {
-            alert('Please enter both album and artist.');
-            return;
-        }
-
-        setLoading(true);
-        setRecommendation('');
-
-        try {
-            const response = await fetch(`https://api-openai-albumrecs.rian-db8.workers.dev/?album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}`);
-            const data = await response.json();
-
-            setRecommendation(data.data);
-        } catch (error) {
-            console.error('Error fetching album recommendations:', error);
-            setRecommendation('Failed to load recommendations. Please try again later.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleKeyDown = (event) => {
-        if (event.key === 'Enter') {
-            handleSearch();
-        }
-    };
 
     return (
         <div>
             <h1>Recommendations</h1>
-            <h2 style={{ marginBottom:0, marginTop: "1em" }}>New Releases</h2>
-                <div className="track_ul2" dangerouslySetInnerHTML={{ __html: newAlbumsContent }} />
+            <h2 style={{ marginBottom: 0, marginTop: "1em" }}>New Releases</h2>
+            <div className="track_ul2" dangerouslySetInnerHTML={{ __html: newAlbumsContent }} />
             <h2 style={{ marginTop: "1.5em" }}>Song Recommendations</h2>
             <div style={{ textAlign: 'center' }}>
                 <p><strong>A selection of tracks I recently liked on Last.fm</strong></p>
