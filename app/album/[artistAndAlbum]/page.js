@@ -17,8 +17,9 @@ export default function AlbumPage({ params }) {
     });
     const [releaseYear, setReleaseYear] = useState('Loading...');
     const [trackCount, setTrackCount] = useState('Loading...');
-    const [genres, setGenres] = useState('Loading...');
+    const [genres, setGenres] = useState('Loading...'); // New state for genres
     const [openAISummary, setOpenAISummary] = useState('Loading summary...');
+    const [artistId, setArtistId] = useState(null); // Store the artist ID separately
     const [error, setError] = useState(null);
     const fetchedOpenAISummary = useRef(false);
     const [recommendation, setRecommendation] = useState('');
@@ -57,6 +58,11 @@ export default function AlbumPage({ params }) {
                         if (releaseDate) setReleaseYear(releaseDate.split('-')[0]);
                         setTrackCount(spotifyAlbum.tracks || 'Unknown');
 
+                        // Set the artist ID immediately to fetch genres separately
+                        if (spotifyAlbum.artistIds && spotifyAlbum.artistIds.length > 0) {
+                            setArtistId(spotifyAlbum.artistIds[0]); // Set the artist ID here
+                        }
+
                         const songLinkResponse = await fetch(
                             `https://api-songlink.rian-db8.workers.dev/?url=${encodeURIComponent(
                                 spotifyAlbum.url
@@ -69,11 +75,6 @@ export default function AlbumPage({ params }) {
                             appleMusic: songLinkData.appleUrl,
                             youtube: songLinkData.youtubeUrl,
                         }));
-
-                        // Trigger a separate fetch for artist genres
-                        if (spotifyAlbum.artistIds && spotifyAlbum.artistIds.length > 0) {
-                            fetchArtistGenres(spotifyAlbum.artistIds[0]); // Fetch genres using artist ID
-                        }
                     } else {
                         throw new Error('Album not found');
                     }
@@ -86,22 +87,27 @@ export default function AlbumPage({ params }) {
         }
     }, [artist, album]);
 
-    // Fetch artist genres independently
-    const fetchArtistGenres = async (artistId) => {
-        try {
-            const artistDetailsResponse = await fetch(
-                `https://api-spotify-artists.rian-db8.workers.dev/?id=${artistId}`
-            );
-            const artistDetailsData = await artistDetailsResponse.json();
-            const fetchedGenres = artistDetailsData.data.genres || [];
+    // Fetch genres as soon as artist ID is available
+    useEffect(() => {
+        if (artistId) {
+            async function fetchArtistGenres() {
+                try {
+                    const artistDetailsResponse = await fetch(
+                        `https://api-spotify-artists.rian-db8.workers.dev/?id=${artistId}`
+                    );
+                    const artistDetailsData = await artistDetailsResponse.json();
+                    const fetchedGenres = artistDetailsData.data.genres || [];
 
-            // Update genres state with up to 3 genres
-            setGenres(fetchedGenres.slice(0, 3).join(', ') || 'Unknown');
-        } catch (error) {
-            console.error('Error fetching artist genres:', error);
-            setGenres('Failed to load genres');
+                    // Update genres state with up to 3 genres
+                    setGenres(fetchedGenres.slice(0, 3).join(', ') || 'Unknown');
+                } catch (error) {
+                    console.error('Error fetching artist genres:', error);
+                    setGenres('Failed to load genres');
+                }
+            }
+            fetchArtistGenres();
         }
-    };
+    }, [artistId]); // This useEffect only depends on artistId
 
     // Fetch OpenAI summary
     useEffect(() => {
@@ -179,7 +185,7 @@ export default function AlbumPage({ params }) {
                                 <strong>Released:</strong> {releaseYear}
                             </p>
                             <p>
-                                <strong>Genres:</strong> {genres}
+                                <strong>Genres:</strong> {genres} {/* Display genres */}
                             </p>
                             <p>
                                 <strong>Streaming:</strong>
