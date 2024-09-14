@@ -17,7 +17,7 @@ export default function AlbumPage({ params }) {
     });
     const [releaseYear, setReleaseYear] = useState('Loading...');
     const [trackCount, setTrackCount] = useState('Loading...');
-    const [genres, setGenres] = useState('Loading...'); // New state for genres
+    const [genres, setGenres] = useState('Loading...');
     const [openAISummary, setOpenAISummary] = useState('Loading summary...');
     const [error, setError] = useState(null);
     const fetchedOpenAISummary = useRef(false);
@@ -31,6 +31,7 @@ export default function AlbumPage({ params }) {
     const artist = decodePrettyUrl(prettyArtist);
     const album = decodePrettyUrl(prettyAlbum);
 
+    // Fetch album details
     useEffect(() => {
         if (artist && album) {
             async function fetchAlbumData() {
@@ -69,18 +70,9 @@ export default function AlbumPage({ params }) {
                             youtube: songLinkData.youtubeUrl,
                         }));
 
-                        // Fetch artist genres using the artist ID from the search result
+                        // Trigger a separate fetch for artist genres
                         if (spotifyAlbum.artistIds && spotifyAlbum.artistIds.length > 0) {
-                            const artistId = spotifyAlbum.artistIds[0]; // Using the first artist ID
-
-                            const artistDetailsResponse = await fetch(
-                                `https://api-spotify-artists.rian-db8.workers.dev/?id=${artistId}`
-                            );
-                            const artistDetailsData = await artistDetailsResponse.json();
-                            const fetchedGenres = artistDetailsData.data.genres || [];
-
-                            // Update genres state with up to 3 genres
-                            setGenres(fetchedGenres.slice(0, 3).join(', ') || 'Unknown');
+                            fetchArtistGenres(spotifyAlbum.artistIds[0]); // Fetch genres using artist ID
                         }
                     } else {
                         throw new Error('Album not found');
@@ -94,6 +86,24 @@ export default function AlbumPage({ params }) {
         }
     }, [artist, album]);
 
+    // Fetch artist genres independently
+    const fetchArtistGenres = async (artistId) => {
+        try {
+            const artistDetailsResponse = await fetch(
+                `https://api-spotify-artists.rian-db8.workers.dev/?id=${artistId}`
+            );
+            const artistDetailsData = await artistDetailsResponse.json();
+            const fetchedGenres = artistDetailsData.data.genres || [];
+
+            // Update genres state with up to 3 genres
+            setGenres(fetchedGenres.slice(0, 3).join(', ') || 'Unknown');
+        } catch (error) {
+            console.error('Error fetching artist genres:', error);
+            setGenres('Failed to load genres');
+        }
+    };
+
+    // Fetch OpenAI summary
     useEffect(() => {
         if (artist && album && !fetchedOpenAISummary.current) {
             fetchedOpenAISummary.current = true;
@@ -121,7 +131,6 @@ export default function AlbumPage({ params }) {
         setLoadingRecommendation(true);
         try {
             const response = await fetch(
-            //    `https://api-openai-albumrecs.rian-db8.workers.dev/?album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}`
                 `https://api-perplexity-albumrecs.rian-db8.workers.dev/?album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}`
             );
             const data = await response.json();
@@ -147,7 +156,6 @@ export default function AlbumPage({ params }) {
     }
 
     const prettySpotifyArtist = encodePrettyUrl(albumDetails.artist);
-
     const albumImage = albumDetails.image || 'https://file.elezea.com/noun-no-image.png';
 
     return (
