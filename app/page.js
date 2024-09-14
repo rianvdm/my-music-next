@@ -10,20 +10,27 @@ function TopArtists({ data }) {
 
     return (
         <div className="track-grid">
-            {data.map(artist => (
-                <div className="track" key={artist.name}>
-                    <Link href={`artist/${encodeURIComponent(artist.name.replace(/ /g, '-').toLowerCase())}`} rel="noopener noreferrer">
-                        <img src={artist.image || '/path/to/default/image.png'} className="track_image" alt={artist.name} />
-                    </Link>
-                    <div className="track_content">
-                        <h2 className="track_artist">
-                            <Link href={`artist/${encodeURIComponent(artist.name.replace(/ /g, '-').toLowerCase())}`} rel="noopener noreferrer">
-                                {artist.name}
-                            </Link>
-                        </h2>
+            {data.map(artist => {
+                // Move URL generation outside of JSX
+                const artistSlug = encodeURIComponent(artist.name.replace(/ /g, '-').toLowerCase());
+                const artistUrl = `artist/${artistSlug}`;
+                const artistImage = artist.image || 'https://file.elezea.com/noun-no-image.png';
+
+                return (
+                    <div className="track" key={artist.name}>
+                        <Link href={artistUrl} rel="noopener noreferrer">
+                            <img src={artistImage} className="track_image" alt={artist.name} />
+                        </Link>
+                        <div className="track_content">
+                            <h2 className="track_artist">
+                                <Link href={artistUrl} rel="noopener noreferrer">
+                                    {artist.name}
+                                </Link>
+                            </h2>
+                        </div>
                     </div>
-                </div>
-            ))}
+                );
+            })}
         </div>
     );
 }
@@ -33,20 +40,31 @@ function TopAlbums({ data }) {
 
     return (
         <div className="track-grid">
-            {data.map(album => (
-                <div className="track" key={album.name}>
-                    <a href={`/album/${encodeURIComponent(album.artist.replace(/ /g, '-').toLowerCase())}_${encodeURIComponent(album.name.replace(/ /g, '-').toLowerCase())}`}>
-                        <img src={album.image} className="track_image" alt={album.name} />
-                    </a>
-                    <div className="track_content">
-                        <p className="track_name"><a href={`/album/${encodeURIComponent(album.artist.replace(/ /g, '-').toLowerCase())}_${encodeURIComponent(album.name.replace(/ /g, '-').toLowerCase())}`}><strong>{album.name}</strong></a></p>
-                        <p className="track_artist">
-                            <Link href={`artist/${encodeURIComponent(album.artist.replace(/ /g, '-').toLowerCase())}`} rel="noopener noreferrer">
-                                {album.artist}
-                            </Link></p>
+            {data.map(album => {
+                // Compute slugs and URLs outside of JSX
+                const artistSlug = encodeURIComponent(album.artist.replace(/ /g, '-').toLowerCase());
+                const albumSlug = encodeURIComponent(album.name.replace(/ /g, '-').toLowerCase());
+                const albumUrl = `/album/${artistSlug}_${albumSlug}`;
+                const artistUrl = `artist/${artistSlug}`;
+
+                return (
+                    <div className="track" key={album.name}>
+                        <a href={albumUrl}>
+                            <img src={album.image} className="track_image" alt={album.name} />
+                        </a>
+                        <div className="track_content">
+                            <p className="track_name">
+                                <a href={albumUrl}><strong>{album.name}</strong></a>
+                            </p>
+                            <p className="track_artist">
+                                <Link href={artistUrl} rel="noopener noreferrer">
+                                    {album.artist}
+                                </Link>
+                            </p>
+                        </div>
                     </div>
-                </div>
-            ))}
+                );
+            })}
         </div>
     );
 }

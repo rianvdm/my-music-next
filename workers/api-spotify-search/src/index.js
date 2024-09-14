@@ -104,16 +104,34 @@ export default {
                     preview: item.preview_url,
                 }));
             } else if (dataType === 'album') {
-                resultData = jsonResponse.albums.items.map(item => ({
+            // Attempt to get full albums first
+            let fullAlbums = jsonResponse.albums.items.filter(item => item.album_type === 'album');
+
+            if (fullAlbums.length > 0) {
+                // Use full albums if available
+                resultData = fullAlbums.map(item => ({
                     name: item.name,
                     id: item.id,
                     artist: item.artists.map(artist => artist.name).join(', '),
-                    artistIds: item.artists.map(artist => artist.id), // Capture artist IDs
+                    artistIds: item.artists.map(artist => artist.id),
                     releaseDate: item.release_date,
                     tracks: item.total_tracks,
                     url: item.external_urls.spotify,
                     image: item.images[0]?.url
                 }));
+            } else {
+                // If no full albums, use the original list without filtering
+                resultData = jsonResponse.albums.items.map(item => ({
+                    name: item.name,
+                    id: item.id,
+                    artist: item.artists.map(artist => artist.name).join(', '),
+                    artistIds: item.artists.map(artist => artist.id),
+                    releaseDate: item.release_date,
+                    tracks: item.total_tracks,
+                    url: item.external_urls.spotify,
+                    image: item.images[0]?.url
+                }));
+            }
             } else if (dataType === 'artist') {
                 resultData = jsonResponse.artists.items.map(item => ({
                     name: item.name,
