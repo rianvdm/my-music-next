@@ -107,7 +107,7 @@ export default function RecommendationsPage() {
             <div className="track_ul2" dangerouslySetInnerHTML={{ __html: newAlbumsContent }} />
             <h2 style={{ marginTop: "1.5em" }}>Song Recommendations</h2>
             <div style={{ textAlign: 'center' }}>
-                <p><strong>A selection of tracks I recently liked on Last.fm</strong></p>
+                <p><strong>A selection of tracks I recently liked</strong></p>
             </div>
 
             <div className="track_ul">
