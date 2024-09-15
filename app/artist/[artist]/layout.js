@@ -17,7 +17,7 @@ export async function generateMetadata({ params }) {
         images: [artistData.image],
       },
       twitter: {
-        card: 'summary_large_image',
+        card: 'summary',
         title: `${artistData.name} - Artist Details`,
         description: `Details about ${artistData.name}`,
         images: [artistData.image],
