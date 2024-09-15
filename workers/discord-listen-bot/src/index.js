@@ -79,7 +79,10 @@ async function handleAlbumInfo(env, interaction, album, artist) {
 
         // Create custom URL
         const formattedArtist = spotifyAlbum.artist.replace(/\s+/g, '-').toLowerCase();
-        const formattedAlbum = spotifyAlbum.name.replace(/\s+/g, '-').toLowerCase();
+        const formattedAlbum = spotifyAlbum.name
+            .replace(/\s*\(.*?\)\s*/g, '') // Remove any text inside parentheses
+            .replace(/\s+/g, '-') // Replace spaces with hyphens
+            .toLowerCase();
         const customUrl = `https://listentomore.com/album/${formattedArtist}_${formattedAlbum}`;
 
         // Fetch song link info from SongLink
