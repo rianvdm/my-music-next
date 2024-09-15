@@ -196,3 +196,43 @@ function hexToUint8(hex) {
     return arr;
 }
 
+// Function to register the `/listento` command
+async function registerCommands(env) {
+    const discordApiUrl = `https://discord.com/api/v10/applications/${env.DISCORD_APPLICATION_ID}/commands`;
+
+    const commandBody = {
+        name: 'listento',
+        description: 'Get details about an album by artist',
+        type: 1, // Slash command
+        options: [
+            {
+                name: 'album',
+                description: 'The name of the album',
+                type: 3, // STRING
+                required: true,
+            },
+            {
+                name: 'artist',
+                description: 'The name of the artist',
+                type: 3, // STRING
+                required: true,
+            },
+        ],
+    };
+
+    const response = await fetch(discordApiUrl, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bot ${env.DISCORD_TOKEN}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(commandBody),
+    });
+
+    if (!response.ok) {
+        const error = await response.text();
+        throw new Error(`Failed to register commands: ${response.statusText}. Response: ${error}`);
+    }
+
+    console.log('Command registered successfully');
+}
