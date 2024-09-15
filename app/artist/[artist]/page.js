@@ -99,6 +99,8 @@ export default function ArtistPage({ params }) {
     // Use the fallback image if artistDetails.image is an empty string
     const artistImage = artistDetails.image || 'https://file.elezea.com/noun-no-image.png';
 
+    const formattedArtist = artistDetails.name.replace(/\s+/g, '-').toLowerCase();
+
     return (
         <div>
             <header>
@@ -118,13 +120,20 @@ export default function ArtistPage({ params }) {
 
                             <p style={{ marginBottom: '0.2em' }}><strong>Popular Albums:</strong></p>
                             <ul style={{ listStyleType: 'none', paddingLeft: '0', marginTop: '0' }}>
-                                {topAlbums.map((album, index) => (
-                                    <li key={index}>
-                                        <a href={`/album/${encodeURIComponent(artistDetails.name.replace(/ /g, '-').toLowerCase())}_${encodeURIComponent(album.name.replace(/ /g, '-').toLowerCase())}`}>
-                                            {album.name}
-                                        </a>
-                                    </li>
-                                ))}
+                                {topAlbums.map((album, index) => {
+                                    const formattedAlbum = album.name
+                                        .replace(/\s*\(.*?\)\s*/g, '') // Remove any text inside parentheses
+                                        .replace(/\s+/g, '-') // Replace spaces with hyphens
+                                        .toLowerCase();
+                                    
+                                    return (
+                                        <li key={index}>
+                                            <a href={`/album/${formattedArtist}_${formattedAlbum}`}>
+                                                {album.name}
+                                            </a>
+                                        </li>
+                                    );
+                                })}
                             </ul>
                         </div>
                     </div>

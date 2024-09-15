@@ -43,7 +43,13 @@ function TopAlbums({ data }) {
             {data.map(album => {
                 // Compute slugs and URLs outside of JSX
                 const artistSlug = encodeURIComponent(album.artist.replace(/ /g, '-').toLowerCase());
-                const albumSlug = encodeURIComponent(album.name.replace(/ /g, '-').toLowerCase());
+
+                const formattedAlbum = album.name
+                    .replace(/\s*\(.*?\)\s*/g, '') // Remove any text inside parentheses
+                    .replace(/\s+/g, '-') // Replace spaces with hyphens
+                    .toLowerCase();
+                const albumSlug = encodeURIComponent(formattedAlbum);
+
                 const albumUrl = `/album/${artistSlug}_${albumSlug}`;
                 const artistUrl = `artist/${artistSlug}`;
 

@@ -73,7 +73,10 @@ export default function AlbumSearchPage() {
                 // Use the first result to get the correct album and artist names
                 const spotifyAlbum = spotifyData.data[0];
                 const formattedArtist = encodeURIComponent(spotifyAlbum.artist.replace(/ /g, '-').toLowerCase());
-                const formattedAlbum = encodeURIComponent(spotifyAlbum.name.replace(/ /g, '-').toLowerCase());
+                const formattedAlbum = spotifyAlbum.name
+                    .replace(/\s*\(.*?\)\s*/g, '') // Remove any text inside parentheses
+                    .replace(/\s+/g, '-') // Replace spaces with hyphens
+                    .toLowerCase();
 
                 // Push the user to the correct URL
                 router.push(`/album/${formattedArtist}_${formattedAlbum}`);
