@@ -1,10 +1,21 @@
+import nacl from 'tweetnacl';
+
 export default {
     async fetch(request, env, context) {
         try {
             const url = new URL(request.url);
 
             if (url.pathname === '/discord-interaction') {
-                const interaction = await request.json();
+                const signature = request.headers.get('X-Signature-Ed25519');
+                const timestamp = request.headers.get('X-Signature-Timestamp');
+                const body = await request.text(); // Read the raw text body for signature verification
+
+                // Validate the signature
+                if (!verifySignature(signature, timestamp, body, env.DISCORD_PUBLIC_KEY)) {
+                    return new Response('Invalid request signature', { status: 401 });
+                }
+
+                const interaction = JSON.parse(body); // Parse the body as JSON after verifying the signature
 
                 // Handle 'listento' command
                 if (interaction.type === 2 && interaction.data.name === 'listento') {
@@ -14,8 +25,8 @@ export default {
                     console.log('Received listento command');
                     console.log('Fetching album info for:', album, 'by artist:', artist);
 
-                    // Acknowledge the interaction immediately
-                    const response = respondWithDeferredMessage();
+                    // Acknowledge the interaction immediately with an ephemeral message
+                    const response = respondWithEphemeralMessage("Fetching album details...");
 
                     // Handle the album info retrieval in the background
                     context.waitUntil(handleAlbumInfo(env, interaction, album, artist));
@@ -55,9 +66,10 @@ async function handleAlbumInfo(env, interaction, album, artist) {
         const spotifyData = await spotifyResponse.json();
 
         if (!spotifyData.data || spotifyData.data.length === 0) {
+            // Send an ephemeral error message to the user
             await sendFollowUpMessage(env.DISCORD_APPLICATION_ID, interaction.token, {
                 content: "Album not found on Spotify.",
-                flags: 64 // Ephemeral flag
+                flags: 64, // Ephemeral flag
             });
             return;
         }
@@ -76,9 +88,6 @@ async function handleAlbumInfo(env, interaction, album, artist) {
         );
         const songLinkData = await songLinkResponse.json();
 
-		console.log("Spotify Album Data:", spotifyAlbum);
-		console.log("SongLink Data:", songLinkData);
-
         // Handle undefined URLs and provide fallback
         const streamingUrls = {
             spotify: spotifyAlbum.url ? `[Listen](${spotifyAlbum.url})` : 'Not available',
@@ -87,7 +96,7 @@ async function handleAlbumInfo(env, interaction, album, artist) {
             songLink: songLinkData.pageUrl ? `[Listen](${songLinkData.pageUrl})` : 'Not available',
         };
 
-        // Send a follow-up message with album info
+        // Send a public follow-up message with album info (visible to everyone)
         await sendFollowUpMessage(env.DISCORD_APPLICATION_ID, interaction.token, {
             content: `**${spotifyAlbum.name}** by **${spotifyAlbum.artist}** (${releaseYear})\n**Spotify:** ${streamingUrls.spotify}\n**Apple Music:** ${streamingUrls.appleMusic}\n**YouTube:** ${streamingUrls.youtube}\n**Other:** ${streamingUrls.songLink}`,
             embeds: [
@@ -105,19 +114,30 @@ async function handleAlbumInfo(env, interaction, album, artist) {
         console.error("Error occurred while processing the interaction:", error);
         await sendFollowUpMessage(env.DISCORD_APPLICATION_ID, interaction.token, {
             content: "An error occurred while fetching the album details.",
-            flags: 64, // Ephemeral flag
+            flags: 64, // Ephemeral flag for errors
         });
     }
 }
 
-// Helper function to respond with a deferred message
-function respondWithDeferredMessage() {
-    return new Response(JSON.stringify({
-        type: 5, // Deferred response
-    }), { headers: { 'Content-Type': 'application/json' } });
+// Helper function to verify the request signature
+function verifySignature(signature, timestamp, body, publicKey) {
+    const message = new TextEncoder().encode(timestamp + body);
+    const signatureUint8 = hexToUint8(signature);
+    const publicKeyUint8 = hexToUint8(publicKey);
+
+    return nacl.sign.detached.verify(message, signatureUint8, publicKeyUint8);
 }
 
-// Helper function to send a follow-up message
+// Helper function to convert a hex string to Uint8Array
+function hexToUint8(hex) {
+    const arr = new Uint8Array(hex.length / 2);
+    for (let i = 0; i < hex.length; i += 2) {
+        arr[i / 2] = parseInt(hex.substr(i, 2), 16);
+    }
+    return arr;
+}
+
+// Helper function to send follow-up messages to Discord
 async function sendFollowUpMessage(applicationId, token, messageContent) {
     const response = await fetch(`https://discord.com/api/v10/webhooks/${applicationId}/${token}`, {
         method: 'POST',
@@ -133,21 +153,13 @@ async function sendFollowUpMessage(applicationId, token, messageContent) {
     }
 }
 
-// Helper function to respond with an ephemeral message
+// Helper function to respond with an ephemeral message (only visible to the user)
 function respondWithEphemeralMessage(message) {
     return new Response(JSON.stringify({
         type: 4,
         data: {
             content: message,
-            flags: 64,
+            flags: 64, // Ephemeral flag
         },
-    }), { headers: { 'Content-Type': 'application/json' } });
-}
-
-// Helper function to respond with a regular message
-function respondWithMessage(messageContent) {
-    return new Response(JSON.stringify({
-        type: 4,
-        data: messageContent,
     }), { headers: { 'Content-Type': 'application/json' } });
 }
