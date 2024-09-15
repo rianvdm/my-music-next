@@ -60,7 +60,7 @@ async function handleAlbumInfo(env, interaction, album, artist) {
         const spotifyData = await spotifyResponse.json();
 
         if (!spotifyData.data || spotifyData.data.length === 0) {
-            await sendFollowUp(env.DISCORD_APPLICATION_ID, interaction.token, "Album not found on Spotify.");
+            await sendEphemeralMessage(env.DISCORD_APPLICATION_ID, interaction.token, "Album not found on Spotify.");
             return;
         }
 
@@ -84,87 +84,60 @@ async function handleAlbumInfo(env, interaction, album, artist) {
             songLink: songLinkData.pageUrl ? `[Link](${songLinkData.pageUrl})` : 'Not available',
         };
 
-
-
         // Send a follow-up response with album info
         await sendFollowUp(env.DISCORD_APPLICATION_ID, interaction.token, {
-            content: `**Album:** ${spotifyAlbum.name} by ${spotifyAlbum.artist}, released in ${releaseYear}\n**Spotify:** ${streamingUrls.spotify}\n**Apple Music:** ${streamingUrls.appleMusic}\n**YouTube:** ${streamingUrls.youtube}\n**SongLink:** ${streamingUrls.songLink}`,
+            content: `**${spotifyAlbum.name}** by **${spotifyAlbum.artist}** (${releaseYear})\n**Spotify:** ${streamingUrls.spotify}\n**Apple Music:** ${streamingUrls.appleMusic}\n**YouTube:** ${streamingUrls.youtube}\n`,
             embeds: [
                 {
                     title: `${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
                     url: songLinkData.pageUrl || spotifyAlbum.url,
-                    description: `Release Year: ${releaseYear}`,
-                    image: {
+                    description: `Click through for more streaming options on Songlink.`,
+                    thumbnail: {
                         url: spotifyAlbum.image || 'https://file.elezea.com/noun-no-image.png', // Placeholder image if no image
-                    },
-                    footer: {
-                        text: 'Data from Spotify and SongLink',
                     },
                 },
             ],
         });
     } catch (error) {
         console.error("Error occurred while processing the interaction:", error);
-        await sendFollowUp(env.DISCORD_APPLICATION_ID, interaction.token, "An error occurred while fetching the album details.");
+        await sendEphemeralMessage(env.DISCORD_APPLICATION_ID, interaction.token, "An error occurred while fetching the album details.");
+    }
+}
+
+// Helper function to send ephemeral messages (only visible to the user)
+async function sendEphemeralMessage(applicationId, token, message) {
+    const response = await fetch(`https://discord.com/api/v10/webhooks/${applicationId}/${token}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            content: message,
+            flags: 64, // Ephemeral message
+        }),
+    });
+
+    if (!response.ok) {
+        const errorBody = await response.text();
+        console.error(`Failed to send ephemeral message: ${response.statusText}. Response body: ${errorBody}`);
     }
 }
 
 // Helper function to send follow-up messages to Discord
 async function sendFollowUp(applicationId, token, messageContent) {
-		const response = await fetch(`https://discord.com/api/v10/webhooks/${applicationId}/${token}`, {
-		    method: 'POST',
-		    headers: {
-		        'Content-Type': 'application/json',
-		    },
-		    body: JSON.stringify({
-		        content: messageContent.content,
-		        embeds: messageContent.embeds,
-		    }),
-		});
-
-		if (!response.ok) {
-		    const errorBody = await response.text();
-		    console.error(`Failed to send follow-up message: ${response.statusText}. Response body: ${errorBody}`);
-}
-}
-
-// Function to register the `/listento` command
-async function registerCommands(env) {
-    const discordApiUrl = `https://discord.com/api/v10/applications/${env.DISCORD_APPLICATION_ID}/commands`;
-
-    const commandBody = {
-        name: 'listento',
-        description: 'Get details about an album by artist',
-        type: 1, // Slash command
-        options: [
-            {
-                name: 'album',
-                description: 'The name of the album',
-                type: 3, // STRING
-                required: true,
-            },
-            {
-                name: 'artist',
-                description: 'The name of the artist',
-                type: 3, // STRING
-                required: true,
-            },
-        ],
-    };
-
-    const response = await fetch(discordApiUrl, {
+    const response = await fetch(`https://discord.com/api/v10/webhooks/${applicationId}/${token}`, {
         method: 'POST',
         headers: {
-            'Authorization': `Bot ${env.DISCORD_TOKEN}`,
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(commandBody),
+        body: JSON.stringify({
+            content: messageContent.content,
+            embeds: messageContent.embeds,
+        }),
     });
 
     if (!response.ok) {
-        const error = await response.text();
-        throw new Error(`Failed to register commands: ${response.statusText}. Response: ${error}`);
+        const errorBody = await response.text();
+        console.error(`Failed to send follow-up message: ${response.statusText}. Response body: ${errorBody}`);
     }
-
-    console.log('Command registered successfully');
 }
