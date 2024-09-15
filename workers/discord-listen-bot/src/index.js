@@ -104,6 +104,15 @@ async function handleAlbumInfo(env, interaction, album, artist) {
             songLink: songLinkData.pageUrl ? `[Listen](${songLinkData.pageUrl})` : 'Not available',
         };
 
+        // Fetch artist sentence from the API
+        const sentenceResponse = await env.SENTENCE_SERVICE.fetch(
+            `https://api-openai-artistsentence.rian-db8.workers.dev/?name=${encodeURIComponent(artist)}`
+        );
+        const sentenceData = await sentenceResponse.json();
+
+        // Ensure the artist sentence is available
+        const artistSentence = sentenceData.data || "Artist sentence not available";
+
         // Send a new public message with album info (visible to everyone)
         await sendNewMessage(env.DISCORD_TOKEN, interaction.channel_id, {
             content: `**${spotifyAlbum.name}** by **${spotifyAlbum.artist}** (${releaseYear})\n**Spotify:** ${streamingUrls.spotify}\n**Apple Music:** ${streamingUrls.appleMusic}\n**YouTube:** ${streamingUrls.youtube}\n**Other:** ${streamingUrls.songLink}`,
@@ -111,7 +120,7 @@ async function handleAlbumInfo(env, interaction, album, artist) {
                 {
                     title: `${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
                     url: customUrl,
-                    description: `Click through for more details about this album.`,
+                    description: `${artistSentence}\n\nClick through for more details about this album.`,
                     thumbnail: {
                         url: spotifyAlbum.image || 'https://file.elezea.com/noun-no-image.png',
                     },
