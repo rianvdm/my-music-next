@@ -14,18 +14,13 @@ export default {
                     console.log('Received listento command');
                     console.log('Fetching album info for:', album, 'by artist:', artist);
 
-                    // Respond immediately to prevent Discord timeout (within 3 seconds)
-                    const initialResponse = new Response(
-                        JSON.stringify({
-                            type: 5, // Acknowledge the interaction and mark it as deferred
-                        }),
-                        { headers: { 'Content-Type': 'application/json' } }
-                    );
+                    // Acknowledge the interaction immediately
+                    const response = respondWithDeferredMessage();
 
-                    // Asynchronously fetch album info and send follow-up message
+                    // Handle the album info retrieval in the background
                     context.waitUntil(handleAlbumInfo(env, interaction, album, artist));
 
-                    return initialResponse;
+                    return response;
                 }
 
                 // Respond to PING interaction
@@ -49,7 +44,7 @@ export default {
     }
 };
 
-// Function to handle album info retrieval and send follow-up message
+// Function to handle album info retrieval and send response
 async function handleAlbumInfo(env, interaction, album, artist) {
     try {
         // Fetch album info from Spotify
@@ -60,12 +55,20 @@ async function handleAlbumInfo(env, interaction, album, artist) {
         const spotifyData = await spotifyResponse.json();
 
         if (!spotifyData.data || spotifyData.data.length === 0) {
-            await sendEphemeralMessage(env.DISCORD_APPLICATION_ID, interaction.token, "Album not found on Spotify.");
+            await sendFollowUpMessage(env.DISCORD_APPLICATION_ID, interaction.token, {
+                content: "Album not found on Spotify.",
+                flags: 64 // Ephemeral flag
+            });
             return;
         }
 
         const spotifyAlbum = spotifyData.data[0];
         const releaseYear = spotifyAlbum.releaseDate ? spotifyAlbum.releaseDate.split('-')[0] : 'Unknown';
+
+        // Create custom URL
+        const formattedArtist = spotifyAlbum.artist.replace(/\s+/g, '-').toLowerCase();
+        const formattedAlbum = spotifyAlbum.name.replace(/\s+/g, '-').toLowerCase();
+        const customUrl = `https://listentomore.com/album/${formattedArtist}_${formattedAlbum}`;
 
         // Fetch song link info from SongLink
         const songLinkResponse = await env.SONGLINK_SERVICE.fetch(
@@ -78,66 +81,73 @@ async function handleAlbumInfo(env, interaction, album, artist) {
 
         // Handle undefined URLs and provide fallback
         const streamingUrls = {
-            spotify: spotifyAlbum.url ? `[Link](${spotifyAlbum.url})` : 'Not available',
-            appleMusic: songLinkData.appleUrl ? `[Link](${songLinkData.appleUrl})` : 'Not available',
-            youtube: songLinkData.youtubeUrl ? `[Link](${songLinkData.youtubeUrl})` : 'Not available',
-            songLink: songLinkData.pageUrl ? `[Link](${songLinkData.pageUrl})` : 'Not available',
+            spotify: spotifyAlbum.url ? `[Listen](${spotifyAlbum.url})` : 'Not available',
+            appleMusic: songLinkData.appleUrl ? `[Listen](${songLinkData.appleUrl})` : 'Not available',
+            youtube: songLinkData.youtubeUrl ? `[Listen](${songLinkData.youtubeUrl})` : 'Not available',
+            songLink: songLinkData.pageUrl ? `[Listen](${songLinkData.pageUrl})` : 'Not available',
         };
 
-        // Send a follow-up response with album info
-        await sendFollowUp(env.DISCORD_APPLICATION_ID, interaction.token, {
-            content: `**${spotifyAlbum.name}** by **${spotifyAlbum.artist}** (${releaseYear})\n**Spotify:** ${streamingUrls.spotify}\n**Apple Music:** ${streamingUrls.appleMusic}\n**YouTube:** ${streamingUrls.youtube}\n`,
+        // Send a follow-up message with album info
+        await sendFollowUpMessage(env.DISCORD_APPLICATION_ID, interaction.token, {
+            content: `**${spotifyAlbum.name}** by **${spotifyAlbum.artist}** (${releaseYear})\n**Spotify:** ${streamingUrls.spotify}\n**Apple Music:** ${streamingUrls.appleMusic}\n**YouTube:** ${streamingUrls.youtube}\n**Other:** ${streamingUrls.songLink}`,
             embeds: [
                 {
                     title: `${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
-                    url: songLinkData.pageUrl || spotifyAlbum.url,
-                    description: `Click through for more streaming options on Songlink.`,
+                    url: customUrl,
+                    description: `Click through for more details about this album.`,
                     thumbnail: {
-                        url: spotifyAlbum.image || 'https://file.elezea.com/noun-no-image.png', // Placeholder image if no image
+                        url: spotifyAlbum.image || 'https://file.elezea.com/noun-no-image.png',
                     },
                 },
             ],
         });
     } catch (error) {
         console.error("Error occurred while processing the interaction:", error);
-        await sendEphemeralMessage(env.DISCORD_APPLICATION_ID, interaction.token, "An error occurred while fetching the album details.");
+        await sendFollowUpMessage(env.DISCORD_APPLICATION_ID, interaction.token, {
+            content: "An error occurred while fetching the album details.",
+            flags: 64, // Ephemeral flag
+        });
     }
 }
 
-// Helper function to send ephemeral messages (only visible to the user)
-async function sendEphemeralMessage(applicationId, token, message) {
+// Helper function to respond with a deferred message
+function respondWithDeferredMessage() {
+    return new Response(JSON.stringify({
+        type: 5, // Deferred response
+    }), { headers: { 'Content-Type': 'application/json' } });
+}
+
+// Helper function to send a follow-up message
+async function sendFollowUpMessage(applicationId, token, messageContent) {
     const response = await fetch(`https://discord.com/api/v10/webhooks/${applicationId}/${token}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            content: message,
-            flags: 64, // Ephemeral message
-        }),
-    });
-
-    if (!response.ok) {
-        const errorBody = await response.text();
-        console.error(`Failed to send ephemeral message: ${response.statusText}. Response body: ${errorBody}`);
-    }
-}
-
-// Helper function to send follow-up messages to Discord
-async function sendFollowUp(applicationId, token, messageContent) {
-    const response = await fetch(`https://discord.com/api/v10/webhooks/${applicationId}/${token}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            content: messageContent.content,
-            embeds: messageContent.embeds,
-        }),
+        body: JSON.stringify(messageContent),
     });
 
     if (!response.ok) {
         const errorBody = await response.text();
         console.error(`Failed to send follow-up message: ${response.statusText}. Response body: ${errorBody}`);
     }
+}
+
+// Helper function to respond with an ephemeral message
+function respondWithEphemeralMessage(message) {
+    return new Response(JSON.stringify({
+        type: 4,
+        data: {
+            content: message,
+            flags: 64,
+        },
+    }), { headers: { 'Content-Type': 'application/json' } });
+}
+
+// Helper function to respond with a regular message
+function respondWithMessage(messageContent) {
+    return new Response(JSON.stringify({
+        type: 4,
+        data: messageContent,
+    }), { headers: { 'Content-Type': 'application/json' } });
 }
