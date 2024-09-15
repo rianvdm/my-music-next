@@ -22,7 +22,7 @@ export default {
                         { headers: { 'Content-Type': 'application/json' } }
                     );
 
-                    // Asynchronously fetch the album info and send a follow-up message
+                    // Asynchronously fetch album info and send follow-up message
                     context.waitUntil(handleAlbumInfo(env, interaction, album, artist));
 
                     return initialResponse;
@@ -31,7 +31,7 @@ export default {
                 // Respond to PING interaction
                 if (interaction.type === 1) {
                     return new Response(
-                        JSON.stringify({ type: 1 }), 
+                        JSON.stringify({ type: 1 }),
                         { headers: { 'Content-Type': 'application/json' } }
                     );
                 }
@@ -52,29 +52,57 @@ export default {
 // Function to handle album info retrieval and send follow-up message
 async function handleAlbumInfo(env, interaction, album, artist) {
     try {
-        // Fetch album info from the other worker
-        const albumInfoResponse = await env.TOKEN_SERVICE.fetch(
-            `https://api-lastfm-albumdetail.rian-db8.workers.dev/?album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}`
+        // Fetch album info from Spotify
+        const spotifyQuery = `album: "${album}" artist:"${artist}"`;
+        const spotifyResponse = await env.SPOTIFY_SERVICE.fetch(
+            `https://api-spotify-search.rian-db8.workers.dev/?q=${encodeURIComponent(spotifyQuery)}&type=album`
         );
+        const spotifyData = await spotifyResponse.json();
 
-        if (!albumInfoResponse.ok) {
-            console.error("Failed to fetch album info:", albumInfoResponse.statusText);
-            await sendFollowUp(env.DISCORD_APPLICATION_ID, interaction.token, "Failed to fetch album details.");
+        if (!spotifyData.data || spotifyData.data.length === 0) {
+            await sendFollowUp(env.DISCORD_APPLICATION_ID, interaction.token, "Album not found on Spotify.");
             return;
         }
 
-        const albumInfo = await albumInfoResponse.json();
-        console.log("Album info fetched successfully:", albumInfo);
+        const spotifyAlbum = spotifyData.data[0];
+        const releaseYear = spotifyAlbum.releaseDate ? spotifyAlbum.releaseDate.split('-')[0] : 'Unknown';
 
-        // Check if the album info contains the necessary data
-        if (!albumInfo.name || !albumInfo.artist || !albumInfo.url) {
-            console.error('Invalid album info:', albumInfo);
-            await sendFollowUp(env.DISCORD_APPLICATION_ID, interaction.token, "Failed to fetch valid album details.");
-            return;
-        }
+        // Fetch song link info from SongLink
+        const songLinkResponse = await env.SONGLINK_SERVICE.fetch(
+            `https://api-songlink.rian-db8.workers.dev/?url=${encodeURIComponent(spotifyAlbum.url)}`
+        );
+        const songLinkData = await songLinkResponse.json();
+
+		console.log("Spotify Album Data:", spotifyAlbum);
+		console.log("SongLink Data:", songLinkData);
+
+        // Handle undefined URLs and provide fallback
+        const streamingUrls = {
+            spotify: spotifyAlbum.url ? `[Link](${spotifyAlbum.url})` : 'Not available',
+            appleMusic: songLinkData.appleUrl ? `[Link](${songLinkData.appleUrl})` : 'Not available',
+            youtube: songLinkData.youtubeUrl ? `[Link](${songLinkData.youtubeUrl})` : 'Not available',
+            songLink: songLinkData.pageUrl ? `[Link](${songLinkData.pageUrl})` : 'Not available',
+        };
+
+
 
         // Send a follow-up response with album info
-        await sendFollowUp(env.DISCORD_APPLICATION_ID, interaction.token, albumInfo);
+        await sendFollowUp(env.DISCORD_APPLICATION_ID, interaction.token, {
+            content: `**Album:** ${spotifyAlbum.name} by ${spotifyAlbum.artist}, released in ${releaseYear}\n**Spotify:** ${streamingUrls.spotify}\n**Apple Music:** ${streamingUrls.appleMusic}\n**YouTube:** ${streamingUrls.youtube}\n**SongLink:** ${streamingUrls.songLink}`,
+            embeds: [
+                {
+                    title: `${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
+                    url: songLinkData.pageUrl || spotifyAlbum.url,
+                    description: `Release Year: ${releaseYear}`,
+                    image: {
+                        url: spotifyAlbum.image || 'https://file.elezea.com/noun-no-image.png', // Placeholder image if no image
+                    },
+                    footer: {
+                        text: 'Data from Spotify and SongLink',
+                    },
+                },
+            ],
+        });
     } catch (error) {
         console.error("Error occurred while processing the interaction:", error);
         await sendFollowUp(env.DISCORD_APPLICATION_ID, interaction.token, "An error occurred while fetching the album details.");
@@ -82,42 +110,22 @@ async function handleAlbumInfo(env, interaction, album, artist) {
 }
 
 // Helper function to send follow-up messages to Discord
-async function sendFollowUp(applicationId, token, albumInfo) {
-    // Ensure the token is correctly passed from the interaction response
-    if (!token) {
-        console.error('Token is missing.');
-        return;
-    }
+async function sendFollowUp(applicationId, token, messageContent) {
+		const response = await fetch(`https://discord.com/api/v10/webhooks/${applicationId}/${token}`, {
+		    method: 'POST',
+		    headers: {
+		        'Content-Type': 'application/json',
+		    },
+		    body: JSON.stringify({
+		        content: messageContent.content,
+		        embeds: messageContent.embeds,
+		    }),
+		});
 
-    const tags = Array.isArray(albumInfo.tags) ? albumInfo.tags.join(', ') : 'No tags available';
-    const bio = albumInfo.bio ? albumInfo.bio.substring(0, 2048) : 'No biography available';
-
-    const response = await fetch(`https://discord.com/api/v10/webhooks/${applicationId}/${token}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            content: `**Album:** ${albumInfo.name}\n**Artist:** ${albumInfo.artist}\n**Playcount:** ${albumInfo.userplaycount}\n**Tags:** ${tags}\n`,
-            embeds: [
-                {
-                    title: albumInfo.name,
-                    url: albumInfo.url,
-                    description: bio,
-                    image: {
-                        url: albumInfo.image,
-                    },
-                    footer: {
-                        text: 'Data from Last.fm',
-                    },
-                },
-            ],
-        }),
-    });
-
-    if (!response.ok) {
-        console.error(`Failed to send follow-up message: ${response.statusText}`);
-    }
+		if (!response.ok) {
+		    const errorBody = await response.text();
+		    console.error(`Failed to send follow-up message: ${response.statusText}. Response body: ${errorBody}`);
+}
 }
 
 // Function to register the `/listento` command
