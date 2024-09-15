@@ -26,7 +26,18 @@ export default function AlbumPage({ params }) {
     const [loadingRecommendation, setLoadingRecommendation] = useState(false);
 
     const decodePrettyUrl = (prettyUrl) => decodeURIComponent(prettyUrl.replace(/-/g, ' '));
-    const encodePrettyUrl = (str) => encodeURIComponent(str.toLowerCase().replace(/\s+/g, '-'));
+//    const encodePrettyUrl = (str) => encodeURIComponent(str.toLowerCase().replace(/\s+/g, '-'));
+
+    const encodePrettyUrl = (str) => {
+    return encodeURIComponent(
+        str
+            .toLowerCase()
+            .replace(/\s+/g, '-')        // Replace spaces with hyphens
+            .replace(/[&]/g, 'and')       // Replace '&' with 'and'
+            .replace(/[']/g, '')          // Remove single quotes
+            .replace(/[()]/g, '')         // Remove parentheses
+    );
+};
 
     const [prettyArtist, prettyAlbum] = artistAndAlbum.split('_');
     const artist = decodePrettyUrl(prettyArtist);

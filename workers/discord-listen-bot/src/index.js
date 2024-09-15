@@ -68,7 +68,7 @@ async function handleAlbumInfo(env, interaction, album, artist) {
         if (!spotifyData.data || spotifyData.data.length === 0) {
             // Send an ephemeral error message to the user
             await sendFollowUpMessage(env.DISCORD_APPLICATION_ID, interaction.token, {
-                content: "I couldn't find this album. I'm a bad robot.",
+                content: "I couldn't find this album. Bad robot.",
                 flags: 64, // Ephemeral flag
             });
             return;
@@ -78,10 +78,15 @@ async function handleAlbumInfo(env, interaction, album, artist) {
         const releaseYear = spotifyAlbum.releaseDate ? spotifyAlbum.releaseDate.split('-')[0] : 'Unknown';
 
         // Create custom URL
-        const formattedArtist = spotifyAlbum.artist.replace(/\s+/g, '-').toLowerCase();
+        const formattedArtist = spotifyAlbum.artist
+            .replace(/\s+/g, '-') // Replace spaces with hyphens
+            .replace(/&/g, 'and') // Replace & with "and"
+            .toLowerCase();
+
         const formattedAlbum = spotifyAlbum.name
             .replace(/\s*\(.*?\)\s*/g, '') // Remove any text inside parentheses
             .replace(/\s+/g, '-') // Replace spaces with hyphens
+            .replace(/&/g, 'and') // Replace & with "and"
             .toLowerCase();
         const customUrl = `https://listentomore.com/album/${formattedArtist}_${formattedAlbum}`;
 
