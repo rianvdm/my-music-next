@@ -68,7 +68,7 @@ async function handleAlbumInfo(env, interaction, album, artist) {
         if (!spotifyData.data || spotifyData.data.length === 0) {
             // Send an ephemeral error message to the user
             await sendFollowUpMessage(env.DISCORD_APPLICATION_ID, interaction.token, {
-                content: "Album not found on Spotify.",
+                content: "I couldn't find this album. I'm a bad robot.",
                 flags: 64, // Ephemeral flag
             });
             return;
@@ -96,8 +96,8 @@ async function handleAlbumInfo(env, interaction, album, artist) {
             songLink: songLinkData.pageUrl ? `[Listen](${songLinkData.pageUrl})` : 'Not available',
         };
 
-        // Send a public follow-up message with album info (visible to everyone)
-        await sendFollowUpMessage(env.DISCORD_APPLICATION_ID, interaction.token, {
+        // Send a new public message with album info (visible to everyone)
+        await sendNewMessage(env.DISCORD_TOKEN, interaction.channel_id, {
             content: `**${spotifyAlbum.name}** by **${spotifyAlbum.artist}** (${releaseYear})\n**Spotify:** ${streamingUrls.spotify}\n**Apple Music:** ${streamingUrls.appleMusic}\n**YouTube:** ${streamingUrls.youtube}\n**Other:** ${streamingUrls.songLink}`,
             embeds: [
                 {
@@ -116,25 +116,28 @@ async function handleAlbumInfo(env, interaction, album, artist) {
             content: "An error occurred while fetching the album details.",
             flags: 64, // Ephemeral flag for errors
         });
+    } finally {
+        // Delete the initial "thinking" message
+        await deleteInitialResponse(env.DISCORD_APPLICATION_ID, interaction.token);
     }
 }
 
-// Helper function to verify the request signature
-function verifySignature(signature, timestamp, body, publicKey) {
-    const message = new TextEncoder().encode(timestamp + body);
-    const signatureUint8 = hexToUint8(signature);
-    const publicKeyUint8 = hexToUint8(publicKey);
 
-    return nacl.sign.detached.verify(message, signatureUint8, publicKeyUint8);
-}
+// Helper function to send a new message to the channel
+async function sendNewMessage(botToken, channelId, messageContent) {
+    const response = await fetch(`https://discord.com/api/v10/channels/${channelId}/messages`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bot ${botToken}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(messageContent),
+    });
 
-// Helper function to convert a hex string to Uint8Array
-function hexToUint8(hex) {
-    const arr = new Uint8Array(hex.length / 2);
-    for (let i = 0; i < hex.length; i += 2) {
-        arr[i / 2] = parseInt(hex.substr(i, 2), 16);
+    if (!response.ok) {
+        const errorBody = await response.text();
+        console.error(`Failed to send new message: ${response.statusText}. Response body: ${errorBody}`);
     }
-    return arr;
 }
 
 // Helper function to send follow-up messages to Discord
@@ -163,3 +166,33 @@ function respondWithEphemeralMessage(message) {
         },
     }), { headers: { 'Content-Type': 'application/json' } });
 }
+
+// Helper function to delete the initial response
+async function deleteInitialResponse(applicationId, token) {
+    const response = await fetch(`https://discord.com/api/v10/webhooks/${applicationId}/${token}/messages/@original`, {
+        method: 'DELETE',
+    });
+
+    if (!response.ok) {
+        console.error(`Failed to delete initial response: ${response.statusText}`);
+    }
+}
+
+// Helper function to verify the request signature
+function verifySignature(signature, timestamp, body, publicKey) {
+    const message = new TextEncoder().encode(timestamp + body);
+    const signatureUint8 = hexToUint8(signature);
+    const publicKeyUint8 = hexToUint8(publicKey);
+
+    return nacl.sign.detached.verify(message, signatureUint8, publicKeyUint8);
+}
+
+// Helper function to convert a hex string to Uint8Array
+function hexToUint8(hex) {
+    const arr = new Uint8Array(hex.length / 2);
+    for (let i = 0; i < hex.length; i += 2) {
+        arr[i / 2] = parseInt(hex.substr(i, 2), 16);
+    }
+    return arr;
+}
+
