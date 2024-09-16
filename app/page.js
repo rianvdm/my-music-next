@@ -15,14 +15,14 @@ const RandomFact = ({ fact }) => (
 );
 
 const RecentTrack = ({ recentTracksData, artistSummary }) => {
-    if (!recentTracksData) return <p>Loading recent track...</p>;
-    
+    if (!recentTracksData || !artistSummary) return <p>Loading recent track and artist summary...</p>;
+
     const artistSlug = encodeURIComponent(recentTracksData.last_artist.replace(/ /g, '-').toLowerCase());
     const albumSlug = encodeURIComponent(recentTracksData.last_album.replace(/ /g, '-').toLowerCase());
-    
+
     return (
         <p>
-            🎧 As for me, I recently listened to <Link href={`album/${artistSlug}_${albumSlug}`} rel="noopener noreferrer"><strong>{recentTracksData.last_album}</strong></Link> by <Link href={`artist/${artistSlug}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary || 'Loading artist summary...'}
+            🎧 As for me, I recently listened to <Link href={`album/${artistSlug}_${albumSlug}`} rel="noopener noreferrer"><strong>{recentTracksData.last_album}</strong></Link> by <Link href={`artist/${artistSlug}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}
         </p>
     );
 };
@@ -97,11 +97,12 @@ function TopAlbums({ data }) {
 
 export default function Home() {
     const [recentTracksData, setRecentTracksData] = useState(null);
+    const [artistSummary, setArtistSummary] = useState(null);
     const [topArtistsData, setTopArtistsData] = useState(null);
     const [topAlbumsData, setTopAlbumsData] = useState(null);
     const [dayGreeting, setDayGreeting] = useState('');
-    const [artistSummary, setArtistSummary] = useState('');
     const [randomFact, setRandomFact] = useState('');
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
 
     const fetchedRandomFact = useRef(false);
 
@@ -147,6 +148,7 @@ export default function Home() {
                 const summaryResponse = await fetch(`https://api-openai-artistsentence.rian-db8.workers.dev?name=${artistName}`);
                 const summaryData = await summaryResponse.json();
                 setArtistSummary(summaryData.data);
+                setIsDataLoaded(true); // Ensure both recent track and artist summary are ready
             } catch (error) {
                 console.error(`Error fetching summary for ${artistName}:`, error);
                 setArtistSummary('Failed to load artist summary.');
@@ -156,8 +158,7 @@ export default function Home() {
         setGreeting();
         fetchRecentTracksFromKV();
         fetchRandomFact();
-
-    }, []); 
+    }, []);
 
     useEffect(() => {
         const fetchTopArtists = async () => {
@@ -206,7 +207,10 @@ export default function Home() {
                 <section id="lastfm-stats">
                     <RecommendationLink />
                     <RandomFact fact={randomFact} />
-                    <RecentTrack recentTracksData={recentTracksData} artistSummary={artistSummary} />
+                    {/* Only render RecentTrack when both recentTracksData and artistSummary are available */}
+                    {isDataLoaded && (
+                        <RecentTrack recentTracksData={recentTracksData} artistSummary={artistSummary} />
+                    )}
                     
                     <h2>👩‍🎤 Top Artists</h2>
                     <p style={{ textAlign: 'center' }}>
