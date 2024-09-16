@@ -127,17 +127,18 @@ export default function Home() {
             }
         };
 
-        const fetchRecentTracks = async () => {
+        // Fetch data from the KV store instead of Last.fm API
+        const fetchRecentTracksFromKV = async () => {
             try {
-                const recentTracksResponse = await fetch('https://api-lastfm-recenttracks.rian-db8.workers.dev');
-                const recentTracksData = await recentTracksResponse.json();
+                const response = await fetch('https://kv-fetch-last-track.rian-db8.workers.dev/');
+                const recentTracksData = await response.json();
                 setRecentTracksData(recentTracksData);
 
                 if (recentTracksData.last_artist) {
                     fetchArtistSummary(recentTracksData.last_artist);
                 }
             } catch (error) {
-                console.error('Error fetching recent tracks data:', error);
+                console.error('Error fetching recent tracks from KV:', error);
             }
         };
 
@@ -153,7 +154,7 @@ export default function Home() {
         };
 
         setGreeting();
-        fetchRecentTracks();
+        fetchRecentTracksFromKV();
         fetchRandomFact();
 
     }, []); 
