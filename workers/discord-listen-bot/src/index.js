@@ -114,9 +114,12 @@ async function handleAlbumInfo(env, interaction, album, artist) {
         // Ensure the artist sentence is available
         const artistSentence = sentenceData.data || "Artist sentence not available";
 
+        // Fetch the user who invoked the command
+        const userId = interaction.member.user.id; // Get the user's Discord ID
+
         // Send a new public message with album info (visible to everyone)
         await sendNewMessage(env.DISCORD_TOKEN, interaction.channel_id, {
-            content: `**${spotifyAlbum.name}** by **${spotifyAlbum.artist}** (${releaseYear})\n**Spotify:** ${streamingUrls.spotify}\n**Apple Music:** ${streamingUrls.appleMusic}\n**Deezer:** ${streamingUrls.deezer}\n**Songlink:** ${streamingUrls.songLink}`,
+            content: `**<@${userId}>** thinks you should listen to **${spotifyAlbum.name}** by **${spotifyAlbum.artist}** (${releaseYear})\n**Spotify:** ${streamingUrls.spotify}\n**Apple Music:** ${streamingUrls.appleMusic}\n**Deezer:** ${streamingUrls.deezer}\n**Songlink:** ${streamingUrls.songLink}`,
             embeds: [
                 {
                     title: `${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
