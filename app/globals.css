@@ -270,6 +270,7 @@ blockquote {
 
 .no-wrap-text {
   overflow: hidden;
+  text-align: left; /* Ensure text is always left-aligned on all screens */
 }
 
 .no-wrap-text p {
@@ -288,10 +289,6 @@ blockquote {
     margin-right: 0;
     margin-left: auto;
     margin-right: auto;
-  }
-
-  .no-wrap-text {
-    text-align: left;
   }
 }
 
