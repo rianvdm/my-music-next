@@ -18,23 +18,23 @@ export default function ArtistPage() {
         if (fetchController) {
             fetchController.abort();
         }
-        
+
         // Create a new AbortController for this request
         fetchController = new AbortController();
 
         async function fetchRandomFact() {
             try {
-                const response = await fetch('https://api-openai-randomfact.rian-db8.workers.dev', {
+                const response = await fetch('https://kv-fetch-random-fact.rian-db8.workers.dev/', {
                     signal: fetchController.signal, // Attach the controller's signal to the fetch
                 });
-                const data = await response.json();
+                const factData = await response.json();
                 if (!didCancel) {
-                    setRandomFact(data.data);
+                    setRandomFact(factData.data);
                 }
             } catch (error) {
                 if (!didCancel && error.name !== 'AbortError') {
                     console.error('Error fetching random fact:', error);
-                    setRandomFact('Failed to load fact.');
+                    setRandomFact('Did you know? There was an error loading a random fact.');
                 }
             }
         }

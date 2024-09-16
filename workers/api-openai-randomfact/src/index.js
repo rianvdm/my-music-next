@@ -1,5 +1,6 @@
 export default {
-    async fetch(request, env) {
+    // This will be triggered when a cron job runs
+    async scheduled(event, env, context) {
         try {
             const keyList = await env.ARTIST_FACTS.list(); // List all keys in the KV store
 
@@ -7,17 +8,16 @@ export default {
                 // Sort the keys by creation date (assuming metadata.timestamp is available)
                 keyList.keys.sort((a, b) => new Date(a.metadata.timestamp) - new Date(b.metadata.timestamp));
                 
-                // Delete the oldest entries until only 24 remain
+                // Delete the oldest entries until only 9 remain
                 const keysToDelete = keyList.keys.slice(0, keyList.keys.length - 9);
                 await Promise.all(keysToDelete.map(key => env.ARTIST_FACTS.delete(key.name)));
             }
 
             // Generate a new fact using OpenAI
             const access_token = env.OPENAI_API_TOKEN;
-            // const prompt = `Give me an interesting, verifiable fact about a musical artist, band, or song in two sentences or less. The artist/band/song shouldn't be too obscure, but doesn't have to be extremely well-known or popular. Start with the phrase "Did you know".`;
-            const genres = ['rock', 'pop', 'jazz', 'electronic', 'hip-hop', 'metal music', 'alternative music', 'singer-songwriter'];
+            const genres = ['rock', 'pop', 'jazz', 'electronic', 'hip-hop', 'metal', 'alternative', 'singer-songwriter', 'blues'];
             const randomGenre = genres[Math.floor(Math.random() * genres.length)];
-            const unit = ['artist', 'band', 'song'];
+            const unit = ['musical artist', 'band', 'song'];
             const randomUnit = unit[Math.floor(Math.random() * unit.length)];
             const prompt = `Give me an interesting, verifiable fact about a ${randomGenre} ${randomUnit}. Use two sentences or less, and start with the phrase "Did you know".`;
             const max_tokens = 100;
@@ -43,13 +43,8 @@ export default {
             });
 
             if (!openAIResponse.ok) {
-                return new Response(JSON.stringify({ error: `Failed to fetch from OpenAI API: ${openAIResponse.statusText}` }), {
-                    status: openAIResponse.status,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*',
-                    },
-                });
+                console.error('Failed to fetch from OpenAI API:', openAIResponse.statusText);
+                return;
             }
 
             const openAIJsonResponse = await openAIResponse.json();
@@ -67,23 +62,9 @@ export default {
             const newKey = `fact_${new Date().getTime()}`; // Use a timestamp as the key to ensure uniqueness
             await env.ARTIST_FACTS.put(newKey, encodedArtistSummary, { metadata });
 
-            // Return the artist summary
-            return new Response(JSON.stringify({ data: artistSummary }), {
-                status: 200,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*',
-                },
-            });
-
+            console.log('New fact added to KV:', artistSummary);
         } catch (error) {
-            return new Response(JSON.stringify({ error: error.message }), {
-                status: 500,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*',
-                },
-            });
+            console.error('Error occurred in cron job:', error);
         }
     }
 };
