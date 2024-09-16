@@ -5,13 +5,34 @@ export const runtime = 'edge';
 import { useEffect, useState, useRef, Suspense } from 'react';
 import Link from 'next/link';
 
+// Separate components for each section
+const RecommendationLink = () => (
+    <p>✨ If you're looking for something new to listen to, you should <strong><a href="/recommendations">get rec'd</a></strong>.</p>
+);
+
+const RandomFact = ({ fact }) => (
+    <p>🧠 {fact || 'Loading a random fact...'}</p>
+);
+
+const RecentTrack = ({ recentTracksData, artistSummary }) => {
+    if (!recentTracksData) return <p>Loading recent track...</p>;
+    
+    const artistSlug = encodeURIComponent(recentTracksData.last_artist.replace(/ /g, '-').toLowerCase());
+    const albumSlug = encodeURIComponent(recentTracksData.last_album.replace(/ /g, '-').toLowerCase());
+    
+    return (
+        <p>
+            🎧 As for me, I recently listened to <Link href={`album/${artistSlug}_${albumSlug}`} rel="noopener noreferrer"><strong>{recentTracksData.last_album}</strong></Link> by <Link href={`artist/${artistSlug}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary || 'Loading artist summary...'}
+        </p>
+    );
+};
+
 function TopArtists({ data }) {
     if (!data) return <p>Loading artists...</p>;
 
     return (
         <div className="track-grid">
             {data.map(artist => {
-                // Move URL generation outside of JSX
                 const artistSlug = encodeURIComponent(artist.name.replace(/ /g, '-').toLowerCase());
                 const artistUrl = `artist/${artistSlug}`;
                 const artistImage = artist.image || 'https://file.elezea.com/noun-no-image.png';
@@ -41,12 +62,11 @@ function TopAlbums({ data }) {
     return (
         <div className="track-grid">
             {data.map(album => {
-                // Compute slugs and URLs outside of JSX
                 const artistSlug = encodeURIComponent(album.artist.replace(/ /g, '-').toLowerCase());
 
                 const formattedAlbum = album.name
-                    .replace(/\s*\(.*?\)\s*/g, '') // Remove any text inside parentheses
-                    .replace(/\s+/g, '-') // Replace spaces with hyphens
+                    .replace(/\s*\(.*?\)\s*/g, '')
+                    .replace(/\s+/g, '-')
                     .toLowerCase();
                 const albumSlug = encodeURIComponent(formattedAlbum);
 
@@ -176,20 +196,6 @@ export default function Home() {
         fetchTopAlbums();
     }, []);
 
-    const renderRecentTracks = () => {
-        if (!recentTracksData) {
-            return <p>Loading...</p>;
-        }
-
-        return (
-            <>
-                <p>✨ If you're looking for something new to listen to, you should <strong><a href="/recommendations">get rec’d</a></strong>.</p>
-                <p>🧠 {randomFact}</p>
-                <p>🎧 As for me, I recently listened to <Link href={`album/${encodeURIComponent(recentTracksData.last_artist.replace(/ /g, '-').toLowerCase())}_${encodeURIComponent(recentTracksData.last_album.replace(/ /g, '-').toLowerCase())}`} rel="noopener noreferrer"><strong>{recentTracksData.last_album}</strong></Link> by <Link href={`artist/${encodeURIComponent(recentTracksData.last_artist.replace(/ /g, '-').toLowerCase())}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}</p>
-            </>
-        );
-    };
-
     return (
         <div>
             <header>
@@ -197,7 +203,9 @@ export default function Home() {
             </header>
             <main>
                 <section id="lastfm-stats">
-                    {renderRecentTracks()}
+                    <RecommendationLink />
+                    <RandomFact fact={randomFact} />
+                    <RecentTrack recentTracksData={recentTracksData} artistSummary={artistSummary} />
                     
                     <h2>👩‍🎤 Top Artists</h2>
                     <p style={{ textAlign: 'center' }}>
