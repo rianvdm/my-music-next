@@ -4,6 +4,7 @@ export const runtime = 'edge';
 
 import { useEffect, useState, useRef, Suspense } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 // Separate components for each section
 const RecommendationLink = () => (
@@ -26,35 +27,6 @@ const RecentTrack = ({ recentTracksData, artistSummary }) => {
         </p>
     );
 };
-
-function TopArtists({ data }) {
-    if (!data) return <p>Loading artists...</p>;
-
-    return (
-        <div className="track-grid">
-            {data.map(artist => {
-                const artistSlug = encodeURIComponent(artist.name.replace(/ /g, '-').toLowerCase());
-                const artistUrl = `artist/${artistSlug}`;
-                const artistImage = artist.image || 'https://file.elezea.com/noun-no-image.png';
-
-                return (
-                    <div className="track" key={artist.name}>
-                        <Link href={artistUrl} rel="noopener noreferrer">
-                            <img src={artistImage} className="track_image" alt={artist.name} />
-                        </Link>
-                        <div className="track_content">
-                            <h2 className="track_artist">
-                                <Link href={artistUrl} rel="noopener noreferrer">
-                                    {artist.name}
-                                </Link>
-                            </h2>
-                        </div>
-                    </div>
-                );
-            })}
-        </div>
-    );
-}
 
 function TopAlbums({ data }) {
     if (!data) return <p>Loading albums...</p>;
@@ -95,10 +67,85 @@ function TopAlbums({ data }) {
     );
 }
 
+// Extracted album search functionality
+const AlbumSearch = () => {
+    const [album, setAlbum] = useState('');
+    const [artist, setArtist] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const router = useRouter();
+
+    const handleSearch = async () => {
+        if (album.trim() === '' || artist.trim() === '') {
+            setError('Please enter both album and artist names.');
+            return;
+        }
+
+        setLoading(true);
+        setError('');
+
+        try {
+            const query = `album: "${album}" artist:"${artist}"`;
+            const spotifyResponse = await fetch(
+                `https://api-spotify-search.rian-db8.workers.dev/?q=${encodeURIComponent(query)}&type=album`
+            );
+            const spotifyData = await spotifyResponse.json();
+
+            if (spotifyData.data && spotifyData.data.length > 0) {
+                const spotifyAlbum = spotifyData.data[0];
+                const formattedArtist = encodeURIComponent(spotifyAlbum.artist.replace(/ /g, '-').toLowerCase());
+                const formattedAlbum = spotifyAlbum.name
+                    .replace(/\s*\(.*?\)\s*/g, '') // Remove parentheses
+                    .replace(/\s+/g, '-') // Replace spaces with hyphens
+                    .toLowerCase();
+
+                router.push(`/album/${formattedArtist}_${formattedAlbum}`);
+            } else {
+                setError('No album found for the given artist and album.');
+            }
+        } catch (error) {
+            console.error('Error fetching from Spotify:', error);
+            setError('An error occurred while fetching album data.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    };
+
+    return (
+        <div id="search-form">
+            <input
+                id="album-name"
+                type="text"
+                value={album}
+                onChange={(e) => setAlbum(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Enter album name..."
+            />
+            <input
+                id="artist-name"
+                type="text"
+                value={artist}
+                onChange={(e) => setArtist(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Enter artist name..."
+            />
+            <button className="button" onClick={handleSearch} disabled={loading} style={{ width: '100px' }}>
+                {loading ? 'Searching...' : 'Search'}
+            </button>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+        </div>
+    );
+};
+
 export default function Home() {
     const [recentTracksData, setRecentTracksData] = useState(null);
     const [artistSummary, setArtistSummary] = useState(null);
-    const [topArtistsData, setTopArtistsData] = useState(null);
     const [topAlbumsData, setTopAlbumsData] = useState(null);
     const [dayGreeting, setDayGreeting] = useState('');
     const [randomFact, setRandomFact] = useState('');
@@ -128,7 +175,6 @@ export default function Home() {
             }
         };
 
-        // Fetch data from the KV store instead of Last.fm API
         const fetchRecentTracksFromKV = async () => {
             try {
                 const response = await fetch('https://kv-fetch-last-track.rian-db8.workers.dev/');
@@ -161,29 +207,6 @@ export default function Home() {
     }, []);
 
     useEffect(() => {
-        const fetchTopArtists = async () => {
-            try {
-                const topArtistsResponse = await fetch('https://api-lastfm-topartists.rian-db8.workers.dev');
-                const topArtistsData = await topArtistsResponse.json();
-
-                const detailedArtistsData = await Promise.all(topArtistsData.map(async (artist) => {
-                    const detailResponse = await fetch(`https://api-lastfm-artistdetail.rian-db8.workers.dev?artist=${artist.name}`);
-                    const detailData = await detailResponse.json();
-                    return {
-                        name: detailData.name,
-                        playcount: artist.playcount,
-                        url: detailData.url,
-                        image: detailData.image,
-                        bio: detailData.bio,
-                    };
-                }));
-
-                setTopArtistsData(detailedArtistsData);
-            } catch (error) {
-                console.error('Error fetching top artists data:', error);
-            }
-        };
-
         const fetchTopAlbums = async () => {
             try {
                 const topAlbumsResponse = await fetch('https://api-lastfm-topalbums.rian-db8.workers.dev');
@@ -194,7 +217,6 @@ export default function Home() {
             }
         };
 
-        fetchTopArtists();
         fetchTopAlbums();
     }, []);
 
@@ -207,22 +229,16 @@ export default function Home() {
                 <section id="lastfm-stats">
                     <RecommendationLink />
                     <RandomFact fact={randomFact} />
-                    {/* Only render RecentTrack when both recentTracksData and artistSummary are available */}
                     {isDataLoaded && (
                         <RecentTrack recentTracksData={recentTracksData} artistSummary={artistSummary} />
                     )}
-                    
-                    <h2>👩‍🎤 Top Artists</h2>
-                    <p style={{ textAlign: 'center' }}>
-                        <strong>The top artists I listened to in the past 7 days.</strong>
-                    </p>
-                    <Suspense fallback={<p>Loading artists...</p>}>
-                        <TopArtists data={topArtistsData} />
-                    </Suspense>
+                    <h2 style={{ marginBottom: 0, marginTop: "2em" }}>💿 Go ahead, search for something you like</h2>
+                    <AlbumSearch /> {/* Album search functionality goes here */}
 
-                    <h2>🏆 Top Albums</h2>
+
+                    <h2>🏆 Or give some of these a try</h2>
                     <p style={{ textAlign: 'center' }}>
-                        <strong>The top albums I listened to in the past 7 days.</strong>
+                        These are the top albums I listened to in the past 7 days.
                     </p>
                     <Suspense fallback={<p>Loading albums...</p>}>
                         <TopAlbums data={topAlbumsData} />
