@@ -148,7 +148,8 @@ export default function AlbumPage({ params }) {
         setLoadingRecommendation(true);
         try {
             const response = await fetch(
-                `https://api-perplexity-albumrecs.rian-db8.workers.dev/?album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}`
+                `https://api-openai-albumrecs.rian-db8.workers.dev/?album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}`
+            //    `https://api-perplexity-albumrecs.rian-db8.workers.dev/?album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}`
             );
             const data = await response.json();
             setRecommendation(marked(data.data));
