@@ -98,10 +98,11 @@ async function handleAlbumInfo(env, interaction, album, artist) {
 
         // Handle undefined URLs and provide fallback
         const streamingUrls = {
-            spotify: spotifyAlbum.url ? `[Listen](${spotifyAlbum.url})` : 'Not available',
-            appleMusic: songLinkData.appleUrl ? `[Listen](${songLinkData.appleUrl})` : 'Not available',
-            youtube: songLinkData.youtubeUrl ? `[Listen](${songLinkData.youtubeUrl})` : 'Not available',
-            songLink: songLinkData.pageUrl ? `[Listen](${songLinkData.pageUrl})` : 'Not available',
+            songLink: songLinkData.pageUrl ? `[Listen](${songLinkData.pageUrl})` : 'n/a',
+            spotify: spotifyAlbum.url ? `[Listen](${spotifyAlbum.url})` : 'n/a',
+            appleMusic: songLinkData.appleUrl ? `[Listen](${songLinkData.appleUrl})` : 'n/a',
+            youtube: songLinkData.youtubeUrl ? `[Listen](${songLinkData.youtubeUrl})` : 'n/a',
+            deezer: songLinkData.deezerUrl ? `[Listen](${songLinkData.deezerUrl})` : 'n/a',
         };
 
         // Fetch artist sentence from the API
@@ -115,7 +116,7 @@ async function handleAlbumInfo(env, interaction, album, artist) {
 
         // Send a new public message with album info (visible to everyone)
         await sendNewMessage(env.DISCORD_TOKEN, interaction.channel_id, {
-            content: `**${spotifyAlbum.name}** by **${spotifyAlbum.artist}** (${releaseYear})\n**Spotify:** ${streamingUrls.spotify}\n**Apple Music:** ${streamingUrls.appleMusic}\n**YouTube:** ${streamingUrls.youtube}\n**Songlink:** ${streamingUrls.songLink}`,
+            content: `**${spotifyAlbum.name}** by **${spotifyAlbum.artist}** (${releaseYear})\n**Spotify:** ${streamingUrls.spotify}\n**Apple Music:** ${streamingUrls.appleMusic}\n**Deezer:** ${streamingUrls.deezer}\n**Songlink:** ${streamingUrls.songLink}`,
             embeds: [
                 {
                     title: `${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
