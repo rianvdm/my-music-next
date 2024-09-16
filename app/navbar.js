@@ -32,10 +32,7 @@ export default function NavBar() {
           <Link href="/album">Albums</Link>
         </li>
         <li style={liStyle}>
-          <Link href="/recommendations">Get Rec’d</Link>
-        </li>
-        <li style={liStyle}>
-          <Link href="/collection">Collection</Link>
+          <Link href="/recommendations">Get rec’d</Link>
         </li>
         <li style={liStyle}>
           <Link href="/about">About</Link>
