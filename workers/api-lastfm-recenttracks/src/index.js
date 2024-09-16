@@ -3,14 +3,11 @@ export default {
         const apiKey = env.LASTFM_API_KEY;
         const username = env.LASTFM_USERNAME;
 
-        // Calculate the timestamp for 7 days ago
-        // const oneWeekAgo = Math.floor(Date.now() / 1000) - (7 * 24 * 60 * 60);
-
-        // Construct the API URL
+        // Construct the Last.fm API URL
         const apiUrl = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${encodeURIComponent(username)}&api_key=${encodeURIComponent(apiKey)}&limit=1&format=json`;
 
         try {
-            // Fetch recent tracks from the last 7 days
+            // Fetch recent tracks from Last.fm API
             const response = await fetch(apiUrl);
             
             if (!response.ok) {
@@ -31,7 +28,14 @@ export default {
                 last_album: lastAlbum,
             };
 
-            return new Response(JSON.stringify(recentTracksInfo), {
+            // Convert the track info to JSON string
+            const recentTracksInfoString = JSON.stringify(recentTracksInfo);
+
+            // Save the recent track info in the LASTFM_LAST_TRACK KV
+            await env.LASTFM_LAST_TRACK.put('lastTrack', recentTracksInfoString);
+
+            // Return the recent track info in the response
+            return new Response(recentTracksInfoString, {
                 status: 200,
                 headers: {
                     'Content-Type': 'application/json',
