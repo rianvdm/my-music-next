@@ -115,7 +115,7 @@ async function handleAlbumInfo(env, interaction, album, artist) {
 
         // Send a new public message with album info (visible to everyone)
         await sendNewMessage(env.DISCORD_TOKEN, interaction.channel_id, {
-            content: `**${spotifyAlbum.name}** by **${spotifyAlbum.artist}** (${releaseYear})\n**Spotify:** ${streamingUrls.spotify}\n**Apple Music:** ${streamingUrls.appleMusic}\n**YouTube:** ${streamingUrls.youtube}\n**Other:** ${streamingUrls.songLink}`,
+            content: `**${spotifyAlbum.name}** by **${spotifyAlbum.artist}** (${releaseYear})\n**Spotify:** ${streamingUrls.spotify}\n**Apple Music:** ${streamingUrls.appleMusic}\n**YouTube:** ${streamingUrls.youtube}\n**Songlink:** ${streamingUrls.songLink}`,
             embeds: [
                 {
                     title: `${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
