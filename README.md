@@ -10,6 +10,6 @@ If you want to chat about this project, feel free to [reach out](https://elezea.
 
 I also have a Beta of a Discord Bot that lets you get streaming links for albums. It looks like this:
 
-![](https://file.elezea.com/20240916-YwUABXiv-2x.png)
+![](https://file.elezea.com/20240916-N1TbC815-2x.png)
 
 If you'd like to test it out in your server, [let me know](https://elezea.com/contact/)!
