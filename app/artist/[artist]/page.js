@@ -10,7 +10,7 @@ export default function ArtistPage({ params }) {
     const { artist: prettyArtist } = params;
     const [artistDetails, setArtistDetails] = useState(null);
     const [topAlbums, setTopAlbums] = useState([]);
-    const [openAISummary, setOpenAISummary] = useState('Loading ChatGPT summary...');
+    const [openAISummary, setOpenAISummary] = useState('Loading summary...');
     const [error, setError] = useState(null);
     const fetchedOpenAISummary = useRef(false);
 

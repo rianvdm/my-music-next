@@ -15,7 +15,7 @@ const RandomFact = ({ fact }) => (
 );
 
 const RecentTrack = ({ recentTracksData, artistSummary }) => {
-    if (!recentTracksData || !artistSummary) return <p>Loading recent track and artist summary...</p>;
+    if (!recentTracksData || !artistSummary) return <p>Loading recent album and artist summary...</p>;
 
     const artistSlug = encodeURIComponent(recentTracksData.last_artist.replace(/ /g, '-').toLowerCase());
     const albumSlug = encodeURIComponent(recentTracksData.last_album.replace(/ /g, '-').toLowerCase());
