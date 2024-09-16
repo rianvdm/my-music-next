@@ -1,13 +1,35 @@
+'use client';
+
 export const runtime = 'edge';
 
+import { useEffect, useState } from 'react';
+import { marked } from 'marked';
+
 export default function AboutPage() {
-  return (
-    <div>
-      <h1>About this site</h1>
-        <h3>Hello 👋</h3>
-          <p>My name is <a href="https://elezea.com">Rian van der Merwe</a> and this site started as a side project about the music I listen to, but then I got obsessed with it and now it's a whole lot more. It pulls data from <a href="https://www.last.fm/user/bordesak">my Last.fm activity</a> and <a href="https://www.discogs.com/user/elezea-records/collection">Discogs collection</a>,  and then I ✨enhance✨ the data using APIs from Spotify, <a href="https://odesli.co/">Songlink/Odesli</a>, ChatGPT, and Perplexity. So have fun. Use the site to find information about an artist or album, and find your next favorite listen.</p>
-          <p>The site is built on <a href="https://cloudflare.com">Cloudflare</a> products, including <a href="https://pages.cloudflare.com/">Pages</a>, <a href="https://workers.cloudflare.com/">Workers</a>, and <a href="https://www.cloudflare.com/developer-platform/workers-kv/">Workers KV</a>.  It's a wonderful set of tools to work with—and I'm not just saying that because <a href="https://elezea.com/portfolio/">I work there</a>.</p>
-          <p>If you want to chat about this project, feel free to <a href="https://elezea.com/contact/">reach out</a>! And if you spot any bugs (there are lots!) or have any ideas for things to add, please <a href="https://github.com/rianvdm/my-music-next/issues">submit an issue on GitHub</a></p>
-    </div>
-  );
+    const [aboutContent, setAboutContent] = useState('');
+
+    useEffect(() => {
+        const fetchAboutContent = async () => {
+            try {
+                // Fetch README.md from the public folder or your repository
+                const response = await fetch('https://raw.githubusercontent.com/rianvdm/my-music-next/main/README.md');
+                const markdown = await response.text();
+                const htmlContent = marked(markdown);
+                setAboutContent(htmlContent);
+            } catch (error) {
+                console.error('Error fetching about content:', error);
+                setAboutContent('<p>Failed to load about content.</p>');
+            }
+        };
+
+        fetchAboutContent();
+    }, []);
+
+    return (
+        <div>
+            <h1>About this site</h1>
+            {/* Render the fetched and parsed README.md content */}
+            <div className="about-content" dangerouslySetInnerHTML={{ __html: aboutContent }} />
+        </div>
+    );
 }
