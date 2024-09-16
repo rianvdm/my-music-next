@@ -250,7 +250,7 @@ export default function AlbumPage({ params }) {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        Other ↗
+                                        Songlink ↗
                                     </a>
                                 ) : (
                                     'Not available on Songlink'
