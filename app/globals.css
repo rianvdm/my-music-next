@@ -536,3 +536,11 @@ img.center-image {
         text-align: left; /* Align text to the left */
     }
 }
+
+.centered-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
+    height: auto;
+}
