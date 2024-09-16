@@ -353,8 +353,8 @@ img.center-image {
   max-width: 300px;
 }
 
-/* Search Form */
-#search-form, #usernameInput {
+/* Style for the form */
+#search-form {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -363,8 +363,28 @@ img.center-image {
   padding-bottom: 1em;
 }
 
-#search-form label, #usernameInput label {
-  margin-right: 0.5em;
+#search-form input,
+#search-form button {
+  margin-right: 0.5em; /* Add some space between inputs and buttons */
+}
+
+/* Stack text inputs and button vertically on small screens */
+@media (max-width: 768px) {
+  #search-form {
+    flex-direction: column;
+  }
+
+  #search-form input,
+  #search-form button {
+    width: 90%; /* Take up most of the screen width */
+    max-width: 300px;
+    margin-right: 0; /* Remove right margin for stacked layout */
+    margin-bottom: 0.5em; /* Add space between stacked inputs and button */
+  }
+
+  #search-form button {
+    margin-left: 0; /* Remove left margin for stacked layout */
+  }
 }
 
 #artist-name, #album-name, #song-name, #lastFmUsername {
