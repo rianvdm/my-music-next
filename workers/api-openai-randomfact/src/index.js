@@ -15,7 +15,7 @@ export default {
 
             // Generate a new fact using OpenAI
             const access_token = env.OPENAI_API_TOKEN;
-            const genres = ['rock', 'pop', 'jazz', 'electronic', 'hip-hop', 'metal', 'alternative', 'singer-songwriter', 'blues'];
+            const genres = ['rock', 'pop', 'jazz', 'electronic', 'hip-hop', 'metal', 'alternative', 'singer-songwriter', 'blues', 'soul', 'punk'];
             const randomGenre = genres[Math.floor(Math.random() * genres.length)];
             const unit = ['musical artist', 'band', 'song'];
             const randomUnit = unit[Math.floor(Math.random() * unit.length)];
