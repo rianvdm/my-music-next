@@ -15,8 +15,10 @@ const RandomFact = ({ fact }) => (
     <p>🧠 {fact || 'Loading a random fact...'}</p>
 );
 
-const RecentTrack = ({ recentTracksData, artistSummary }) => {
-    if (!recentTracksData || !artistSummary) return <p>Loading recent album and artist summary...</p>;
+const RecentTrack = ({ recentTracksData, artistSummary, isDataLoaded }) => {
+    if (!isDataLoaded || !recentTracksData || !artistSummary) {
+        return <p>Loading recent album and artist summary...</p>;
+    }
 
     const artistSlug = encodeURIComponent(recentTracksData.last_artist.replace(/ /g, '-').toLowerCase());
     const albumSlug = encodeURIComponent(recentTracksData.last_album.replace(/ /g, '-').toLowerCase());
@@ -194,7 +196,7 @@ export default function Home() {
                 const summaryResponse = await fetch(`https://api-openai-artistsentence.rian-db8.workers.dev?name=${artistName}`);
                 const summaryData = await summaryResponse.json();
                 setArtistSummary(summaryData.data);
-                setIsDataLoaded(true); // Ensure both recent track and artist summary are ready
+                setIsDataLoaded(true);
             } catch (error) {
                 console.error(`Error fetching summary for ${artistName}:`, error);
                 setArtistSummary('Failed to load artist summary.');
@@ -228,10 +230,16 @@ export default function Home() {
             <main>
                 <section id="lastfm-stats">
                     <RecommendationLink />
-                    <RandomFact fact={randomFact} />
-                    {isDataLoaded && (
-                        <RecentTrack recentTracksData={recentTracksData} artistSummary={artistSummary} />
-                    )}
+                <RandomFact fact={randomFact} />
+                {isDataLoaded ? (
+                    <RecentTrack 
+                        recentTracksData={recentTracksData} 
+                        artistSummary={artistSummary} 
+                        isDataLoaded={isDataLoaded} 
+                    />
+                ) : (
+                    <p>Loading recent album and artist summary...</p>
+                )}
                     <h2 style={{ marginBottom: 0, marginTop: "2em" }}>💿 Go ahead, search for something you like</h2>
                     <AlbumSearch /> {/* Album search functionality goes here */}
 
