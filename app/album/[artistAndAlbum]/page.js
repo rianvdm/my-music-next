@@ -17,27 +17,26 @@ export default function AlbumPage({ params }) {
     });
     const [releaseYear, setReleaseYear] = useState('Loading...');
     const [trackCount, setTrackCount] = useState('Loading...');
-    const [genres, setGenres] = useState('Loading...'); // New state for genres
+    const [genres, setGenres] = useState('Loading...');
     const [openAISummary, setOpenAISummary] = useState('Loading summary...');
-    const [artistId, setArtistId] = useState(null); // Store the artist ID separately
+    const [artistId, setArtistId] = useState(null);
     const [error, setError] = useState(null);
     const fetchedOpenAISummary = useRef(false);
     const [recommendation, setRecommendation] = useState('');
     const [loadingRecommendation, setLoadingRecommendation] = useState(false);
 
     const decodePrettyUrl = (prettyUrl) => decodeURIComponent(prettyUrl.replace(/-/g, ' '));
-//    const encodePrettyUrl = (str) => encodeURIComponent(str.toLowerCase().replace(/\s+/g, '-'));
 
     const encodePrettyUrl = (str) => {
-    return encodeURIComponent(
-        str
-            .toLowerCase()
-            .replace(/\s+/g, '-')        // Replace spaces with hyphens
-            .replace(/[&]/g, 'and')       // Replace '&' with 'and'
-            .replace(/[']/g, '')          // Remove single quotes
-            .replace(/[()]/g, '')         // Remove parentheses
-    );
-};
+        return encodeURIComponent(
+            str
+                .toLowerCase()
+                .replace(/\s+/g, '-')        
+                .replace(/[&]/g, 'and')       
+                .replace(/[']/g, '')          
+                .replace(/[()]/g, '')         
+        );
+    };
 
     const [prettyArtist, prettyAlbum] = artistAndAlbum.split('_');
     const artist = decodePrettyUrl(prettyArtist);
@@ -50,9 +49,7 @@ export default function AlbumPage({ params }) {
                 try {
                     const spotifyQuery = `album: "${album}" artist:"${artist}"`;
                     const spotifyResponse = await fetch(
-                        `https://api-spotify-search.rian-db8.workers.dev/?q=${encodeURIComponent(
-                            spotifyQuery
-                        )}&type=album`
+                        `https://api-spotify-search.rian-db8.workers.dev/?q=${encodeURIComponent(spotifyQuery)}&type=album`
                     );
                     const spotifyData = await spotifyResponse.json();
 
@@ -71,13 +68,11 @@ export default function AlbumPage({ params }) {
 
                         // Set the artist ID immediately to fetch genres separately
                         if (spotifyAlbum.artistIds && spotifyAlbum.artistIds.length > 0) {
-                            setArtistId(spotifyAlbum.artistIds[0]); // Set the artist ID here
+                            setArtistId(spotifyAlbum.artistIds[0]);
                         }
 
                         const songLinkResponse = await fetch(
-                            `https://api-songlink.rian-db8.workers.dev/?url=${encodeURIComponent(
-                                spotifyAlbum.url
-                            )}`
+                            `https://api-songlink.rian-db8.workers.dev/?url=${encodeURIComponent(spotifyAlbum.url)}`
                         );
                         const songLinkData = await songLinkResponse.json();
                         setStreamingUrls((prevUrls) => ({
@@ -86,6 +81,9 @@ export default function AlbumPage({ params }) {
                             appleMusic: songLinkData.appleUrl,
                             youtube: songLinkData.youtubeUrl,
                         }));
+
+                        // Fetch OpenAI summary using the album and artist from Spotify
+                        fetchOpenAISummary(spotifyAlbum.name, spotifyAlbum.artist);
                     } else {
                         throw new Error('Album not found');
                     }
@@ -98,6 +96,23 @@ export default function AlbumPage({ params }) {
         }
     }, [artist, album]);
 
+    // Fetch OpenAI summary with Spotify album details
+    const fetchOpenAISummary = async (albumName, artistName) => {
+        if (albumName && artistName && !fetchedOpenAISummary.current) {
+            fetchedOpenAISummary.current = true;
+            try {
+                const summaryResponse = await fetch(
+                    `https://api-perplexity-albumdetail.rian-db8.workers.dev?album=${encodeURIComponent(albumName)}&artist=${encodeURIComponent(artistName)}`
+                );
+                const summaryData = await summaryResponse.json();
+                setOpenAISummary(summaryData.data);
+            } catch (error) {
+                console.error('Error fetching OpenAI summary:', error);
+                setOpenAISummary('Failed to load summary.');
+            }
+        }
+    };
+
     // Fetch genres as soon as artist ID is available
     useEffect(() => {
         if (artistId) {
@@ -108,8 +123,6 @@ export default function AlbumPage({ params }) {
                     );
                     const artistDetailsData = await artistDetailsResponse.json();
                     const fetchedGenres = artistDetailsData.data.genres || [];
-
-                    // Update genres state with up to 3 genres
                     setGenres(fetchedGenres.slice(0, 3).join(', ') || 'Unknown');
                 } catch (error) {
                     console.error('Error fetching artist genres:', error);
@@ -118,32 +131,9 @@ export default function AlbumPage({ params }) {
             }
             fetchArtistGenres();
         }
-    }, [artistId]); // This useEffect only depends on artistId
+    }, [artistId]);
 
-    // Fetch OpenAI summary
-    useEffect(() => {
-        if (artist && album && !fetchedOpenAISummary.current) {
-            fetchedOpenAISummary.current = true;
-            async function fetchOpenAISummary() {
-                try {
-                    const summaryResponse = await fetch(
-                        `https://api-perplexity-albumdetail.rian-db8.workers.dev?album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}`
-                    );
-                    const summaryData = await summaryResponse.json();
-                    setOpenAISummary(summaryData.data);
-                } catch (error) {
-                    console.error('Error fetching OpenAI summary:', error);
-                    setOpenAISummary('Failed to load summary.');
-                }
-            }
-            fetchOpenAISummary();
-        }
-    }, [artist, album]);
-
-    const renderOpenAISummary = (summary) => {
-        return <div dangerouslySetInnerHTML={{ __html: marked(summary) }} />;
-    };
-
+    // Fetch recommendations
     const handleRecommendation = async () => {
         setLoadingRecommendation(true);
         try {
@@ -159,6 +149,10 @@ export default function AlbumPage({ params }) {
         } finally {
             setLoadingRecommendation(false);
         }
+    };
+
+    const renderOpenAISummary = (summary) => {
+        return <div dangerouslySetInnerHTML={{ __html: marked(summary) }} />;
     };
 
     if (error) {
@@ -197,7 +191,7 @@ export default function AlbumPage({ params }) {
                                 <strong>Released:</strong> {releaseYear}
                             </p>
                             <p>
-                                <strong>Genres:</strong> {genres} {/* Display genres */}
+                                <strong>Genres:</strong> {genres}
                             </p>
                             <p>
                                 <strong>Streaming:</strong>
