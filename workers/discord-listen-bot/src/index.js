@@ -105,9 +105,8 @@ async function handleAlbumInfo(env, interaction, album, artist) {
             deezer: songLinkData.deezerUrl ? `[Listen](${songLinkData.deezerUrl})` : 'n/a',
         };
 
-        // Fetch artist sentence from the API
         const sentenceResponse = await env.SENTENCE_SERVICE.fetch(
-            `https://api-openai-artistsentence.rian-db8.workers.dev/?name=${encodeURIComponent(artist)}`
+            `https://api-openai-artistsentence.rian-db8.workers.dev/?name=${encodeURIComponent(spotifyAlbum.artist)}`
         );
         const sentenceData = await sentenceResponse.json();
 
