@@ -39,3 +39,5 @@ next-env.d.ts
 .wrangler
 .dev.vars
 **/wrangler.toml
+
+/workers
