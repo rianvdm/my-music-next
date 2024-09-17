@@ -209,17 +209,18 @@ export default function Home() {
     }, []);
 
     useEffect(() => {
-        const fetchTopAlbums = async () => {
+        // Fetch the top albums from KV instead of Last.fm API
+        const fetchTopAlbumsFromKV = async () => {
             try {
-                const topAlbumsResponse = await fetch('https://api-lastfm-topalbums.rian-db8.workers.dev');
-                const topAlbumsData = await topAlbumsResponse.json();
+                const response = await fetch('https://kv-fetch-top-albums.rian-db8.workers.dev/');
+                const topAlbumsData = await response.json();
                 setTopAlbumsData(topAlbumsData);
             } catch (error) {
-                console.error('Error fetching top albums:', error);
+                console.error('Error fetching top albums from KV:', error);
             }
         };
 
-        fetchTopAlbums();
+        fetchTopAlbumsFromKV();
     }, []);
 
     return (
