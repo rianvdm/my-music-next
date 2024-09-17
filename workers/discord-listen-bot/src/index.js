@@ -123,7 +123,7 @@ async function handleAlbumInfo(env, interaction, album, artist) {
                 {
                     title: `${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
                     url: customUrl,
-                    description: `${artistSentence}\n\nClick through for more details about this album.`,
+                    description: `${artistSentence}`,
                     thumbnail: {
                         url: spotifyAlbum.image || 'https://file.elezea.com/noun-no-image.png',
                     },

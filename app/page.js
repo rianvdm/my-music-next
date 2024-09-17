@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 
 // Separate components for each section
 const RecommendationLink = () => (
-    <p>✨ Welcome, fellow album wanderer who frequently gets lost in an ocean of playlists. You have found your home. If you're looking for something new to listen to, you should absolutely <strong><a href="/recommendations">get rec'd</a></strong>.</p>
+    <p>✨ Welcome, music traveler. If you're looking for something new to listen to, you should <strong><a href="/recommendations">get rec'd</a></strong>.</p>
 );
 
 const RandomFact = ({ fact }) => (
