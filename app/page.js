@@ -73,44 +73,21 @@ function TopAlbums({ data }) {
 const AlbumSearch = () => {
     const [album, setAlbum] = useState('');
     const [artist, setArtist] = useState('');
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const router = useRouter();
 
-    const handleSearch = async () => {
+    const handleSearch = () => {
         if (album.trim() === '' || artist.trim() === '') {
             setError('Please enter both album and artist names.');
             return;
         }
 
-        setLoading(true);
-        setError('');
+        // Generate the slugs from the user input
+        const formattedArtist = encodeURIComponent(artist.replace(/ /g, '-').toLowerCase());
+        const formattedAlbum = encodeURIComponent(album.replace(/\s*\(.*?\)\s*/g, '').replace(/\s+/g, '-').toLowerCase());
 
-        try {
-            const query = `album: "${album}" artist:"${artist}"`;
-            const spotifyResponse = await fetch(
-                `https://api-spotify-search.rian-db8.workers.dev/?q=${encodeURIComponent(query)}&type=album`
-            );
-            const spotifyData = await spotifyResponse.json();
-
-            if (spotifyData.data && spotifyData.data.length > 0) {
-                const spotifyAlbum = spotifyData.data[0];
-                const formattedArtist = encodeURIComponent(spotifyAlbum.artist.replace(/ /g, '-').toLowerCase());
-                const formattedAlbum = spotifyAlbum.name
-                    .replace(/\s*\(.*?\)\s*/g, '') // Remove parentheses
-                    .replace(/\s+/g, '-') // Replace spaces with hyphens
-                    .toLowerCase();
-
-                router.push(`/album/${formattedArtist}_${formattedAlbum}`);
-            } else {
-                setError('No album found for the given artist and album.');
-            }
-        } catch (error) {
-            console.error('Error fetching from Spotify:', error);
-            setError('An error occurred while fetching album data.');
-        } finally {
-            setLoading(false);
-        }
+        // Navigate to the album page where the search will happen
+        router.push(`/album/${formattedArtist}_${formattedAlbum}`);
     };
 
     const handleKeyDown = (e) => {
@@ -137,8 +114,8 @@ const AlbumSearch = () => {
                 onKeyDown={handleKeyDown}
                 placeholder="Enter artist name..."
             />
-            <button className="button" onClick={handleSearch} disabled={loading} style={{ width: '100px' }}>
-                {loading ? 'Searching...' : 'Search'}
+            <button className="button" onClick={handleSearch} style={{ width: '100px' }}>
+                Search
             </button>
             {error && <p style={{ color: 'red' }}>{error}</p>}
         </div>
