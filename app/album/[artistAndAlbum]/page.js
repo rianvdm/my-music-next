@@ -47,7 +47,7 @@ export default function AlbumPage({ params }) {
         if (artist && album) {
             async function fetchAlbumData() {
                 try {
-                    const spotifyQuery = `album:"${album}" artist:"${artist}"`;
+                    const spotifyQuery = `album:${album} artist:${artist}`;
                     const spotifyResponse = await fetch(
                         `https://api-spotify-search.rian-db8.workers.dev/?q=${encodeURIComponent(spotifyQuery)}&type=album`
                     );
