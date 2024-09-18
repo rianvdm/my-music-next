@@ -31,10 +31,11 @@ export default function AlbumPage({ params }) {
         return encodeURIComponent(
             str
                 .toLowerCase()
-                .replace(/\s+/g, '-')        
-                .replace(/[&]/g, 'and')       
-                .replace(/[']/g, '')          
-                .replace(/[()]/g, '')         
+                .split(',')[0]               // Remove text after the first comma
+                .replace(/\s+/g, '-')         // Replace spaces with hyphens
+                .replace(/[&]/g, 'and')       // Replace & with 'and'
+                .replace(/[']/g, '')          // Remove single quotes
+                .replace(/[()]/g, '')         // Remove parentheses
         );
     };
 
