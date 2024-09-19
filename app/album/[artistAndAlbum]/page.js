@@ -124,7 +124,7 @@ export default function AlbumPage({ params }) {
                     );
                     const artistDetailsData = await artistDetailsResponse.json();
                     const fetchedGenres = artistDetailsData.data.genres || [];
-                    setGenres(fetchedGenres.slice(0, 3).join(', ') || 'Unknown');
+                    setGenres(fetchedGenres.slice(0, 2).join(', ') || 'Unknown');
                 } catch (error) {
                     console.error('Error fetching artist genres:', error);
                     setGenres('Failed to load genres');
