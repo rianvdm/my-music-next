@@ -36,7 +36,11 @@ function TopAlbums({ data }) {
     return (
         <div className="track-grid">
             {data.map(album => {
-                const artistSlug = encodeURIComponent(album.artist.replace(/ /g, '-').toLowerCase());
+                const formattedArtist = album.artist
+                    .replace(/ /g, '-')
+                    .replace(/[&]/g, 'and')  
+                    .toLowerCase();
+                const artistSlug = encodeURIComponent(formattedArtist);
 
                 const formattedAlbum = album.name
                     .replace(/\s*\(.*?\)\s*/g, '')
