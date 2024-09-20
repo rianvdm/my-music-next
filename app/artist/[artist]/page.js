@@ -115,7 +115,6 @@ export default function ArtistPage({ params }) {
                             style={{ maxWidth: '100%', width: '220px', height: 'auto' }} 
                         />
                         <div className="no-wrap-text">
-                            <p><strong>My playcount:</strong> {formattedPlaycount} plays</p>
                             <p><strong>Genre:</strong> {artistDetails.tags[0] || 'No genres found'}</p>
 
                             <p style={{ marginBottom: '0.2em' }}><strong>Popular Albums:</strong></p>
