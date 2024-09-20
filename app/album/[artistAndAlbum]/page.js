@@ -36,7 +36,6 @@ export default function AlbumPage({ params }) {
                 .replace(/[&]/g, 'and')       // Replace & with 'and'
                 .replace(/[']/g, '')          // Remove single quotes
                 .replace(/[()]/g, '')         // Remove parentheses
-                .replace(/\//g, '-')          // Replace / with hyphens
         );
     };
 
