@@ -1,5 +1,4 @@
-Here are some new releases I'm checking out the week of September 14, 2024:
+It's a bit of a slow week this week it seems, but here are a couple of new releases I'm checking out the week of September 20, 2024:
 
-* **[Live Drugs Again by The War On Drugs](https://listentomore.com/album/the-war-on-drugs_live-drugs-again)**. I really loved the first Live Drugs, so I'm hopeful about this one!
-* **[The Forest Is The Path by Snow Patrol](https://listentomore.com/album/snow-patrol_the-forest-is-the-path)**. A new Snow Patrol in 2024? Ok fine I'll take it. I've listened to this one a bit and it's mellow and lovely so far.
-* **[Dayglow by Dayglow](https://listentomore.com/album/dayglow_dayglow)**. Some light indie pop fun for good weekend times.
+* **[Talker by Wilderado](https://listentomore.com/album/wilderado_talker)**. Second album from the indie folk / alternative band.
+* **[CHLORINE by Justin Nozuka](https://listentomore.com/album/justin-nozuka_chlorine).** I remember being obsessed with the gentle R&B vibes of his album [Holly](https://listentomore.com/album/justin-nozuka_holly) way back in the day (2008!) but haven't really kept up.
