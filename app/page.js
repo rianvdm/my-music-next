@@ -20,8 +20,21 @@ const RecentTrack = ({ recentTracksData, artistSummary, isDataLoaded }) => {
         return <p>Loading recent album and artist summary...</p>;
     }
 
-    const artistSlug = encodeURIComponent(recentTracksData.last_artist.replace(/ /g, '-').toLowerCase());
-    const albumSlug = encodeURIComponent(recentTracksData.last_album.replace(/ /g, '-').toLowerCase());
+const artistSlug = encodeURIComponent(
+    recentTracksData.last_artist
+        .replace(/\s+/g, '-')     // Replace spaces with hyphens
+        .replace(/&/g, 'and')     // Replace & with 'and'
+        .replace(/\//g, '-')      // Replace / with hyphens
+        .toLowerCase()
+);
+
+const albumSlug = encodeURIComponent(
+    recentTracksData.last_album
+        .replace(/\s+/g, '-')     // Replace spaces with hyphens
+        .replace(/&/g, 'and')     // Replace & with 'and'
+        .replace(/\//g, '-')      // Replace / with hyphens
+        .toLowerCase()
+);
 
     return (
         <p>
@@ -39,12 +52,14 @@ function TopAlbums({ data }) {
                 const formattedArtist = album.artist
                     .replace(/ /g, '-')
                     .replace(/[&]/g, 'and')  
+                    .replace(/\//g, '-')
                     .toLowerCase();
                 const artistSlug = encodeURIComponent(formattedArtist);
 
                 const formattedAlbum = album.name
                     .replace(/\s*\(.*?\)\s*/g, '')
                     .replace(/\s+/g, '-')
+                    .replace(/\//g, '-')
                     .toLowerCase();
                 const albumSlug = encodeURIComponent(formattedAlbum);
 
