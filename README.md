@@ -1,6 +1,6 @@
 ### Hello 👋
 
-My name is [Rian van der Merwe](https://elezea.com/) and this site started as a side project about the music I listen to, but then I got obsessed with it and now it's a whole lot more. The home page pulls data from [my Last.fm activity](https://www.last.fm/user/bordesak), and then it gets ✨enhanced✨ via APIs from Spotify, ChatGPT, and Perplexity. And then it just expanded from there to what it is now—essentially a full-fledged artist and album database. So have fun. Use the site to find information about an artist or album, and find your next favorite listen.
+My name is [Rian van der Merwe](https://elezea.com/) and this site started as a side project about the music I listen to, but then I got obsessed with it and now it's a whole lot more. The home page pulls data from [my Last.fm activity](https://www.last.fm/user/bordesak), and then it gets ✨enhanced✨ via APIs from Spotify, ChatGPT, and Perplexity. The whole thing expanded from that initial idea, to where it is now essentially a full-fledged artist and album database. So have fun. Use the site to find information about an artist or album, and find your next favorite listen.
 
 The site is built on [Cloudflare](https://cloudflare.com/) products, including [Pages](https://pages.cloudflare.com/), [Workers](https://workers.cloudflare.com/), and [Workers KV](https://www.cloudflare.com/developer-platform/workers-kv/). It's a wonderful set of tools to work with--and I'm not just saying that because [I work there](https://elezea.com/portfolio/).
 
