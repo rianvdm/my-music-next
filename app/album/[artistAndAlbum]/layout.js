@@ -20,10 +20,10 @@ export async function generateMetadata({ params }) {
 
             return {
                 title: `${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
-                description: `Album details and streaming links for ${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
+                description: `Streaming links and album details for ${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
                 openGraph: {
                     title: `${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
-                    description: `Album details and streaming links for ${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
+                    description: `Streaming links and album details for ${spotifyAlbum.name} by ${spotifyAlbum.artist}. Powered by Listen To More, your home for music discovery.`,
                     images: [spotifyAlbum.image],
                     url: pageUrl,
                     type: 'music.album',
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }) {
                 twitter: {
                     card: 'summary',
                     title: `${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
-                    description: `Album details and streaming links for ${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
+                    description: `Streaming links and album details for ${spotifyAlbum.name} by ${spotifyAlbum.artist}. Powered by Listen To More, your home for music discovery.`,
                     images: [spotifyAlbum.image],
                 },
             };
