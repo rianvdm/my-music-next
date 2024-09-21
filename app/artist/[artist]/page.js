@@ -5,6 +5,7 @@ export const runtime = 'edge';
 import { useEffect, useState, useRef } from 'react';
 import { marked } from 'marked';
 import Link from 'next/link';
+import { generateArtistSlug, generateAlbumSlug, generateLastfmArtistSlug } from '../../utils/slugify';
 
 export default function ArtistPage({ params }) {
     const { artist: prettyArtist } = params;
@@ -103,7 +104,7 @@ export default function ArtistPage({ params }) {
     // Use the fallback image if artistDetails.image is an empty string
     const artistImage = artistDetails.image || 'https://file.elezea.com/noun-no-image.png';
 
-    const formattedArtist = artistDetails.name.replace(/\s+/g, '-').toLowerCase();
+    const formattedArtist = generateArtistSlug(artistDetails.name);
 
     return (
         <div>
@@ -124,14 +125,7 @@ export default function ArtistPage({ params }) {
                             <p style={{ marginBottom: '0.2em' }}><strong>Popular Albums:</strong></p>
                             <ul style={{ listStyleType: 'none', paddingLeft: '0', marginTop: '0' }}>
                                 {topAlbums.map((album, index) => {
-                                    const formattedAlbum = album.name
-                                        .replace(/\s*\(.*?\)\s*/g, '')  // Remove any text inside parentheses
-                                        .replace(/\s+/g, '-')           // Replace spaces with hyphens
-                            //            .replace(/&/g, 'and')           // Replace & with "and"
-                                        .replace(/\//g, '-')            // Replace / with hyphens
-                                        .replace(/'/g, '')          // Remove single quotation marks
-                                        .toLowerCase();
-                                    
+                                    const formattedAlbum = generateAlbumSlug(album.name);                                    
                                     return (
                                         <li key={index}>
                                             <a href={`/album/${formattedArtist}_${formattedAlbum}`}>

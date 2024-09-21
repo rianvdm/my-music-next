@@ -5,6 +5,7 @@ export const runtime = 'edge';
 import { useEffect, useState, useRef } from 'react';
 import { marked } from 'marked';
 import Link from 'next/link';
+import { generateArtistSlug, generateAlbumSlug, generateLastfmArtistSlug } from '../../utils/slugify';
 
 export default function AlbumPage({ params }) {
     const { artistAndAlbum } = params;
@@ -26,18 +27,6 @@ export default function AlbumPage({ params }) {
     const [loadingRecommendation, setLoadingRecommendation] = useState(false);
 
     const decodePrettyUrl = (prettyUrl) => decodeURIComponent(prettyUrl.replace(/-/g, ' '));
-
-    const encodePrettyUrl = (str) => {
-        return encodeURIComponent(
-            str
-                .toLowerCase()
-                .split(',')[0]               // Remove text after the first comma
-                .replace(/\s+/g, '-')         // Replace spaces with hyphens
-        //        .replace(/[&]/g, 'and')       // Replace & with 'and'
-                .replace(/[']/g, '')          // Remove single quotes
-                .replace(/[()]/g, '')         // Remove parentheses
-        );
-    };
 
     const [prettyArtist, prettyAlbum] = artistAndAlbum.split('_');
     const artist = decodePrettyUrl(prettyArtist);
@@ -168,7 +157,7 @@ export default function AlbumPage({ params }) {
         return <p>Loading...</p>;
     }
 
-    const prettySpotifyArtist = encodePrettyUrl(albumDetails.artist);
+    const prettySpotifyArtist = generateLastfmArtistSlug(albumDetails.artist);
     const albumImage = albumDetails.image || 'https://file.elezea.com/noun-no-image.png';
 
     return (

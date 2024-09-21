@@ -4,6 +4,7 @@ export const runtime = 'edge';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { generateArtistSlug, generateAlbumSlug, generateLastfmArtistSlug } from '../utils/slugify';
 
 export default function AlbumSearchPage() {
     const [album, setAlbum] = useState('');
@@ -60,8 +61,8 @@ export default function AlbumSearchPage() {
         setError('');
 
         // Generate the slugs from the user input
-        const formattedArtist = encodeURIComponent(artist.replace(/ /g, '-').toLowerCase());
-        const formattedAlbum = encodeURIComponent(album.replace(/\s*\(.*?\)\s*/g, '').replace(/\s+/g, '-').toLowerCase());
+        const formattedArtist = generateArtistSlug(artist);
+        const formattedAlbum = generateAlbumSlug(album);
 
         // Navigate to the album page where the search will happen
         router.push(`/album/${formattedArtist}_${formattedAlbum}`);

@@ -5,6 +5,7 @@ export const runtime = 'edge';
 import { useEffect, useState, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { generateArtistSlug, generateAlbumSlug, generateLastfmArtistSlug } from './/utils/slugify'; 
 
 // Separate components for each section
 const RecommendationLink = () => (
@@ -20,28 +21,13 @@ const RecentTrack = ({ recentTracksData, artistSummary, isDataLoaded }) => {
         return <p>Loading recent album and artist summary...</p>;
     }
 
-const artistSlug = encodeURIComponent(
-    recentTracksData.last_artist
-        .replace(/\s+/g, '-')     // Replace spaces with hyphens
-    //    .replace(/&/g, 'and')     // Replace & with 'and'
-        .replace(/\//g, '-')      // Replace / with hyphens
-        .replace(/'/g, '')          // Remove single quotation marks
-        .toLowerCase()
-);
-
-const albumSlug = encodeURIComponent(
-    recentTracksData.last_album
-        .replace(/\s+/g, '-')       // Replace spaces with hyphens
-        //.replace(/&/g, 'and')     // Replace & with 'and'
-        .replace(/\//g, '-')        // Replace / with hyphens
-        .replace(/\s*\(.*?\)\s*/g, '')  // Remove any text inside parentheses
-        .replace(/'/g, '')          // Remove single quotation marks
-        .toLowerCase()
-);
+    const artistSlug = generateArtistSlug(recentTracksData.last_artist);
+    const artistLastfmSlug = generateLastfmArtistSlug(recentTracksData.last_artist);
+    const albumSlug = generateAlbumSlug(recentTracksData.last_album);
 
     return (
         <p>
-            🎧 I recently listened to the album <Link href={`album/${artistSlug}_${albumSlug}`} rel="noopener noreferrer"><strong>{recentTracksData.last_album}</strong></Link> by <Link href={`artist/${artistSlug}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}
+            🎧 I recently listened to the album <Link href={`album/${artistSlug}_${albumSlug}`} rel="noopener noreferrer"><strong>{recentTracksData.last_album}</strong></Link> by <Link href={`artist/${artistLastfmSlug}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}
         </p>
     );
 };
@@ -52,20 +38,8 @@ function TopAlbums({ data }) {
     return (
         <div className="track-grid">
             {data.map(album => {
-                const formattedArtist = album.artist
-                    .replace(/ /g, '-')
-                    .replace(/[&]/g, 'and')  
-                    .replace(/\//g, '-')
-                    .toLowerCase();
-                const artistSlug = encodeURIComponent(formattedArtist);
-
-                const formattedAlbum = album.name
-                    .replace(/\s*\(.*?\)\s*/g, '')
-                    .replace(/\s+/g, '-')
-                    .replace(/\//g, '-')
-                    .replace(/'/g, '')          // Remove single quotation marks
-                    .toLowerCase();
-                const albumSlug = encodeURIComponent(formattedAlbum);
+                const artistSlug = generateArtistSlug(album.artist);
+                const albumSlug = generateAlbumSlug(album.name);
 
                 const albumUrl = `/album/${artistSlug}_${albumSlug}`;
                 const artistUrl = `artist/${artistSlug}`;
@@ -106,8 +80,8 @@ const AlbumSearch = () => {
         }
 
         // Generate the slugs from the user input
-        const formattedArtist = encodeURIComponent(artist.replace(/ /g, '-').toLowerCase());
-        const formattedAlbum = encodeURIComponent(album.replace(/\s*\(.*?\)\s*/g, '').replace(/\s+/g, '-').toLowerCase());
+        const formattedArtist = generateArtistSlug(artist);
+        const formattedAlbum = generateAlbumSlug(album);
 
         // Navigate to the album page where the search will happen
         router.push(`/album/${formattedArtist}_${formattedAlbum}`);
