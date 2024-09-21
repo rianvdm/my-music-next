@@ -25,15 +25,17 @@ const artistSlug = encodeURIComponent(
         .replace(/\s+/g, '-')     // Replace spaces with hyphens
     //    .replace(/&/g, 'and')     // Replace & with 'and'
         .replace(/\//g, '-')      // Replace / with hyphens
+        .replace(/'/g, '')          // Remove single quotation marks
         .toLowerCase()
 );
 
 const albumSlug = encodeURIComponent(
     recentTracksData.last_album
-        .replace(/\s+/g, '-')     // Replace spaces with hyphens
-    //    .replace(/&/g, 'and')     // Replace & with 'and'
-        .replace(/\//g, '-')      // Replace / with hyphens
+        .replace(/\s+/g, '-')       // Replace spaces with hyphens
+        //.replace(/&/g, 'and')     // Replace & with 'and'
+        .replace(/\//g, '-')        // Replace / with hyphens
         .replace(/\s*\(.*?\)\s*/g, '')  // Remove any text inside parentheses
+        .replace(/'/g, '')          // Remove single quotation marks
         .toLowerCase()
 );
 
@@ -61,6 +63,7 @@ function TopAlbums({ data }) {
                     .replace(/\s*\(.*?\)\s*/g, '')
                     .replace(/\s+/g, '-')
                     .replace(/\//g, '-')
+                    .replace(/'/g, '')          // Remove single quotation marks
                     .toLowerCase();
                 const albumSlug = encodeURIComponent(formattedAlbum);
 

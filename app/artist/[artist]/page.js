@@ -129,6 +129,7 @@ export default function ArtistPage({ params }) {
                                         .replace(/\s+/g, '-')           // Replace spaces with hyphens
                             //            .replace(/&/g, 'and')           // Replace & with "and"
                                         .replace(/\//g, '-')            // Replace / with hyphens
+                                        .replace(/'/g, '')          // Remove single quotation marks
                                         .toLowerCase();
                                     
                                     return (
