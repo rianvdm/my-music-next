@@ -190,7 +190,8 @@ export default function Home() {
 
         const fetchArtistSummary = async (artistName) => {
             try {
-                const summaryResponse = await fetch(`https://api-openai-artistsentence.rian-db8.workers.dev?name=${artistName}`);
+                const encodedArtistName = encodeURIComponent(artistName);
+                const summaryResponse = await fetch(`https://api-openai-artistsentence.rian-db8.workers.dev?name=${encodedArtistName}`);
                 const summaryData = await summaryResponse.json();
                 setArtistSummary(summaryData.data);
                 setIsDataLoaded(true);
