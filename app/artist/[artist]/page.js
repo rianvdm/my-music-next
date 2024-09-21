@@ -121,8 +121,10 @@ export default function ArtistPage({ params }) {
                             <ul style={{ listStyleType: 'none', paddingLeft: '0', marginTop: '0' }}>
                                 {topAlbums.map((album, index) => {
                                     const formattedAlbum = album.name
-                                        .replace(/\s*\(.*?\)\s*/g, '') // Remove any text inside parentheses
-                                        .replace(/\s+/g, '-') // Replace spaces with hyphens
+                                        .replace(/\s*\(.*?\)\s*/g, '')  // Remove any text inside parentheses
+                                        .replace(/\s+/g, '-')           // Replace spaces with hyphens
+                                        .replace(/&/g, 'and')           // Replace & with "and"
+                                        .replace(/\//g, '-')            // Replace / with hyphens
                                         .toLowerCase();
                                     
                                     return (
