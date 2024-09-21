@@ -33,6 +33,7 @@ const albumSlug = encodeURIComponent(
         .replace(/\s+/g, '-')     // Replace spaces with hyphens
         .replace(/&/g, 'and')     // Replace & with 'and'
         .replace(/\//g, '-')      // Replace / with hyphens
+        .replace(/\s*\(.*?\)\s*/g, '')  // Remove any text inside parentheses
         .toLowerCase()
 );
 
