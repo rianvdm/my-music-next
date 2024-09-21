@@ -20,7 +20,7 @@ export async function generateMetadata({ params }) {
 
             return {
                 title: `${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
-                description: `Streaming links and album details for ${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
+                description: `Streaming links and album details for ${spotifyAlbum.name} by ${spotifyAlbum.artist}. Powered by Listen To More, your home for music discovery.`,
                 openGraph: {
                     title: `${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
                     description: `Streaming links and album details for ${spotifyAlbum.name} by ${spotifyAlbum.artist}. Powered by Listen To More, your home for music discovery.`,
