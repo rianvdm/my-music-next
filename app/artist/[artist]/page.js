@@ -53,7 +53,7 @@ export default function ArtistPage({ params }) {
                     );
                     const albumsData = await albumsResponse.json();
 
-                    setTopAlbums(albumsData.topAlbums.slice(0, 3));
+                    setTopAlbums(albumsData.topAlbums?.slice(0, 3) || []);
 
                 } catch (error) {
                     console.error('Error fetching artist data:', error);
@@ -124,16 +124,20 @@ export default function ArtistPage({ params }) {
 
                             <p style={{ marginBottom: '0.2em' }}><strong>Popular Albums:</strong></p>
                             <ul style={{ listStyleType: 'none', paddingLeft: '0', marginTop: '0' }}>
-                                {topAlbums.map((album, index) => {
-                                    const formattedAlbum = generateAlbumSlug(album.name);                                    
-                                    return (
-                                        <li key={index}>
-                                            <a href={`/album/${formattedArtist}_${formattedAlbum}`}>
-                                                {album.name}
-                                            </a>
-                                        </li>
-                                    );
-                                })}
+                                {topAlbums.length > 0 ? (
+                                    topAlbums.map((album, index) => {
+                                        const formattedAlbum = generateAlbumSlug(album.name);
+                                        return (
+                                            <li key={index}>
+                                                <a href={`/album/${formattedArtist}_${formattedAlbum}`}>
+                                                    {album.name}
+                                                </a>
+                                            </li>
+                                        );
+                                    })
+                                ) : (
+                                    <li>No albums found</li>
+                                )}
                             </ul>
                         </div>
                     </div>
