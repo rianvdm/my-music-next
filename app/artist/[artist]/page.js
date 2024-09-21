@@ -24,8 +24,10 @@ export default function ArtistPage({ params }) {
         if (artist) {
             async function fetchArtistData() {
                 try {
+                    const encodedArtist = encodeURIComponent(artist);
+
                     const artistResponse = await fetch(
-                        `https://api-lastfm-artistdetail.rian-db8.workers.dev?artist=${artist}`
+                        `https://api-lastfm-artistdetail.rian-db8.workers.dev?artist=${encodedArtist}`
                     );
                     if (!artistResponse.ok) {
                         throw new Error('Artist not found');
@@ -68,9 +70,11 @@ export default function ArtistPage({ params }) {
 
             async function fetchOpenAISummary() {
                 try {
-                    const summaryResponse = await fetch(
-                        `https://api-openai-artistdetail.rian-db8.workers.dev?name=${artist}`
-                    );
+                const encodedArtist = encodeURIComponent(artist);
+
+                const summaryResponse = await fetch(
+                    `https://api-openai-artistdetail.rian-db8.workers.dev?name=${encodedArtist}`
+                );
                     const summaryData = await summaryResponse.json();
                     setOpenAISummary(summaryData.data);
                 } catch (error) {

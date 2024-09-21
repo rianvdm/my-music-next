@@ -23,7 +23,7 @@ const RecentTrack = ({ recentTracksData, artistSummary, isDataLoaded }) => {
 const artistSlug = encodeURIComponent(
     recentTracksData.last_artist
         .replace(/\s+/g, '-')     // Replace spaces with hyphens
-        .replace(/&/g, 'and')     // Replace & with 'and'
+    //    .replace(/&/g, 'and')     // Replace & with 'and'
         .replace(/\//g, '-')      // Replace / with hyphens
         .toLowerCase()
 );
@@ -31,7 +31,7 @@ const artistSlug = encodeURIComponent(
 const albumSlug = encodeURIComponent(
     recentTracksData.last_album
         .replace(/\s+/g, '-')     // Replace spaces with hyphens
-        .replace(/&/g, 'and')     // Replace & with 'and'
+    //    .replace(/&/g, 'and')     // Replace & with 'and'
         .replace(/\//g, '-')      // Replace / with hyphens
         .replace(/\s*\(.*?\)\s*/g, '')  // Remove any text inside parentheses
         .toLowerCase()

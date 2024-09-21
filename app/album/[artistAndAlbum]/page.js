@@ -33,7 +33,7 @@ export default function AlbumPage({ params }) {
                 .toLowerCase()
                 .split(',')[0]               // Remove text after the first comma
                 .replace(/\s+/g, '-')         // Replace spaces with hyphens
-                .replace(/[&]/g, 'and')       // Replace & with 'and'
+        //        .replace(/[&]/g, 'and')       // Replace & with 'and'
                 .replace(/[']/g, '')          // Remove single quotes
                 .replace(/[()]/g, '')         // Remove parentheses
         );
