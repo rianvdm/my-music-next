@@ -6,7 +6,7 @@ export async function generateMetadata({ params }) {
 
     try {
         // Fetch album details from Spotify
-        const spotifyQuery = `album:"${album}" artist:"${artist}"`;
+        const spotifyQuery = `album:${album} artist:${artist}`;
         const spotifyResponse = await fetch(
             `https://api-spotify-search.rian-db8.workers.dev/?q=${encodeURIComponent(spotifyQuery)}&type=album`
         );
@@ -20,7 +20,7 @@ export async function generateMetadata({ params }) {
 
             return {
                 title: `${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
-                description: `Information about the album ${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
+                description: `Album details and streaming links for ${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
                 openGraph: {
                     title: `${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
                     description: `Album details and streaming links for ${spotifyAlbum.name} by ${spotifyAlbum.artist}`,
@@ -43,7 +43,7 @@ export async function generateMetadata({ params }) {
 
         // Return default metadata or handle error appropriately
         return {
-            title: 'Album Not Found - ListenToMore',
+            title: 'Album Not Found - Listen To More',
             description: 'The album you are looking for was not found.',
         };
     }
