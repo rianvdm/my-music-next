@@ -256,6 +256,7 @@ export default function AlbumPage({ params }) {
                     {renderOpenAISummary(openAISummary)}
                     <div style={{ textAlign: 'center', marginTop: '20px' }}>
                         <h3>Want a recommendation for similar albums to check out?</h3>
+                        <p>(This might not work if it is a newer album that the robots don't know about yet)</p>
                         <button
                             className="button"
                             onClick={handleRecommendation}
