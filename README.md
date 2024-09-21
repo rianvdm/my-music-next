@@ -1,4 +1,4 @@
-## Hello 👋
+### Hello 👋
 
 My name is [Rian van der Merwe](https://elezea.com/) and this site started as a side project about the music I listen to, but then I got obsessed with it and now it's a whole lot more. The home page pulls data from [my Last.fm activity](https://www.last.fm/user/bordesak), and then it gets ✨enhanced✨ via APIs from Spotify, ChatGPT, and Perplexity. It has expanded to a full-fledged artist and album database. Have fun. Use the site to find information about an artist or album, and find your next favorite listen.
 
@@ -8,7 +8,7 @@ If you want to chat about this project, feel free to [reach out](https://elezea.
 
 ## Discord Bot
 
-I also have a Beta of a Discord Bot that lets you get streaming links for albums.
+I also have a Beta of a Discord Bot that lets you get streaming links for albums. You can [add it to your server here](https://discord.com/oauth2/authorize?client_id=1284593290947068024).
 
 The `/listento` command gets details like this:
 
