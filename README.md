@@ -18,4 +18,8 @@ You can also use `/listennow` to get your most recent album from Last.fm:
 
 ![](https://file.elezea.com/20240921-NwqTUNLY-2x.png)
 
+And finally (for now), the command `/whois` will give you a short description of an artist:
+
+![](https://file.elezea.com/20240921-jgL6zFnS-2x.png)
+
 If you'd like to test it out in your server, you can [install the bot here](https://discord.com/oauth2/authorize?client_id=1284593290947068024).
