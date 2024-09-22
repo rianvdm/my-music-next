@@ -293,28 +293,29 @@ export default function AlbumPage({ params }) {
                     {renderOpenAISummary(openAISummary)}
                     <div style={{ textAlign: 'center', marginTop: '20px' }}>
                         <h3>Ask a follow-up question about the album</h3>
-                        <input
-                            className="input-field" // Apply your input styles
-                            type="text"
-                            value={followUpQuestion}
-                            onChange={(e) => setFollowUpQuestion(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    handleFollowUpQuestion();  // Call the function when Enter is pressed
-                                }
-                            }}
-                            placeholder={followUpCount < 3 ? "Type your follow-up question..." : "No more follow-up questions allowed"}  // Show message when limit is reached
-                            disabled={followUpCount >= 3}  // Disable input if follow-up limit is reached
-                            style={{ width: '80%', padding: '10px', marginBottom: '10px' }}
-                        />
-                        <button
-                            className="button" // Apply your existing button styles
-                            onClick={handleFollowUpQuestion}
-                            disabled={loadingFollowUp || !followUpQuestion.trim() || followUpCount >= 3}  // Disable button if follow-up limit is reached
-                            style={{ width: '100px' }}
-                        >
-                            {loadingFollowUp ? 'Loading...' : 'Ask'}
-                        </button>
+                        <div id="search-form">
+                            <input
+                                id="follow-up-search" 
+                                type="text"
+                                value={followUpQuestion}
+                                onChange={(e) => setFollowUpQuestion(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        handleFollowUpQuestion();  // Call the function when Enter is pressed
+                                    }
+                                }}
+                                placeholder={followUpCount < 3 ? "Type your follow-up question..." : "No more follow-up questions allowed"}  // Show message when limit is reached
+                                disabled={followUpCount >= 3}  // Disable input if follow-up limit is reached
+                                style={{ width: '100%' }}
+                            />
+                            <button
+                                className="button" 
+                                onClick={handleFollowUpQuestion}
+                                disabled={loadingFollowUp || !followUpQuestion.trim() || followUpCount >= 3}  // Disable button if follow-up limit is reached
+                            >
+                                {loadingFollowUp ? 'Loading...' : 'Ask'}
+                            </button>
+                        </div>
                     </div>
                     {followUpResponse && (
                         <div style={{ marginTop: '20px' }}>

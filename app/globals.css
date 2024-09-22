@@ -398,6 +398,17 @@ img.center-image {
   max-width: 300px;
 }
 
+#follow-up-search {
+  border: 2px solid var(--c-accent);
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s;
+  width: 80%;
+  max-width: 600px;
+}
+
 /* Focus styles for input fields */
 #artist-name:focus, #album-name:focus, #song-name:focus, #lastFmUsername:focus {
   border-color: var(--c-accent); /* Use the accent color for focused border */
