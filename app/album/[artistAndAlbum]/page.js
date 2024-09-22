@@ -30,6 +30,7 @@ export default function AlbumPage({ params }) {
     const [conversationHistory, setConversationHistory] = useState([]);
     const [followUpResponse, setFollowUpResponse] = useState('');
     const [loadingFollowUp, setLoadingFollowUp] = useState(false);
+    const [followUpCount, setFollowUpCount] = useState(0); // <-- Track number of follow-up questions
 
     const decodePrettyUrl = (prettyUrl) => decodeURIComponent(prettyUrl.replace(/-/g, ' '));
 
@@ -166,7 +167,7 @@ export default function AlbumPage({ params }) {
     }
 
     const handleFollowUpQuestion = async () => {
-        if (!followUpQuestion || !kvKey) return;  // <-- Ensure kvKey is present
+        if (!followUpQuestion || !artist || !album || followUpCount >= 3) return;  // Limit to 3 follow-up questions
 
         setLoadingFollowUp(true);
 
@@ -177,7 +178,9 @@ export default function AlbumPage({ params }) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    kvKey,                      // <-- Send the kvKey
+                    kvKey,                      // Keep the kvKey
+                    artistName: artist,          // Send the artist name
+                    albumName: album,            // Send the album name
                     conversationHistory,         // Send the conversation history
                     userQuestion: followUpQuestion,  // Send the new follow-up question
                 }),
@@ -194,6 +197,7 @@ export default function AlbumPage({ params }) {
             ]);
 
             setFollowUpQuestion(''); // Clear the input field
+            setFollowUpCount(followUpCount + 1); // Increment follow-up count
         } catch (error) {
             console.error('Error sending follow-up question:', error);
         } finally {
@@ -290,6 +294,7 @@ export default function AlbumPage({ params }) {
                     <div style={{ textAlign: 'center', marginTop: '20px' }}>
                         <h3>Ask a follow-up question about the album</h3>
                         <input
+                            className="input-field" // Apply your input styles
                             type="text"
                             value={followUpQuestion}
                             onChange={(e) => setFollowUpQuestion(e.target.value)}
@@ -298,13 +303,14 @@ export default function AlbumPage({ params }) {
                                     handleFollowUpQuestion();  // Call the function when Enter is pressed
                                 }
                             }}
-                            placeholder="Type your follow-up question..."
-                            style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+                            placeholder={followUpCount < 3 ? "Type your follow-up question..." : "No more follow-up questions allowed"}  // Show message when limit is reached
+                            disabled={followUpCount >= 3}  // Disable input if follow-up limit is reached
+                            style={{ width: '80%', padding: '10px', marginBottom: '10px' }}
                         />
                         <button
-                            className="button"
+                            className="button" // Apply your existing button styles
                             onClick={handleFollowUpQuestion}
-                            disabled={loadingFollowUp || !followUpQuestion.trim()}
+                            disabled={loadingFollowUp || !followUpQuestion.trim() || followUpCount >= 3}  // Disable button if follow-up limit is reached
                             style={{ width: '100px' }}
                         >
                             {loadingFollowUp ? 'Loading...' : 'Ask'}
