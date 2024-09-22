@@ -22,9 +22,14 @@ export default function AlbumPage({ params }) {
     const [openAISummary, setOpenAISummary] = useState('Loading summary...');
     const [artistId, setArtistId] = useState(null);
     const [error, setError] = useState(null);
+    const [kvKey, setKvKey] = useState(null);  // kvKey for the follow-up worker
     const fetchedOpenAISummary = useRef(false);
     const [recommendation, setRecommendation] = useState('');
     const [loadingRecommendation, setLoadingRecommendation] = useState(false);
+    const [followUpQuestion, setFollowUpQuestion] = useState('');
+    const [conversationHistory, setConversationHistory] = useState([]);
+    const [followUpResponse, setFollowUpResponse] = useState('');
+    const [loadingFollowUp, setLoadingFollowUp] = useState(false);
 
     const decodePrettyUrl = (prettyUrl) => decodeURIComponent(prettyUrl.replace(/-/g, ' '));
 
@@ -56,7 +61,6 @@ export default function AlbumPage({ params }) {
                         if (releaseDate) setReleaseYear(releaseDate.split('-')[0]);
                         setTrackCount(spotifyAlbum.tracks || 'Unknown');
 
-                        // Set the artist ID immediately to fetch genres separately
                         if (spotifyAlbum.artistIds && spotifyAlbum.artistIds.length > 0) {
                             setArtistId(spotifyAlbum.artistIds[0]);
                         }
@@ -96,6 +100,7 @@ export default function AlbumPage({ params }) {
                 );
                 const summaryData = await summaryResponse.json();
                 setOpenAISummary(summaryData.data);
+                setKvKey(summaryData.kvKey);  // <-- Store kvKey returned from the API
             } catch (error) {
                 console.error('Error fetching OpenAI summary:', error);
                 setOpenAISummary('Failed to load summary.');
@@ -129,7 +134,6 @@ export default function AlbumPage({ params }) {
         try {
             const response = await fetch(
                 `https://api-openai-albumrecs.rian-db8.workers.dev/?album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}`
-            //    `https://api-perplexity-albumrecs.rian-db8.workers.dev/?album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}`
             );
             const data = await response.json();
             setRecommendation(marked(data.data));
@@ -145,6 +149,10 @@ export default function AlbumPage({ params }) {
         return <div dangerouslySetInnerHTML={{ __html: marked(summary) }} />;
     };
 
+    const renderFollowUpResponse = (response) => {
+        return <div dangerouslySetInnerHTML={{ __html: marked(response) }} />;
+    };
+
     if (error) {
         return (
             <p>
@@ -156,6 +164,42 @@ export default function AlbumPage({ params }) {
     if (!albumDetails) {
         return <p>Loading...</p>;
     }
+
+    const handleFollowUpQuestion = async () => {
+        if (!followUpQuestion || !kvKey) return;  // <-- Ensure kvKey is present
+
+        setLoadingFollowUp(true);
+
+        try {
+            const response = await fetch('https://api-perplexity-albumdetail-fu.rian-db8.workers.dev', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    kvKey,                      // <-- Send the kvKey
+                    conversationHistory,         // Send the conversation history
+                    userQuestion: followUpQuestion,  // Send the new follow-up question
+                }),
+            });
+
+            const data = await response.json();
+            setFollowUpResponse(data.data);
+            
+            // Append the follow-up question and response to the conversation history
+            setConversationHistory([
+                ...conversationHistory,
+                { role: 'user', content: followUpQuestion },
+                { role: 'assistant', content: data.data }
+            ]);
+
+            setFollowUpQuestion(''); // Clear the input field
+        } catch (error) {
+            console.error('Error sending follow-up question:', error);
+        } finally {
+            setLoadingFollowUp(false);
+        }
+    };
 
     const prettySpotifyArtist = generateLastfmArtistSlug(albumDetails.artist);
     const albumImage = albumDetails.image || 'https://file.elezea.com/noun-no-image.png';
@@ -244,21 +288,32 @@ export default function AlbumPage({ params }) {
                     </div>
                     {renderOpenAISummary(openAISummary)}
                     <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                        <h3>Want a recommendation for similar albums to check out?</h3>
-                        <p>(This might not work if it is a newer album that the robots don't know about yet)</p>
+                        <h3>Ask a follow-up question about the album</h3>
+                        <input
+                            type="text"
+                            value={followUpQuestion}
+                            onChange={(e) => setFollowUpQuestion(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleFollowUpQuestion();  // Call the function when Enter is pressed
+                                }
+                            }}
+                            placeholder="Type your follow-up question..."
+                            style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+                        />
                         <button
                             className="button"
-                            onClick={handleRecommendation}
-                            disabled={loadingRecommendation}
+                            onClick={handleFollowUpQuestion}
+                            disabled={loadingFollowUp || !followUpQuestion.trim()}
+                            style={{ width: '100px' }}
                         >
-                            {loadingRecommendation ? 'Loading...' : 'Get rec’d'}
+                            {loadingFollowUp ? 'Loading...' : 'Ask'}
                         </button>
                     </div>
-                    {recommendation && (
-                        <div
-                            style={{ marginTop: '20px' }}
-                            dangerouslySetInnerHTML={{ __html: recommendation }}
-                        />
+                    {followUpResponse && (
+                        <div style={{ marginTop: '20px' }}>
+                            {renderFollowUpResponse(followUpResponse)}  {/* Render follow-up response with markdown */}
+                        </div>
                     )}
                 </section>
             </main>
