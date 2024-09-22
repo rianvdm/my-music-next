@@ -157,7 +157,8 @@ export default function AlbumPage({ params }) {
     if (error) {
         return (
             <p>
-                {error} This either means it's not available to stream, or I am doing something wrong with the search. Please <Link href="https://github.com/rianvdm/my-music-next/issues">submit a bug report</Link> and let me know what you search for!
+                {error} This either means it's not available to stream, or I am doing something wrong with the search. Please <Link href="https://github.com/rianvdm/my-music-next/issues">submit a bug report</Link> and let me know what you searched for! <br/><br/>
+                You can also <a href="/album">try the search manually</a> and see if that works.
             </p>
         );
     }
