@@ -306,11 +306,11 @@ export default function AlbumPage({ params }) {
                                 }}
                                 placeholder={followUpCount < 3 ? "Type your follow-up question..." : "No more follow-up questions allowed"}  // Show message when limit is reached
                                 disabled={followUpCount >= 3}  // Disable input if follow-up limit is reached
-                                style={{ width: '100%' }}
                             />
                             <button
                                 className="button" 
                                 onClick={handleFollowUpQuestion}
+                                style={{ width: '100px' }}
                                 disabled={loadingFollowUp || !followUpQuestion.trim() || followUpCount >= 3}  // Disable button if follow-up limit is reached
                             >
                                 {loadingFollowUp ? 'Loading...' : 'Ask'}
