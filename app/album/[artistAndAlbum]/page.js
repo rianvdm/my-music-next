@@ -319,6 +319,7 @@ export default function AlbumPage({ params }) {
                     </div>
                     {followUpResponse && (
                         <div style={{ marginTop: '20px' }}>
+                            <p><strong>Q: {conversationHistory[conversationHistory.length - 2]?.content}</strong></p>
                             {renderFollowUpResponse(followUpResponse)}  {/* Render follow-up response with markdown */}
                         </div>
                     )}
