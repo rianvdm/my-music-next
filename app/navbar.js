@@ -7,17 +7,28 @@ export default function NavBar() {
   const [theme, setTheme] = useState('light');
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    setTheme(savedTheme);
-    document.documentElement.setAttribute('data-theme', savedTheme);
-  }, []);
+    // Detect system theme preference
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    
+    // Set the theme based on system preference
+    setTheme(systemTheme);
+    document.documentElement.setAttribute('data-theme', systemTheme);
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-  };
+    // Listener for changes in system theme
+    const themeChangeListener = (e) => {
+      const newSystemTheme = e.matches ? 'dark' : 'light';
+      setTheme(newSystemTheme);
+      document.documentElement.setAttribute('data-theme', newSystemTheme);
+    };
+
+    // Add event listener for system theme changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', themeChangeListener);
+
+    return () => {
+      // Clean up event listener
+      window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', themeChangeListener);
+    };
+  }, []);
 
   return (
     <nav style={{ ...navStyle, background: theme === 'light' ? '#ffffff' : '#000000', color: theme === 'light' ? '#FF6C00' : '#FFA500' }}>
@@ -36,11 +47,6 @@ export default function NavBar() {
         </li>
         <li style={liStyle}>
           <Link href="/about">About</Link>
-        </li>
-        <li style={liStyle}>
-          <a role="button" onClick={toggleTheme} style={linkStyle}>
-            {theme === 'light' ? '☀️/🌙' : '☀️/🌙'}
-          </a>
         </li>
       </ul>
 
@@ -102,10 +108,4 @@ const ulStyle = {
 const liStyle = {
   margin: '0 0.2em',
   flexShrink: 0, // Prevents items from shrinking too much
-};
-
-const linkStyle = {
-  color: 'inherit',
-  textDecoration: 'none',
-  cursor: 'pointer',
 };
