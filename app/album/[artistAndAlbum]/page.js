@@ -5,7 +5,7 @@ export const runtime = 'edge';
 import { useEffect, useState, useRef } from 'react';
 import { marked } from 'marked';
 import Link from 'next/link';
-import { generateArtistSlug, generateAlbumSlug, generateLastfmArtistSlug } from '../../utils/slugify';
+import { generateArtistSlug, generateAlbumSlug, generateLastfmArtistSlug, generateGenreSlug } from '../../utils/slugify';
 
 export default function AlbumPage({ params }) {
     const { artistAndAlbum } = params;
@@ -229,9 +229,24 @@ export default function AlbumPage({ params }) {
                             <p>
                                 <strong>Released:</strong> {releaseYear}
                             </p>
-                            <p>
-                                <strong>Genres:</strong> {genres}
-                            </p>
+                        <p>
+                            <strong>Genres:</strong>{' '}
+                            {genres !== 'Unknown' ? (
+                                genres.split(', ').map((genre, index) => {
+                                    const genreSlug = generateGenreSlug(genre);
+                                    return (
+                                        <span key={index}>
+                                            <Link href={`/genre/${genreSlug}`}>
+                                                {genre}
+                                            </Link>
+                                            {index < genres.split(', ').length - 1 ? ', ' : ''}
+                                        </span>
+                                    );
+                                })
+                            ) : (
+                                genres
+                            )}
+                        </p>
                             <p>
                                 <strong>Streaming:</strong>
                                 <br />

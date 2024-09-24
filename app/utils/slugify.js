@@ -31,3 +31,11 @@ export const generateLastfmArtistSlug = (artistName) => {
             .toLowerCase()
     );
 };
+
+export const generateGenreSlug = (genreName) => {
+    return encodeURIComponent(
+        genreName
+            .replace(/\s+/g, '-')        // Replace spaces with hyphens
+            .toLowerCase()
+    );
+};

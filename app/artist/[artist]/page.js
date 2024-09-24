@@ -5,7 +5,7 @@ export const runtime = 'edge';
 import { useEffect, useState, useRef } from 'react';
 import { marked } from 'marked';
 import Link from 'next/link';
-import { generateArtistSlug, generateAlbumSlug, generateLastfmArtistSlug } from '../../utils/slugify';
+import { generateArtistSlug, generateAlbumSlug, generateLastfmArtistSlug, generateGenreSlug } from '../../utils/slugify';
 
 export default function ArtistPage({ params }) {
     const { artist: prettyArtist } = params;
@@ -16,7 +16,7 @@ export default function ArtistPage({ params }) {
     const fetchedOpenAISummary = useRef(false);
 
     const decodePrettyUrl = (prettyUrl) => {
-        return decodeURIComponent(prettyUrl.replace(/-/g, ' '));
+        return decodeURIComponent(prettyUrl.replace(/-/g, ' '))
     };
 
     const artist = decodePrettyUrl(prettyArtist);
@@ -71,11 +71,11 @@ export default function ArtistPage({ params }) {
 
             async function fetchOpenAISummary() {
                 try {
-                const encodedArtist = encodeURIComponent(artist);
+                    const encodedArtist = encodeURIComponent(artist);
 
-                const summaryResponse = await fetch(
-                    `https://api-openai-artistdetail.rian-db8.workers.dev?name=${encodedArtist}`
-                );
+                    const summaryResponse = await fetch(
+                        `https://api-openai-artistdetail.rian-db8.workers.dev?name=${encodedArtist}`
+                    );
                     const summaryData = await summaryResponse.json();
                     setOpenAISummary(summaryData.data);
                 } catch (error) {
@@ -106,6 +106,9 @@ export default function ArtistPage({ params }) {
 
     const formattedArtist = generateArtistSlug(artistDetails.name);
 
+    const genre = artistDetails.tags[0] || 'No genres found';
+    const genreSlug = genre !== 'No genres found' ? generateGenreSlug(genre) : '';
+
     return (
         <div>
             <header>
@@ -120,7 +123,16 @@ export default function ArtistPage({ params }) {
                             style={{ maxWidth: '100%', width: '220px', height: 'auto' }} 
                         />
                         <div className="no-wrap-text">
-                            <p><strong>Genre:</strong> {artistDetails.tags[0] || 'No genres found'}</p>
+                            <p>
+                                <strong>Genre:</strong>{' '}
+                                {genre !== 'No genres found' ? (
+                                    <Link href={`/genre/${genreSlug}`}>
+                                        {genre}
+                                    </Link>
+                                ) : (
+                                    genre
+                                )}
+                            </p>
 
                             <p style={{ marginBottom: '0.2em' }}><strong>Popular Albums:</strong></p>
                             <ul style={{ listStyleType: 'none', paddingLeft: '0', marginTop: '0' }}>
