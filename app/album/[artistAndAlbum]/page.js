@@ -119,7 +119,7 @@ export default function AlbumPage({ params }) {
                     );
                     const artistDetailsData = await artistDetailsResponse.json();
                     const fetchedGenres = artistDetailsData.data.genres || [];
-                    setGenres(fetchedGenres.slice(0, 2).join(', ') || 'Unknown');
+                    setGenres(fetchedGenres.slice(0, 3).join(', ') || 'Unknown');
                 } catch (error) {
                     console.error('Error fetching artist genres:', error);
                     setGenres('Failed to load genres');
@@ -229,24 +229,24 @@ export default function AlbumPage({ params }) {
                             <p>
                                 <strong>Released:</strong> {releaseYear}
                             </p>
-                        <p>
-                            <strong>Genres:</strong>{' '}
-                            {genres !== 'Unknown' ? (
-                                genres.split(', ').map((genre, index) => {
-                                    const genreSlug = generateGenreSlug(genre);
-                                    return (
-                                        <span key={index}>
-                                            <Link href={`/genre/${genreSlug}`}>
-                                                {genre}
-                                            </Link>
-                                            {index < genres.split(', ').length - 1 ? ', ' : ''}
-                                        </span>
-                                    );
-                                })
-                            ) : (
-                                genres
-                            )}
-                        </p>
+                            <p>
+                                <strong>Genres:</strong>{' '}
+                                {genres !== 'Unknown' ? (
+                                    genres.split(', ').map((genre, index) => {
+                                        const genreSlug = generateGenreSlug(genre);
+                                        return (
+                                            <span key={index}>
+                                                <Link href={`/genre/${genreSlug}`}>
+                                                    {genre}
+                                                </Link>
+                                                {index < genres.split(', ').length - 1 ? ' | ' : ''}
+                                            </span>
+                                        );
+                                    })
+                                ) : (
+                                    genres
+                                )}
+                            </p>
                             <p>
                                 <strong>Streaming:</strong>
                                 <br />
