@@ -7,7 +7,7 @@ import { marked } from 'marked';
 
 export default function GenrePage({ params }) {
     const { genre: prettyGenre } = params;
-    const [genreSummary, setGenreSummary] = useState('Loading summary...');
+    const [genreSummary, setGenreSummary] = useState('Generating summary...');
     const [error, setError] = useState(null);
     const fetchedGenreSummary = useRef(false);
 
