@@ -16,7 +16,7 @@ There is also a Discord Bot that lets you easily generate get streaming links (a
 | `/whois`       | Gives you a one-sentence summary of an artist.                                                                      |
 
 
-As an example, the `/listento`, `listenurl`, and `/listennow` commands shows details like this:
+As an example, the `/listento`, `listenurl`, and `/listennow` commands show details like this:
 
 ![](https://file.elezea.com/20240921-aoapEQAq-2x.png)
 
