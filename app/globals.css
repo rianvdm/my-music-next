@@ -1,14 +1,20 @@
 /* Root Variables and Theme Settings */
 :root {
   --c-bg: #ffffff;
+  --c-bg-rgb: 255, 255, 255;
   --c-accent: #FF6C00;
+  --c-accent-rgb: 255, 108, 0;
   --c-base: #000000;
+  --c-base-rgb: 0, 0, 0;
 }
 
 [data-theme="dark"] {
   --c-bg: #000000;
+  --c-bg-rgb: 0, 0, 0;
   --c-accent: #FFA500;
+  --c-accent-rgb: 255, 165, 0;
   --c-base: #ffffff;
+  --c-base-rgb: 255, 255, 255;
 }
 
 /* Global Styles */
@@ -22,7 +28,10 @@ body {
 }
 
 /* Typography */
-p, .footnote {
+
+/* Paragraphs and footnotes */
+p,
+.footnote {
   color: var(--c-base);
   margin: 1em auto;
   line-height: 1.4em;
@@ -37,25 +46,17 @@ p {
   font-size: 12px;
 }
 
+/* Links */
 a {
   color: var(--c-accent);
   text-decoration: none;
 }
 
-h1, h2, h3, h4 {
-  color: var(--c-base);
-  position: relative;
-  text-align: center; /* Center alignment for h1 and h2 */
-}
-
-h3, h4 {
-  text-align: left; /* Override for h3 and h4 */
-  margin: 2em auto 0.5em;
-  max-width: 800px;
-}
-
+/* Headings */
 h1 {
   color: var(--c-accent);
+  position: relative;
+  text-align: center;
   margin: 0.4em 0 0.8em;
 }
 
@@ -63,14 +64,30 @@ h1 span {
   z-index: 2;
 }
 
+h2,
+h3,
+h4 {
+  color: var(--c-base);
+  position: relative;
+}
+
 h2 {
+  text-align: center;
   margin: 2.5em 0 1em;
+}
+
+h3,
+h4 {
+  text-align: left;
+  margin: 2em auto 0.5em;
+  max-width: 800px;
 }
 
 h4 {
   font-size: 18px;
 }
 
+/* Table Styles */
 table {
   width: 100%;
   max-width: 800px;
@@ -78,10 +95,11 @@ table {
   border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
   padding: 0.5em;
   text-align: left;
-  border: 1px solid var(--c-base); /* Adjust border style and color as needed */
+  border: 1px solid var(--c-base);
 }
 
 /* Navigation */
@@ -107,7 +125,7 @@ nav a {
   display: block;
   color: var(--c-accent);
   text-align: center;
-  padding: 16px 16px 0px 16px;
+  padding: 16px 16px 0 16px;
   text-decoration: none;
 }
 
@@ -133,8 +151,7 @@ nav li.active a {
   }
 
   nav li {
-    display: inline-block;
-    margin: 0px 5px 0px 5px;
+    margin: 0 5px;
   }
 }
 
@@ -148,7 +165,6 @@ blockquote {
 
 /* Buttons */
 .button,
-.button:visited,
 #search-form button {
   background-color: var(--c-accent);
   color: var(--c-bg);
@@ -165,8 +181,8 @@ blockquote {
 
 .button:hover,
 #search-form button:hover {
-  background-color: rgba(var(--c-accent), 0.8);
-  color: rgba(var(--c-bg), 0.8);
+  background-color: rgba(var(--c-accent-rgb), 0.8);
+  color: rgba(var(--c-bg-rgb), 0.8);
 }
 
 /* Track Styles */
@@ -179,11 +195,15 @@ blockquote {
 }
 
 @media (min-width: 600px) {
-  .track-grid { grid-template-columns: repeat(2, 1fr); }
+  .track-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (min-width: 800px) {
-  .track-grid { grid-template-columns: repeat(3, 1fr); }
+  .track-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .track-list {
@@ -226,7 +246,8 @@ blockquote {
   font-style: italic;
 }
 
-.track_none, .track_video {
+.track_none,
+.track_video {
   margin: 0 auto;
   font-size: 18px;
 }
@@ -244,21 +265,24 @@ blockquote {
   max-width: 200px;
   border-radius: 10px;
   z-index: 2;
+  transition: all 180ms ease-in-out;
 }
 
 .track_image:hover {
-  transition: all 180ms ease-in-out;
   transform: translateY(-5px) rotate(-5deg);
 }
 
-.track_ol, .track_ul, .track_ul2 {
+.track_ol,
+.track_ul,
+.track_ul2 {
   margin: 0.1em auto 0;
   font-size: 18px;
   line-height: 1.4em;
   max-width: 800px;
 }
 
-.track_ul, .track_ul2 {
+.track_ul,
+.track_ul2 {
   overflow: auto;
 }
 
@@ -266,7 +290,8 @@ blockquote {
   margin: 0.4em auto 1.5em;
 }
 
-.track_ul img, .track_ul2 img {
+.track_ul img,
+.track_ul2 img {
   float: left;
   max-width: 150px;
   margin-right: 10px;
@@ -278,6 +303,16 @@ blockquote {
   font-size: 18px;
   line-height: 1.2em;
   max-width: 800px;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .track_ul img,
+  .track_ul2 img {
+    float: none;
+    display: block;
+    margin: 0 auto;
+  }
 }
 
 /* No Wrap Text */
@@ -294,19 +329,9 @@ blockquote {
   font-size: 18px;
 }
 
-/* Media query for smaller screens */
-@media (max-width: 768px) {
-  .track_ul img {
-    float: none;
-    display: block;
-    margin: 0 auto;
-  }
-}
-
 /* Footer */
 .footer {
   color: var(--c-base);
-  position: block;
   margin: 5em auto;
   text-align: center;
   line-height: 1.5em;
@@ -355,7 +380,8 @@ blockquote {
 }
 
 /* Center Image */
-img.center-image, .centered-image {
+img.center-image,
+.centered-image {
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -382,7 +408,11 @@ img.center-image {
   margin-right: 0.5em;
 }
 
-#artist-name, #album-name, #song-name, #lastFmUsername, #follow-up-search {
+#artist-name,
+#album-name,
+#song-name,
+#lastFmUsername,
+#follow-up-search {
   border: 2px solid #ccc;
   border-radius: 4px;
   padding: 8px;
@@ -391,7 +421,10 @@ img.center-image {
   transition: border-color 0.3s;
 }
 
-#artist-name, #album-name, #song-name, #lastFmUsername {
+#artist-name,
+#album-name,
+#song-name,
+#lastFmUsername {
   width: 90%;
   max-width: 300px;
 }
@@ -401,7 +434,11 @@ img.center-image {
   max-width: 600px;
 }
 
-#artist-name:focus, #album-name:focus, #song-name:focus, #lastFmUsername:focus, #follow-up-search:focus {
+#artist-name:focus,
+#album-name:focus,
+#song-name:focus,
+#lastFmUsername:focus,
+#follow-up-search:focus {
   border-color: var(--c-accent);
   box-shadow: 0 0 5px var(--c-accent);
   transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
@@ -499,7 +536,7 @@ img.center-image {
 /* Code and Preformatted Text Styles */
 code {
   font-family: 'Courier New', Courier, monospace;
-  background-color: rgba(var(--c-accent), 0.1);
+  background-color: rgba(var(--c-accent-rgb), 0.1);
   color: var(--c-base);
   padding: 2px 5px;
   border-radius: 3px;
@@ -507,19 +544,19 @@ code {
 
 pre {
   font-family: 'Courier New', Courier, monospace;
-  background-color: rgba(var(--c-accent), 0.1);
+  background-color: rgba(var(--c-accent-rgb), 0.1);
   color: var(--c-base);
   padding: 10px;
   border-radius: 5px;
   overflow-x: auto;
   max-width: 100%;
   line-height: 1.6em;
-  white-space: pre-wrap; /* Ensures text wraps in smaller screens */
+  white-space: pre-wrap; /* Ensures text wraps on smaller screens */
 }
 
 /* Dark Theme Code Block */
-[data-theme="dark"] code, 
+[data-theme="dark"] code,
 [data-theme="dark"] pre {
-  background-color: rgba(var(--c-accent), 0.2);
+  background-color: rgba(var(--c-accent-rgb), 0.2);
   color: var(--c-base);
 }
