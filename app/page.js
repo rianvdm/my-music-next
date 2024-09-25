@@ -27,7 +27,7 @@ const RecentTrack = ({ recentTracksData, artistSummary, isDataLoaded }) => {
 
     return (
         <p>
-            🎧 I recently listened to the album <Link href={`album/${artistSlug}_${albumSlug}`} rel="noopener noreferrer"><strong>{recentTracksData.last_album}</strong></Link> by <Link href={`artist/${artistLastfmSlug}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}
+            🎧 I recently listened to <Link href={`album/${artistSlug}_${albumSlug}`} rel="noopener noreferrer"><strong>{recentTracksData.last_album}</strong></Link> by <Link href={`artist/${artistLastfmSlug}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}
         </p>
     );
 };
