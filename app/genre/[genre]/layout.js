@@ -7,16 +7,16 @@ export async function generateMetadata({ params }) {
   
     return {
       title: `${genre} - Genre Details`,
-      description: `Find out more about the history, elements, and artist of the ${genre} genre.`,
+      description: `Find out more about the history, musical elements, and artists of the ${genre} genre.`,
       openGraph: {
         title: `${genre} - Genre Details`,
-        description: `Find out more about the history, elements, and artist of the ${genre} genre.`,
+        description: `Find out more about the history, musical elements, and artists of the ${genre} genre.`,
         images: `https://file.elezea.com/listentomoregenre.png`,
       },
       twitter: {
         card: 'summary',
         title: `${genre} - Genre Details`,
-        description: `Find out more about the history, elements, and artist of the ${genre} genre.`,
+        description: `Find out more about the history, musical elements, and artists of the ${genre} genre.`,
         images: `https://file.elezea.com/listentomoregenre.png`,
       },
     }
