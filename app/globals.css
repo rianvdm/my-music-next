@@ -482,3 +482,31 @@ img.center-image {
     text-align: left;
   }
 }
+
+/* Code and Preformatted Text Styles */
+code {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: rgba(var(--c-accent), 0.1);
+  color: var(--c-base);
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+pre {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: rgba(var(--c-accent), 0.1);
+  color: var(--c-base);
+  padding: 10px;
+  border-radius: 5px;
+  overflow-x: auto;
+  max-width: 100%;
+  line-height: 1.6em;
+  white-space: pre-wrap; /* Ensures text wraps in smaller screens */
+}
+
+/* Dark Theme Code Block */
+[data-theme="dark"] code, 
+[data-theme="dark"] pre {
+  background-color: rgba(var(--c-accent), 0.2);
+  color: var(--c-base);
+}
