@@ -12,7 +12,7 @@ I also have a Beta of a Discord Bot that lets you get streaming links for albums
 
 ### Current commands:
 
-* <code>/listento</code> let you enter an album and artist, and it gets you streaming links for other platforms, and a link to more details about the album.
+* <code>/listento</code> lets you enter an album and artist, and then it gets you streaming links for all platforms as well as a link to more details about the album.
 * <code>/listenurl</code> does the same, but you can just enter a streaming URL from any platform (Spotify, Apple Music, etc.)
 * <code>/listennow</code> asks you to enter your Last.fm username, and then it gets the same details for the last album you listened to. 
 * <code>/whois</code> gives you a one-sentence summary of an artist.
@@ -27,7 +27,7 @@ You can also use <code>/listennow</code> to get your most recent album from Last
 
 ![](https://file.elezea.com/20240921-NwqTUNLY-2x.png)
 
-And finally (for now), the command <code>/whois</code> will give you a short description of an artist:
+<code>/whois</code> will give you a short description of an artist:
 
 ![](https://file.elezea.com/20240921-jgL6zFnS-2x.png)
 
