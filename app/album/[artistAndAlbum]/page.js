@@ -19,7 +19,7 @@ export default function AlbumPage({ params }) {
     const [releaseYear, setReleaseYear] = useState('Loading...');
     const [trackCount, setTrackCount] = useState('Loading...');
     const [genres, setGenres] = useState('Loading...');
-    const [openAISummary, setOpenAISummary] = useState('Loading summary...');
+    const [openAISummary, setOpenAISummary] = useState('Generating summary...');
     const [artistId, setArtistId] = useState(null);
     const [error, setError] = useState(null);
     const [kvKey, setKvKey] = useState(null);  // kvKey for the follow-up worker
