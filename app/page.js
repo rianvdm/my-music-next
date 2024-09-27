@@ -32,6 +32,8 @@ const RecentTrack = ({ recentTracksData, artistSummary, isDataLoaded }) => {
     );
 };
 
+// Commented out TopAlbums component
+/*
 function TopAlbums({ data }) {
     if (!data) return <p>Loading albums...</p>;
 
@@ -46,6 +48,42 @@ function TopAlbums({ data }) {
 
                 return (
                     <div className="track" key={album.name}>
+                        <a href={albumUrl}>
+                            <img src={album.image} className="track_image" alt={album.name} />
+                        </a>
+                        <div className="track_content">
+                            <p className="track_name">
+                                <a href={albumUrl}><strong>{album.name}</strong></a>
+                            </p>
+                            <p className="track_artist">
+                                <Link href={artistUrl} rel="noopener noreferrer">
+                                    {album.artist}
+                                </Link>
+                            </p>
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+    );
+}
+*/
+
+// New component to display recent searches, similar to TopAlbums
+function RecentSearches({ data }) {
+    if (!data) return <p>Loading recent searches...</p>;
+
+    return (
+        <div className="track-grid">
+            {data.map(album => {
+                const artistSlug = generateArtistSlug(album.artist);
+                const albumSlug = generateAlbumSlug(album.name);
+
+                const albumUrl = `/album/${artistSlug}_${albumSlug}`;
+                const artistUrl = `artist/${artistSlug}`;
+
+                return (
+                    <div className="track" key={album.id}>
                         <a href={albumUrl}>
                             <img src={album.image} className="track_image" alt={album.name} />
                         </a>
@@ -122,7 +160,7 @@ const AlbumSearch = () => {
 export default function Home() {
     const [recentTracksData, setRecentTracksData] = useState(null);
     const [artistSummary, setArtistSummary] = useState(null);
-    const [topAlbumsData, setTopAlbumsData] = useState(null);
+    const [recentSearchesData, setRecentSearchesData] = useState(null);
     const [dayGreeting, setDayGreeting] = useState('');
     const [randomFact, setRandomFact] = useState('');
     const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -184,18 +222,18 @@ export default function Home() {
     }, []);
 
     useEffect(() => {
-        // Fetch the top albums from KV instead of Last.fm API
-        const fetchTopAlbumsFromKV = async () => {
+        // Fetch the recent searches from KV
+        const fetchRecentSearchesFromKV = async () => {
             try {
-                const response = await fetch('https://kv-fetch-top-albums.rian-db8.workers.dev/');
-                const topAlbumsData = await response.json();
-                setTopAlbumsData(topAlbumsData);
+                const response = await fetch('https://kv-fetch-recentsearches.rian-db8.workers.dev/');
+                const recentSearchesData = await response.json();
+                setRecentSearchesData(recentSearchesData.data); // Access the 'data' property
             } catch (error) {
-                console.error('Error fetching top albums from KV:', error);
+                console.error('Error fetching recent searches from KV:', error);
             }
         };
 
-        fetchTopAlbumsFromKV();
+        fetchRecentSearchesFromKV();
     }, []);
 
     return (
@@ -206,20 +244,28 @@ export default function Home() {
             <main>
                 <section id="lastfm-stats">
                     <RecommendationLink />
-                <RandomFact fact={randomFact} />
-                {isDataLoaded ? (
-                    <RecentTrack 
-                        recentTracksData={recentTracksData} 
-                        artistSummary={artistSummary} 
-                        isDataLoaded={isDataLoaded} 
-                    />
-                ) : (
-                    <p>Loading recent album and artist summary...</p>
-                )}
+                    <RandomFact fact={randomFact} />
+                    {isDataLoaded ? (
+                        <RecentTrack 
+                            recentTracksData={recentTracksData} 
+                            artistSummary={artistSummary} 
+                            isDataLoaded={isDataLoaded} 
+                        />
+                    ) : (
+                        <p>Loading recent album and artist summary...</p>
+                    )}
                     <h2 style={{ marginBottom: 0, marginTop: "2em" }}>💿 Go ahead, search for something you like</h2>
                     <AlbumSearch /> {/* Album search functionality goes here */}
 
-
+                    <h2>🔍 Recent Albums from the Community</h2>
+                    <p style={{ textAlign: 'center' }}>
+                        Here are the 9 most recent albums that users searched for. Maybe there's something for you here.
+                    </p>
+                    <Suspense fallback={<p>Loading recent searches...</p>}>
+                        <RecentSearches data={recentSearchesData} />
+                    </Suspense>
+                    
+                    {/* Commented out TopAlbums section
                     <h2>🏆 Or give some of these a try</h2>
                     <p style={{ textAlign: 'center' }}>
                         These are the top albums I listened to in the past 7 days.
@@ -227,6 +273,7 @@ export default function Home() {
                     <Suspense fallback={<p>Loading albums...</p>}>
                         <TopAlbums data={topAlbumsData} />
                     </Suspense>
+                    */}
                 </section>
             </main>
         </div>
