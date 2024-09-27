@@ -259,7 +259,7 @@ export default function Home() {
 
                     <h2>🔍 Or give these recent searches a try</h2>
                     <p style={{ textAlign: 'center' }}>
-                        Here are the 9 most recent albums that users searched for.
+                        Here are some albums that users recently searched for.
                     </p>
                     <Suspense fallback={<p>Loading recent searches...</p>}>
                         <RecentSearches data={recentSearchesData} />
