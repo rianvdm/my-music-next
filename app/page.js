@@ -257,9 +257,9 @@ export default function Home() {
                     <h2 style={{ marginBottom: 0, marginTop: "2em" }}>💿 Go ahead, search for something you like</h2>
                     <AlbumSearch /> {/* Album search functionality goes here */}
 
-                    <h2>🔍 Recent Albums from the Community</h2>
+                    <h2>🔍 Or give these recent searches a try</h2>
                     <p style={{ textAlign: 'center' }}>
-                        Here are the 9 most recent albums that users searched for. Maybe there's something for you here.
+                        Here are the 9 most recent albums that users searched for.
                     </p>
                     <Suspense fallback={<p>Loading recent searches...</p>}>
                         <RecentSearches data={recentSearchesData} />
