@@ -15,6 +15,7 @@ export default function RecommendationsPage() {
     const [artist, setArtist] = useState('');
     const [recommendation, setRecommendation] = useState('');
     const [newAlbumsContent, setNewAlbumsContent] = useState('');
+    const [lastUpdatedDate, setLastUpdatedDate] = useState('');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -23,6 +24,17 @@ export default function RecommendationsPage() {
                 const response = await fetch('https://api-lastfm-lovedtracks.rian-db8.workers.dev/');
                 const data = await response.json();
                 setLovedTracks(data);
+
+                // Calculate the most recent date
+                if (data && data.length > 0) {
+                    // Convert date strings to Date objects
+                    const dates = data.map(track => new Date(track.dateLiked));
+                    // Find the most recent date
+                    const mostRecentDate = new Date(Math.max(...dates));
+                    // Format the date as desired
+                    const formattedDate = mostRecentDate.toLocaleDateString();
+                    setLastUpdatedDate(formattedDate);
+                }
             } catch (error) {
                 console.error('Error fetching loved tracks:', error);
             }
@@ -45,14 +57,16 @@ export default function RecommendationsPage() {
     }, []);
 
     useEffect(() => {
-        lovedTracks.forEach((track) => {
-            const fetchTrackData = async () => {
+        const fetchAllTrackData = async () => {
+            const fetchPromises = lovedTracks.map(async (track) => {
                 try {
-                    // Fetch summary from Perplexity
+                    // Fetch summary from OpenAI Cloudflare Worker
                     const summaryResponse = await fetch(
-                        `https://api-perplexity-songrec.rian-db8.workers.dev/?title=${encodeURIComponent(track.title)}&artist=${encodeURIComponent(track.artist)}`
+                        `https://api-openai-artistsentence.rian-db8.workers.dev/?name=${encodeURIComponent(track.artist)}`
                     );
                     const summaryData = await summaryResponse.json();
+
+                    // Update the trackSummaries state with the summary data
                     setTrackSummaries(prevSummaries => ({
                         ...prevSummaries,
                         [`${track.title}_${track.artist}`]: summaryData.data
@@ -71,9 +85,30 @@ export default function RecommendationsPage() {
                         const previewUrl = spotifyTrack.preview || null;
                         const image = spotifyTrack.image || null;
 
+                        // Fetch Songlink data using your Cloudflare Worker
+                        let songlinkUrl = null;
+                        if (spotifyUrl) {
+                            try {
+                                const songlinkResponse = await fetch(
+                                    `https://api-songlink.rian-db8.workers.dev/?url=${encodeURIComponent(spotifyUrl)}`
+                                );
+                                const songlinkData = await songlinkResponse.json();
+                                if (songlinkData && songlinkData.pageUrl) {
+                                    songlinkUrl = songlinkData.pageUrl;
+                                } else {
+                                    console.error(`No Songlink URL found for ${track.title} by ${track.artist}`);
+                                    songlinkUrl = spotifyUrl; // Fallback to Spotify URL
+                                }
+                            } catch (error) {
+                                console.error(`Error fetching Songlink URL for ${track.title} by ${track.artist}:`, error);
+                                songlinkUrl = spotifyUrl; // Fallback to Spotify URL
+                            }
+                        }
+
+                        // Update the spotifyLinks state with songlinkUrl
                         setSpotifyLinks(prevLinks => ({
                             ...prevLinks,
-                            [`${track.title}_${track.artist}`]: { spotifyUrl, previewUrl }
+                            [`${track.title}_${track.artist}`]: { spotifyUrl, previewUrl, songlinkUrl }
                         }));
 
                         // Set artist image using the album image from Spotify data
@@ -87,10 +122,14 @@ export default function RecommendationsPage() {
                 } catch (error) {
                     console.error(`Error fetching data for ${track.title} by ${track.artist}:`, error);
                 }
-            };
+            });
 
-            fetchTrackData();
-        });
+            await Promise.all(fetchPromises);
+        };
+
+        if (lovedTracks.length > 0) {
+            fetchAllTrackData();
+        }
     }, [lovedTracks]);
 
     const handleImageLoad = (artist) => {
@@ -107,9 +146,13 @@ export default function RecommendationsPage() {
             <div className="track_ul2" dangerouslySetInnerHTML={{ __html: newAlbumsContent }} />
             <h2 style={{ marginTop: "1.5em" }}>Song Recommendations</h2>
             <div style={{ textAlign: 'center' }}>
-                <p><strong>A selection of tracks I recently liked</strong></p>
+                <p>
+                    <strong>A selection of tracks I recently liked</strong>
+                    {lastUpdatedDate && (
+                        <> • Last updated on {lastUpdatedDate}</>
+                    )}
+                </p>
             </div>
-
             <div className="track_ul">
                 {lovedTracks.map((track, index) => (
                     <div key={index} className="track_item track_item_responsive">
@@ -129,20 +172,44 @@ export default function RecommendationsPage() {
                         <div className="no-wrap-text">
                             <p>
                                 <strong>{track.title}</strong> by <strong>
-                                <Link href={`/artist/${encodeURIComponent(track.artist.replace(/ /g, '-').toLowerCase())}`}>{track.artist}</Link>
-                                </strong> (liked on {track.dateLiked}).
+                                    <Link href={`/artist/${encodeURIComponent(track.artist.replace(/ /g, '-').toLowerCase())}`}>
+                                        {track.artist}
+                                    </Link>
+                                </strong>
+                                {spotifyLinks[`${track.title}_${track.artist}`]?.songlinkUrl && (
+                                    <>
+                                        {' '}
+                                        •{' '}
+                                        <a
+                                            href={spotifyLinks[`${track.title}_${track.artist}`].songlinkUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            Listen ↗
+                                        </a>
+                                    </>
+                                )}
                             </p>
                             <div>
-                                {trackSummaries[`${track.title}_${track.artist}`]
-                                    ? <p>{trackSummaries[`${track.title}_${track.artist}`]}</p>
-                                    : <p>Loading...</p>}
+                                {trackSummaries[`${track.title}_${track.artist}`] ? (
+                                    <p>{trackSummaries[`${track.title}_${track.artist}`]}</p>
+                                ) : (
+                                    <p>Loading...</p>
+                                )}
                             </div>
+                            {/* Added audio player */}
                             <div>
-                                {spotifyLinks[`${track.title}_${track.artist}`]?.spotifyUrl ? (
-                                    <p>
-                                        <a href={spotifyLinks[`${track.title}_${track.artist}`]?.spotifyUrl} target="_blank" rel="noopener noreferrer">Spotify ↗</a>
-                                    </p>
-                                ) : <p>Loading...</p>}
+                                {spotifyLinks[`${track.title}_${track.artist}`]?.previewUrl ? (
+                                    <audio controls>
+                                        <source
+                                            src={spotifyLinks[`${track.title}_${track.artist}`].previewUrl}
+                                            type="audio/mpeg"
+                                        />
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                ) : (
+                                    <p>Spotify preview not available.</p>
+                                )}
                             </div>
                         </div>
                     </div>

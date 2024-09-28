@@ -475,7 +475,26 @@ img.center-image {
   .image-text-wrapper {
     flex-direction: column;
     align-items: center;
+    gap: 15px;
   }
+
+  .image-text-wrapper .no-wrap-text {
+    align-self: flex-start; /* Aligns the text container to the left */
+    width: 100%;            /* Ensures the text container takes full width */
+  }
+}
+
+/* Adjust margins of elements inside .image-text-wrapper on smaller screens */
+@media (max-width: 768px) {
+  /* Option 1: Add margin-bottom to the image */
+  .image-text-wrapper img {
+    margin-bottom: 15px;
+  }
+
+  /* Option 2: Alternatively, add margin-top to the text container */
+  /* .image-text-wrapper .no-wrap-text {
+    margin-top: 15px;
+  } */
 }
 
 /* Artist Image Styles */
@@ -485,7 +504,7 @@ img.center-image {
   position: relative;
   overflow: hidden;
   border-radius: 10px;
-  margin-right: 15px;
+  margin-right: 15px; /* This margin is suitable for larger screens */
   flex-shrink: 0;
 }
 
@@ -512,24 +531,30 @@ img.center-image {
   border-radius: 10px;
 }
 
+/* Adjust margins for smaller screens */
+@media (max-width: 768px) {
+  .artist_image_wrapper {
+    margin-right: 0;       /* Remove right margin */
+    margin-bottom: 15px;   /* Add bottom margin to create vertical space */
+  }
+}
+
 /* Track Item Styles */
 .track_item {
   display: flex;
-  align-items: flex-start;
   margin-bottom: 20px;
 }
 
 .track_item_responsive {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  align-items: center; /* Center items when in column direction */
 }
 
 @media (min-width: 769px) {
   .track_item_responsive {
     flex-direction: row;
-    text-align: left;
+    align-items: flex-start; /* Top-align items when in row direction */
   }
 }
 
