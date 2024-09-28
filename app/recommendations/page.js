@@ -59,7 +59,7 @@ export default function RecommendationsPage() {
                     }));
 
                     // Fetch track data from Spotify
-                    const spotifyQuery = `track:"${track.title}" artist:"${track.artist}"`;
+                    const spotifyQuery = `track:${track.title} artist:${track.artist}`;
                     const spotifyResponse = await fetch(
                         `https://api-spotify-search.rian-db8.workers.dev/?q=${encodeURIComponent(spotifyQuery)}&type=track`
                     );
@@ -69,7 +69,7 @@ export default function RecommendationsPage() {
                         const spotifyTrack = spotifyData.data[0];
                         const spotifyUrl = spotifyTrack.url || null;
                         const previewUrl = spotifyTrack.preview || null;
-                        const image = spotifyTrack.image || null; // Get the album image from Spotify data
+                        const image = spotifyTrack.image || null;
 
                         setSpotifyLinks(prevLinks => ({
                             ...prevLinks,
