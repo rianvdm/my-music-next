@@ -31,8 +31,12 @@ export default function RecommendationsPage() {
                     const dates = data.map(track => new Date(track.dateLiked));
                     // Find the most recent date
                     const mostRecentDate = new Date(Math.max(...dates));
-                    // Format the date as desired
-                    const formattedDate = mostRecentDate.toLocaleDateString();
+                    // Format the date as "month day, year"
+                    const formattedDate = mostRecentDate.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
                     setLastUpdatedDate(formattedDate);
                 }
             } catch (error) {
@@ -156,11 +160,10 @@ export default function RecommendationsPage() {
                         </div>
                         <div className="no-wrap-text">
                             <p>
-                                <strong>{track.title}</strong> by <strong>
+                                <strong>{track.title}</strong> by{' '}
                                     <Link href={`/artist/${encodeURIComponent(track.artist.replace(/ /g, '-').toLowerCase())}`}>
                                         {track.artist}
                                     </Link>
-                                </strong>
                                 {spotifyLinks[`${track.title}_${track.artist}`]?.songlinkUrl && (
                                     <>
                                         {' '}
