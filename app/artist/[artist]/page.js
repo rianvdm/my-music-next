@@ -135,7 +135,7 @@ export default function ArtistPage({ params }) {
                             </p>
 
                             <p style={{ marginBottom: '0.2em' }}><strong>Popular Albums:</strong></p>
-                            <ul style={{ listStyleType: 'none', paddingLeft: '0', marginTop: '0' }}>
+                            <ul style={{ listStyleType: 'none', paddingLeft: '0', marginTop: '0', marginBottom: '0' }}>
                                 {topAlbums.length > 0 ? (
                                     topAlbums.map((album, index) => {
                                         const formattedAlbum = generateAlbumSlug(album.name);
