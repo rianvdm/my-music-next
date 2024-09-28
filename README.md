@@ -1,6 +1,6 @@
 ## Hello 👋
 
-My name is [Rian van der Merwe](https://elezea.com/) and this site started as a side project about the music I listen to, but then I got obsessed with it and now it's a whole lot more. It uses APIs from Last.fm, Spotify, ChatGPT, and Perplexity to to give you an artist and album database to help you find wonderful things to listen to. Do some searching, click around, and **find your next favorite listen**.
+My name is [Rian van der Merwe](https://elezea.com/) and this site started as a side project about the music I listen to, but then I got obsessed with it and now it's a whole lot more. It uses Last.fm, Spotify, OpenAI, and Perplexity to create an album and artist database that exists to help you find wonderful things to listen to. Do some searching, click around, and **find your next favorite listen**.
 
 ## Discord Bot
 
@@ -10,10 +10,10 @@ If you are part of a Discord server where you share music with each other, the c
 
 | Command        | Description                                                                                                          |
 |----------------|----------------------------------------------------------------------------------------------------------------------|
-| `/listento`    | Lets you enter an album and artist, and then it gets you streaming links for all platforms as well as a link to more details about the album. |
-| `/listenurl`   | Does the same, but you can just enter a streaming URL from any platform (Spotify, Apple Music, etc.)                 |
-| `/listennow`   | Asks you to enter your Last.fm username, and then it gets the same details for the last album you listened to.       |
-| `/whois`       | Gives you a one-sentence summary of an artist.                                                                      |
+| `/listento`    | Enter an album and artist, get streaming links for all platforms as well as a link to more details about the album. |
+| `/listenurl`   | The same as `/listento`, but enter a streaming URL from any platform (Spotify, Apple Music, etc.).                 |
+| `/listennow`   | Enter your Last.fm username, get the same details for the last album you listened to.       |
+| `/whois`       | One-sentence summary of an artist.                                                                      |
 
 
 As an example, the `/listento`, `listenurl`, and `/listennow` commands show details like this:
