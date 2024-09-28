@@ -1,4 +1,4 @@
-### Hello 👋
+## Hello 👋
 
 My name is [Rian van der Merwe](https://elezea.com/) and this site started as a side project about the music I listen to, but then I got obsessed with it and now it's a whole lot more. The home page pulls data from [my Last.fm activity](https://www.last.fm/user/bordesak), and then it gets ✨enhanced✨ via APIs from Spotify, ChatGPT, and Perplexity. It has since expanded into a full-fledged artist and album database. Use the site to find information about an artist or album, and find your next favorite listen.
 

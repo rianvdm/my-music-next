@@ -32,44 +32,7 @@ const RecentTrack = ({ recentTracksData, artistSummary, isDataLoaded }) => {
     );
 };
 
-// Commented out TopAlbums component
-/*
-function TopAlbums({ data }) {
-    if (!data) return <p>Loading albums...</p>;
-
-    return (
-        <div className="track-grid">
-            {data.map(album => {
-                const artistSlug = generateArtistSlug(album.artist);
-                const albumSlug = generateAlbumSlug(album.name);
-
-                const albumUrl = `/album/${artistSlug}_${albumSlug}`;
-                const artistUrl = `artist/${artistSlug}`;
-
-                return (
-                    <div className="track" key={album.name}>
-                        <a href={albumUrl}>
-                            <img src={album.image} className="track_image" alt={album.name} />
-                        </a>
-                        <div className="track_content">
-                            <p className="track_name">
-                                <a href={albumUrl}><strong>{album.name}</strong></a>
-                            </p>
-                            <p className="track_artist">
-                                <Link href={artistUrl} rel="noopener noreferrer">
-                                    {album.artist}
-                                </Link>
-                            </p>
-                        </div>
-                    </div>
-                );
-            })}
-        </div>
-    );
-}
-*/
-
-// New component to display recent searches, similar to TopAlbums
+// Display recent searches
 function RecentSearches({ data }) {
     if (!data) return <p>Loading recent searches...</p>;
 
@@ -254,26 +217,16 @@ export default function Home() {
                     ) : (
                         <p>Loading recent album and artist summary...</p>
                     )}
-                    <h2 style={{ marginBottom: 0, marginTop: "2em" }}>💿 Go ahead, search for something you like</h2>
+                    <h2 style={{ marginBottom: 0, marginTop: "2em" }}>💿 Learn more about an album you like</h2>
                     <AlbumSearch /> {/* Album search functionality goes here */}
 
-                    <h2>🔍 Or give these recent searches a try</h2>
+                    <h2>🔍 Give these recent searches a try</h2>
                     <p style={{ textAlign: 'center' }}>
                         Here are some albums that users recently searched for.
                     </p>
                     <Suspense fallback={<p>Loading recent searches...</p>}>
                         <RecentSearches data={recentSearchesData} />
                     </Suspense>
-                    
-                    {/* Commented out TopAlbums section
-                    <h2>🏆 Or give some of these a try</h2>
-                    <p style={{ textAlign: 'center' }}>
-                        These are the top albums I listened to in the past 7 days.
-                    </p>
-                    <Suspense fallback={<p>Loading albums...</p>}>
-                        <TopAlbums data={topAlbumsData} />
-                    </Suspense>
-                    */}
                 </section>
             </main>
         </div>

@@ -39,9 +39,9 @@ export default function NavBar() {
         <li style={liStyle}>
           <Link href="/artist">Artists</Link>
         </li>
-        <li style={liStyle}>
+{/*        <li style={liStyle}>
           <Link href="/album">Albums</Link>
-        </li>
+        </li>*/}
         <li style={liStyle}>
           <Link href="/recommendations">Get rec’d</Link>
         </li>
