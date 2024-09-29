@@ -12,11 +12,11 @@ If you are part of a Discord server where you share music with each other, the c
 |----------------|----------------------------------------------------------------------------------------------------------------------|
 | `/listento`    | Enter an album and artist, get streaming links for all platforms as well as a link to more details about the album. |
 | `/listenurl`   | The same as `/listento`, but enter a streaming URL from any platform (Spotify, Apple Music, etc.).                 |
-| `/listennow`   | Enter your Last.fm username, get the same details for the last album you listened to.       |
+| `/listenlast`   | Enter your Last.fm username, get the same details for the last album you listened to.       |
 | `/whois`       | One-sentence summary of an artist.                                                                      |
 
 
-As an example, the `/listento`, `listenurl`, and `/listennow` commands show details like this:
+As an example, the `/listento`, `listenurl`, and `/listenlast` commands show details like this:
 
 ![](https://file.elezea.com/20240921-aoapEQAq-2x.png)
 
