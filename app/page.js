@@ -222,7 +222,7 @@ export default function Home() {
 
                     <h2>👀 From the community</h2>
                     <p style={{ textAlign: 'center' }}>
-                        <strong>Here are some albums that the Discord community recently shared with their friends:</strong>
+                        <strong>Here are some albums that <a href="/about">Discord users</a> recently shared with their friends.</strong>
                     </p><br/>
                     <Suspense fallback={<p>Loading recent searches...</p>}>
                         <RecentSearches data={recentSearchesData} />
