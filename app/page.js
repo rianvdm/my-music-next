@@ -220,9 +220,9 @@ export default function Home() {
                     <h2 style={{ marginBottom: 0, marginTop: "2em" }}>💿 Learn more about an album</h2>
                     <AlbumSearch /> {/* Album search functionality goes here */}
 
-                    <h2>👀 Recent searches for inspiration</h2>
+                    <h2>👀 From the community</h2>
                     <p style={{ textAlign: 'center' }}>
-                        <strong>Here are some albums that the community recently searched for.</strong>
+                        <strong>Here are some albums that the Discord community recently shared with their friends:</strong>
                     </p><br/>
                     <Suspense fallback={<p>Loading recent searches...</p>}>
                         <RecentSearches data={recentSearchesData} />
