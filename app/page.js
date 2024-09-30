@@ -217,13 +217,13 @@ export default function Home() {
                     ) : (
                         <p>Loading recent album and artist summary...</p>
                     )}
-                    <h2 style={{ marginBottom: 0, marginTop: "2em" }}>💿 Learn more about an album you like</h2>
+                    <h2 style={{ marginBottom: 0, marginTop: "2em" }}>💿 Learn more about an album</h2>
                     <AlbumSearch /> {/* Album search functionality goes here */}
 
-                    <h2>🔍 Give these recent searches a try</h2>
+                    <h2>👂 Give these recommendations a try</h2>
                     <p style={{ textAlign: 'center' }}>
-                        Here are some albums that users recently searched for.
-                    </p>
+                        <strong>Here are some albums that people recently recommended to their friends:</strong>
+                    </p><br/>
                     <Suspense fallback={<p>Loading recent searches...</p>}>
                         <RecentSearches data={recentSearchesData} />
                     </Suspense>
