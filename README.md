@@ -1,6 +1,6 @@
 ## Hello 👋
 
-My name is [Rian van der Merwe](https://elezea.com/) and this site started as a side project about the music I listen to, but then I got obsessed with it and now it's a whole lot more. My hope is for this to be **an ever-expanding album and artist database that helps you find wonderful things to listen to.** Do some searching, click around, and (hopefully) find your next favorite album.
+My name is [Rian van der Merwe](https://elezea.com/) and this site started as a side project about the music I listen to, but then I got obsessed with it and now it's **an ever-expanding album and artist database that helps you find wonderful things to listen to.** Look around, do some searching, and (hopefully) find your next favorite album.
 
 ## Discord Bot
 
