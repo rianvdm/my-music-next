@@ -53,7 +53,7 @@ const decodePrettyUrl = (prettyUrl) => {
     return (
         <div>
             <header>
-                <h1>{genre}</h1>
+                <h1 style={{ marginBottom: 0 }}>{genre}</h1>
             </header>
             <main>
                 <section className="track_ul2">
