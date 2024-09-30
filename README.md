@@ -2,7 +2,7 @@
 
 My name is [Rian van der Merwe](https://elezea.com/) and this site started as a side project about the music I listen to, but then I got obsessed with it and now it's a whole lot more. It uses Last.fm, Spotify, OpenAI, and Perplexity to create an album and artist database that exists to help you find wonderful things to listen to. Do some searching, click around, and **find your next favorite listen**.
 
-## Discord Bot
+## Discord Bot {#discord-bot}
 
 If you are part of a Discord server where you share music with each other, the companion Discord Bot lets you easily generate streaming links (and other information) for albums. You can [add it to your server here](https://discord.com/oauth2/authorize?client_id=1284593290947068024).
 
