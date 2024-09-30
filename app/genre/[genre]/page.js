@@ -28,7 +28,8 @@ const decodePrettyUrl = (prettyUrl) => {
                     const encodedGenre = encodeURIComponent(genre);
 
                     const summaryResponse = await fetch(
-                        `https://api-openai-genresummary.rian-db8.workers.dev?genre=${encodedGenre}`
+                    //    `https://api-openai-genresummary.rian-db8.workers.dev?genre=${encodedGenre}`
+                        `https://api-perplexity-genresummary.rian-db8.workers.dev?genre=${encodedGenre}`
                     );
                     const summaryData = await summaryResponse.json();
                     setGenreSummary(summaryData.data);
