@@ -1,10 +1,10 @@
 ## Hello 👋
 
-My name is [Rian van der Merwe](https://elezea.com/) and this site started as a side project about the music I listen to, but then I got obsessed with it and now it's a whole lot more. My hope is for this to be **an ever-expanding album and artist database that helps you find wonderful things to listen to.** Do some searching, click around, find your next favorite album.
+My name is [Rian van der Merwe](https://elezea.com/) and this site started as a side project about the music I listen to, but then I got obsessed with it and now it's a whole lot more. My hope is for this to be **an ever-expanding album and artist database that helps you find wonderful things to listen to.** Do some searching, click around, and (hopefully) find your next favorite album.
 
 ## Discord Bot
 
-If you are part of a Discord server where you share music with each other, the companion Discord Bot lets you easily generate streaming links (and other information) for albums. You can [add it to your server here](https://discord.com/oauth2/authorize?client_id=1284593290947068024).
+If you are part of a Discord server where you share music with each other, the companion Discord Bot lets you easily generate streaming links (and other information) for albums. You can **[add it to your server here](https://discord.com/oauth2/authorize?client_id=1284593290947068024)**.
 
 ### Current commands:
 
