@@ -62,58 +62,45 @@ export default function RecommendationsPage() {
 
     useEffect(() => {
       const fetchAllTrackData = async () => {
-        const summaries = {};
-        const images = {};
-        const links = {};
+        lovedTracks.forEach(async (track) => {
+          const trackKey = `${track.title}_${track.artist}`;
+          try {
+            // Fetch Summary
+            const summaryResponse = await fetch(`https://api-openai-artistsentence.rian-db8.workers.dev/?name=${encodeURIComponent(track.artist)}`);
+            const summaryData = await summaryResponse.json();
+            setTrackSummaries(prev => ({ ...prev, [trackKey]: summaryData.data }));
 
-        await Promise.all(
-          lovedTracks.map(async (track) => {
-            try {
-              // Fetch summary
-              const summaryResponse = await fetch(
-                `https://api-openai-artistsentence.rian-db8.workers.dev/?name=${encodeURIComponent(track.artist)}`
-              );
-              const summaryData = await summaryResponse.json();
-              summaries[`${track.title}_${track.artist}`] = summaryData.data;
+            // Fetch Spotify Data
+            const spotifyResponse = await fetch(`https://api-spotify-search.rian-db8.workers.dev/?q=${encodeURIComponent(`track:${track.title} artist:${track.artist}`)}&type=track`);
+            const spotifyData = await spotifyResponse.json();
 
-              // Fetch track data from Spotify
-              const spotifyQuery = `track:${track.title} artist:${track.artist}`;
-              const spotifyResponse = await fetch(
-                `https://api-spotify-search.rian-db8.workers.dev/?q=${encodeURIComponent(spotifyQuery)}&type=track`
-              );
-              const spotifyData = await spotifyResponse.json();
+            if (spotifyData?.data?.[0]) {
+              const spotifyTrack = spotifyData.data[0];
+              const spotifyUrl = spotifyTrack.url || null;
+              const previewUrl = spotifyTrack.preview || null;
+              const image = spotifyTrack.image || null;
 
-              if (spotifyData?.data?.[0]) {
-                const spotifyTrack = spotifyData.data[0];
-                const spotifyUrl = spotifyTrack.url || null;
-                const previewUrl = spotifyTrack.preview || null;
-                const image = spotifyTrack.image || null;
+              setArtistImages(prev => ({ ...prev, [track.artist]: image }));
 
-                // Fetch Songlink data
-                let songlinkUrl = null;
-                if (spotifyUrl) {
-                  const songlinkResponse = await fetch(
-                    `https://api-songlink.rian-db8.workers.dev/?url=${encodeURIComponent(spotifyUrl)}`
-                  );
-                  const songlinkData = await songlinkResponse.json();
-                  songlinkUrl = songlinkData.pageUrl || spotifyUrl;
-                }
-
-                links[`${track.title}_${track.artist}`] = { spotifyUrl, previewUrl, songlinkUrl };
-                images[track.artist] = image;
-              } else {
-                console.error(`No Spotify data found for ${track.title} by ${track.artist}`);
+              // Fetch Songlink Data
+              let songlinkUrl = null;
+              if (spotifyUrl) {
+                const songlinkResponse = await fetch(`https://api-songlink.rian-db8.workers.dev/?url=${encodeURIComponent(spotifyUrl)}`);
+                const songlinkData = await songlinkResponse.json();
+                songlinkUrl = songlinkData.pageUrl || spotifyUrl;
               }
-            } catch (error) {
-              console.error(`Error fetching data for ${track.title} by ${track.artist}:`, error);
-            }
-          })
-        );
 
-        // Update states once after all data is fetched
-        setTrackSummaries(summaries);
-        setArtistImages(images);
-        setSpotifyLinks(links);
+              setSpotifyLinks(prev => ({
+                ...prev,
+                [trackKey]: { spotifyUrl, previewUrl, songlinkUrl }
+              }));
+            } else {
+              console.error(`No Spotify data found for ${track.title} by ${track.artist}`);
+            }
+          } catch (error) {
+            console.error(`Error fetching data for ${track.title} by ${track.artist}:`, error);
+          }
+        });
       };
 
       if (lovedTracks.length > 0) {
