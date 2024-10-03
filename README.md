@@ -12,8 +12,10 @@ If you are part of a Discord server where you share music with each other, the c
 |----------------|----------------------------------------------------------------------------------------------------------------------|
 | `/listento`    | Enter an album and artist, get streaming links for all platforms as well as a link to more details about the album. |
 | `/listenurl`   | The same as `/listento`, but enter a streaming URL from any platform (Spotify, Apple Music, etc.).                 |
-| `/listenlast`   | Enter your Last.fm username, get the same details for the last album you listened to.       |
+| `/listenlast`  | Enter your Last.fm username, get the same details for the last album you listened to.       |
 | `/whois`       | One-sentence summary of an artist.                                                                      |
+| `/whatis`      | Two-sentence summary of a musical genre, with a link to history, artists, and albums to check out. |
+| `/ask`		 | An excuse to play with open-source AI models, this will respond to you using a variety of personalities that I come up with for fun. It's not a serious part of the bot... |
 
 
 As an example, the `/listento`, `listenurl`, and `/listenlast` commands show details like this:
@@ -22,6 +24,6 @@ As an example, the `/listento`, `listenurl`, and `/listenlast` commands show det
 
 ## Nerdy details
 
-The site uses APIs from Last.fm, Spotify, OpenAI, and Perplexity to get album and artist data, and generate some interesting facts about it all. It is built on [Cloudflare](https://cloudflare.com/) products, including [Pages](https://pages.cloudflare.com/), [Workers](https://workers.cloudflare.com/), and [Workers KV](https://www.cloudflare.com/developer-platform/workers-kv/). It's a wonderful set of tools to work with—and I'm not just saying that because [I work there](https://elezea.com/portfolio/).
+The site uses APIs from Last.fm, Spotify, OpenAI, and Perplexity to get album and artist data, and generate some interesting facts about it all. It is built on [Cloudflare](https://cloudflare.com/) products, including [Pages](https://pages.cloudflare.com/), [Workers](https://workers.cloudflare.com/), [Workers AI](https://ai.cloudflare.com/), and [Workers KV](https://www.cloudflare.com/developer-platform/workers-kv/). It's a wonderful set of tools to work with—and I'm not just saying that because [I work there](https://elezea.com/portfolio/).
 
 If you want to chat about this project, feel free to [reach out](https://elezea.com/contact/)! And if you spot any bugs (there are lots!) or have any ideas for things to add, please [submit an issue on GitHub](https://github.com/rianvdm/my-music-next/issues).
