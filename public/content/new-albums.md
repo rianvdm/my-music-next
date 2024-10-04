@@ -1,6 +1,7 @@
-Happy Friday! Here's what I'm checking out the week of September 27, 2024:
+It's a good week for new releases! Here's what I'm checking out the week of October 4, 2024:
 
-* **[Letters by Tiphanie Doucet](https://listentomore.com/album/tiphanie-doucet_letters)**. Lovely blend of folk and indie pop from this French-American singer-songwriter. Try it if you like Feist and Norah Jones.
-* **[Revelation by Leif Vollebekk](https://listentomore.com/album/leif-vollebekk_revelation)**. More chill indie folk vibes. I got to know him through [Twin Solitude](https://listentomore.com/album/leif-vollebekk_twin-solitude), definitely check that one out too.
-* **[Live From Wrigley Field by The Lumineers](https://listentomore.com/album/the-lumineers_live-from-wrigley-field)**. I'm a sucker for live albums 🤷.
-* **[FOREVER! Best Of 40 Years by Alphaville](https://listentomore.com/album/alphaville_forever!-best-of-40-years)**. Sorrynotsorry? Always fun dipping back into these songs. I'm not sure they have 40 songs worth listening to, but I am determined to find out...
+* **[Leon by Leon Bridges](https://listentomore.com/album/leon-bridges_leon)**. I've been really looking forward to the new one from the neo-soul master.
+* **[The Last Flight by Public Service Broadcasting](https://listentomore.com/album/public-service-broadcasting_the-last-flight)**. I absolutely adore [The Race for Space](https://listentomore.com/album/public-service-broadcasting_the-race-for-space), an album that uses old public radio broadcast recordings to recreate the space race of the 60s. This latest one is "a concept album dedicated to the mysterious disappearance of Amelia Earhart during her attempted circumnavigation of the globe in 1937." Love it.
+* **[Cutouts by The Smile](https://listentomore.com/album/the-smile_cutouts)**. Thom Yorke and Jonny Greenwood's second album of 2024? Yes please.
+* **[Honey by Caribou](https://listentomore.com/album/caribou_honey)**. Always up for checking out some weird indie dance. 
+* **[Moon Music by Coldplay](https://listentomore.com/album/coldplay_moon-music)**. I mean, ok. But listen, I am contractually obligated to listen to each new Coldplay album at least once. Don't @ me.
