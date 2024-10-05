@@ -10,7 +10,7 @@ import { genres } from './utils/genres';
 
 // Custom hooks for data fetching
 const useRandomFact = () => {
-  const [fact, setFact] = useState('Loading a random fact...');
+  const [fact, setFact] = useState('Did you know');
 
   useEffect(() => {
     const fetchRandomFact = async () => {
@@ -177,7 +177,7 @@ const RecentTrackDisplay = ({ recentTracks, isLoading }) => {
 
   return (
     <p>
-      🎧 I recently listened to{' '}
+      I recently listened to{' '}
       <Link href={`album/${generateArtistSlug(last_artist)}_${albumSlug}`}>
         <strong>{last_album}</strong>
       </Link>{' '}
@@ -186,6 +186,8 @@ const RecentTrackDisplay = ({ recentTracks, isLoading }) => {
         <strong>{last_artist}</strong>
       </Link>
       . {artistSummary}
+      <br/><br/>
+      There's some more history in <a href="/mystats">my stats</a>.
     </p>
   );
 };
@@ -261,7 +263,7 @@ export default function Home() {
           <br />
           <RecentSearches searches={searches} isLoading={isLoadingSearches} />
 
-          <h3 style={{ marginTop: '3em' }}>My stuff</h3>
+          <h3 style={{ marginTop: '3.5em' }}>My listening history</h3>
           <RecentTrackDisplay recentTracks={recentTracks} isLoading={isLoadingTracks} />
         </section>
       </main>

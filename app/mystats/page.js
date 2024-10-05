@@ -118,7 +118,7 @@ export default function Home() {
     return (
         <div>
             <header>
-                <h1>My stats for the week</h1>
+                <h1>Real-time listening stats</h1>
             </header>
             <main>
                 <section id="lastfm-stats">
