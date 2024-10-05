@@ -71,28 +71,6 @@ const useRecentSearches = () => {
   return { searches, isLoading };
 };
 
-const useRecentTracks = () => {
-  const [recentTracks, setRecentTracks] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchRecentTracks = async () => {
-      try {
-        const response = await fetch('https://kv-fetch-last-track.rian-db8.workers.dev/');
-        const data = await response.json();
-        setRecentTracks(data);
-      } catch (error) {
-        console.error('Error fetching recent tracks:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchRecentTracks();
-  }, []);
-
-  return { recentTracks, isLoading };
-};
 
 // Subcomponents
 const DayGreeting = () => {
@@ -149,48 +127,6 @@ const AlbumSearch = () => {
   );
 };
 
-const RecentTrackDisplay = ({ recentTracks, isLoading }) => {
-  const [artistSummary, setArtistSummary] = useState(null);
-
-  useEffect(() => {
-    if (recentTracks?.last_artist) {
-      const fetchArtistSummary = async () => {
-        try {
-          const encodedArtistName = encodeURIComponent(recentTracks.last_artist);
-          const summaryResponse = await fetch(`https://api-openai-artistsentence.rian-db8.workers.dev?name=${encodedArtistName}`);
-          const summaryData = await summaryResponse.json();
-          setArtistSummary(summaryData.data);
-        } catch (error) {
-          console.error('Error fetching artist summary:', error);
-        }
-      };
-      fetchArtistSummary();
-    }
-  }, [recentTracks]);
-
-  if (isLoading) return <div className="track_ul2">Loading recent tracks...</div>;
-  if (!recentTracks) return null;
-
-  const { last_artist, last_album } = recentTracks;
-  const artistSlug = generateLastfmArtistSlug(last_artist);
-  const albumSlug = generateAlbumSlug(last_album);
-
-  return (
-    <p>
-      I recently listened to{' '}
-      <Link href={`album/${generateArtistSlug(last_artist)}_${albumSlug}`}>
-        <strong>{last_album}</strong>
-      </Link>{' '}
-      by{' '}
-      <Link href={`artist/${artistSlug}`}>
-        <strong>{last_artist}</strong>
-      </Link>
-      . {artistSummary}
-      <br/><br/>
-      There's some more history in <a href="/mystats">my stats</a>.
-    </p>
-  );
-};
 
 const RecentSearches = ({ searches, isLoading }) => {
   if (isLoading) return <div className="track_ul2">Loading recent searches...</div>;
@@ -229,7 +165,6 @@ export default function Home() {
   const randomFact = useRandomFact();
   const { urlGenre, displayGenre } = useRandomGenre();
   const { searches, isLoading: isLoadingSearches } = useRecentSearches();
-  const { recentTracks, isLoading: isLoadingTracks } = useRecentTracks();
 
   return (
     <div>
@@ -262,9 +197,6 @@ export default function Home() {
           </p>
           <br />
           <RecentSearches searches={searches} isLoading={isLoadingSearches} />
-
-          <h3 style={{ marginTop: '3.5em' }}>My listening history</h3>
-          <RecentTrackDisplay recentTracks={recentTracks} isLoading={isLoadingTracks} />
         </section>
       </main>
     </div>

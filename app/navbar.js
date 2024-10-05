@@ -39,11 +39,11 @@ export default function NavBar() {
         <li style={liStyle}>
           <Link href="/artist">Artists</Link>
         </li>
-{/*        <li style={liStyle}>
-          <Link href="/album">Albums</Link>
-        </li>*/}
         <li style={liStyle}>
           <Link href="/recommendations">Get rec’d</Link>
+        </li>
+        <li style={liStyle}>
+          <Link href="/mystats">Stats</Link>
         </li>
         <li style={liStyle}>
           <Link href="/about">About</Link>
