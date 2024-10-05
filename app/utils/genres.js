@@ -10,7 +10,7 @@ export const genres = [
     "hardcore", "hardstyle", "heavy-metal", "hip-hop", "honky-tonk", 
     "house", "idm", "indie", "indie-pop", "industrial", "j-pop", "jazz", 
     "jungle", "k-pop", "krautrock", "latin", "mandopop", "math-rock", 
-    "metal", "metalcore", "minimal-techno", "neoclassical", "new-age", 
+    "metal", "metalcore", "metropopolis", "minimal-techno", "neoclassical", "new-age", 
     "new-wave", "nu-metal", "opera", "pagode", "pop", "post-dubstep", 
     "post-rock", "power-pop", "progressive-house", "psych-rock", "punk", 
     "punk-rock", "r-n-b", "reggae", "reggaeton", "rock", "rock-n-roll", 
