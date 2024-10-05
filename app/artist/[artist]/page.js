@@ -66,15 +66,15 @@ export default function ArtistPage({ params }) {
 
     // Fetch OpenAI summary independently
     useEffect(() => {
-        if (artist && !fetchedOpenAISummary.current) {
+        if (artistDetails?.name && !fetchedOpenAISummary.current) {
             fetchedOpenAISummary.current = true;
 
             async function fetchOpenAISummary() {
                 try {
-                    const encodedArtist = encodeURIComponent(artist);
+                    const encodedArtistName = encodeURIComponent(artistDetails.name);
 
                     const summaryResponse = await fetch(
-                        `https://api-openai-artistdetail.rian-db8.workers.dev?name=${encodedArtist}`
+                        `https://api-openai-artistdetail.rian-db8.workers.dev?name=${encodedArtistName}`
                     );
                     const summaryData = await summaryResponse.json();
                     setOpenAISummary(summaryData.data);
@@ -83,9 +83,10 @@ export default function ArtistPage({ params }) {
                     setOpenAISummary('Failed to load ChatGPT summary.');
                 }
             }
+
             fetchOpenAISummary();
         }
-    }, [artist]);
+    }, [artistDetails]);
 
     if (error) {
         return <p>{error}</p>;
