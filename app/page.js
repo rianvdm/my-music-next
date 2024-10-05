@@ -6,6 +6,7 @@ import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { generateArtistSlug, generateAlbumSlug, generateLastfmArtistSlug } from './utils/slugify';
+import { genres } from './utils/genres';
 
 // Custom hooks for data fetching
 const useRandomFact = () => {
@@ -27,6 +28,24 @@ const useRandomFact = () => {
   }, []);
 
   return fact;
+};
+
+const useRandomGenre = () => {
+  const [genreData, setGenreData] = useState({ urlGenre: null, displayGenre: null });
+
+  useEffect(() => {
+    const randomGenre = genres[Math.floor(Math.random() * genres.length)];
+
+    // Capitalize the first letter of each word and replace hyphens with spaces
+    const displayGenre = randomGenre
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+
+    setGenreData({ urlGenre: randomGenre, displayGenre });
+  }, []);
+
+  return genreData;
 };
 
 const useRecentTracks = () => {
@@ -72,10 +91,6 @@ const useRecentTracks = () => {
 };
 
 // Subcomponents
-const RecommendationLink = () => (
-  <p>✨ Welcome, music traveler. If you're looking for something new to listen to, you should <strong><Link href="/recommendations">get rec'd</Link></strong>.</p>
-);
-
 const DayGreeting = () => {
   const options = { weekday: 'long' };
   const dayName = new Intl.DateTimeFormat('en-US', options).format(new Date());
@@ -177,6 +192,7 @@ const RecentSearches = ({ searches }) => {
 // Main component
 export default function Home() {
   const randomFact = useRandomFact();
+  const { urlGenre, displayGenre } = useRandomGenre(); 
   const { data, artistSummary, isLoading } = useRecentTracks();
 
   if (isLoading) {
@@ -190,7 +206,7 @@ export default function Home() {
       </header>
       <main>
         <section id="lastfm-stats">
-          <RecommendationLink />
+          <p>✨ Welcome, music traveler. If you're looking for something new to listen to, you should <strong><Link href="/recommendations">get rec'd</Link></strong>. Or maybe explore a random genre like <strong><Link href={`/genre/${urlGenre}`}>{displayGenre}</Link></strong>.</p>
           <p>🧠 {randomFact}</p>
           <RecentTrackDisplay recentTracks={data?.recentTracks} artistSummary={artistSummary} />
           
