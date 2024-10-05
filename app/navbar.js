@@ -106,6 +106,6 @@ const ulStyle = {
 };
 
 const liStyle = {
-  margin: '0 0.2em',
+  margin: '0 0.1em',
   flexShrink: 0, // Prevents items from shrinking too much
 };
