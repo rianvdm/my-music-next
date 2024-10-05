@@ -10,17 +10,8 @@ export default function Home() {
     const [topArtistsData, setTopArtistsData] = useState(null);
     const [topAlbumsData, setTopAlbumsData] = useState(null);
     const [dayGreeting, setDayGreeting] = useState('');
-    const [artistSummary, setArtistSummary] = useState(''); // State for the last artist summary
 
     useEffect(() => {
-        const setGreeting = () => {
-            const options = { weekday: 'long' };
-            const today = new Date();
-            const dayName = new Intl.DateTimeFormat('en-US', options).format(today);
-            setDayGreeting(`Happy ${dayName}, friend!`);
-        };
-
-        setGreeting();
 
         const fetchTopArtists = async () => {
             try {
@@ -52,17 +43,6 @@ export default function Home() {
                 setTopAlbumsData(topAlbumsData.slice(0, 6)); // Limit to top 6 albums
             } catch (error) {
                 console.error('Error fetching top albums:', error);
-            }
-        };
-
-        const fetchArtistSummary = async (artistName) => {
-            try {
-                const summaryResponse = await fetch(`https://api-openai-artistsentence.rian-db8.workers.dev?name=${encodeURIComponent(artistName)}`);
-                const summaryData = await summaryResponse.json();
-                setArtistSummary(summaryData.data);
-            } catch (error) {
-                console.error(`Error fetching summary for ${artistName}:`, error);
-                setArtistSummary('Failed to load artist summary.');
             }
         };
 
@@ -138,7 +118,7 @@ export default function Home() {
     return (
         <div>
             <header>
-                <h1>{dayGreeting}</h1>
+                <h1>My stats for the week</h1>
             </header>
             <main>
                 <section id="lastfm-stats">
