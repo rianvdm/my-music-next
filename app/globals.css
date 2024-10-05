@@ -246,6 +246,12 @@ blockquote {
   font-style: italic;
 }
 
+.track_playcount {
+  color: var(--c-base); 
+  margin-left: 0;       
+  font-size: 14px;      
+}
+
 .track_none,
 .track_video {
   margin: 0 auto;

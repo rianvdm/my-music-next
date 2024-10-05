@@ -77,58 +77,63 @@ export default function Home() {
 
         return (
             <div className="track-grid">
-                {topArtistsData.slice(0, 6).map(artist => (
-                    <div className="track" key={artist.name}>
-                        <Link href={`artist/${encodeURIComponent(artist.name)}`} rel="noopener noreferrer">
-                            <img src={artist.image || '/path/to/default/image.png'} className="track_image" alt={artist.name} />
-                        </Link>
-                        <div className="track_content">
-                            <h2 className="track_artist">
-                                <Link href={`artist/${encodeURIComponent(artist.name)}`} rel="noopener noreferrer">
-                                    {artist.name}
-                                </Link>
-                            </h2>
+                {topArtistsData.slice(0, 6).map(artist => {
+                    const artistSlug = generateArtistSlug(artist.name); // If you are using a slug generator
+                    return (
+                        <div className="track" key={artist.name}>
+                            <Link href={`artist/${artistSlug}`} rel="noopener noreferrer">
+                                <img src={artist.image || '/path/to/default/image.png'} className="track_image" alt={artist.name} />
+                            </Link>
+                            <div className="track_content">
+                                <p className="track_artist">
+                                    <Link href={`artist/${artistSlug}`} rel="noopener noreferrer">
+                                        {artist.name}
+                                    </Link><br />
+                                    <span className="track_playcount"> {artist.playcount} plays</span>
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
         );
     };
 
-        const renderTopAlbums = () => {
-            if (!topAlbumsData) {
-                return <p>Loading albums...</p>;
-            }
+    const renderTopAlbums = () => {
+        if (!topAlbumsData) {
+            return <p>Loading albums...</p>;
+        }
 
-            return (
-                <div className="track-grid">
-                    {topAlbumsData.map(album => {
-                        const artistSlug = generateArtistSlug(album.artist);
-                        const albumSlug = generateAlbumSlug(album.name);
+        return (
+            <div className="track-grid">
+                {topAlbumsData.map(album => {
+                    const artistSlug = generateArtistSlug(album.artist);
+                    const albumSlug = generateAlbumSlug(album.name);
 
-                        return (
-                            <div className="track" key={album.name}>
-                                <Link href={`/album/${artistSlug}_${albumSlug}`}>
-                                    <img src={album.image} className="track_image" alt={album.name} />
-                                </Link>
-                                <div className="track_content">
-                                    <p className="track_name">
-                                        <Link href={`/album/${artistSlug}_${albumSlug}`}>
-                                            <strong>{album.name}</strong>
-                                        </Link>
-                                    </p>
-                                    <p className="track_artist">
-                                        <Link href={`artist/${artistSlug}`}>
-                                            {album.artist}
-                                        </Link>
-                                    </p>
-                                </div>
+                    return (
+                        <div className="track" key={album.name}>
+                            <Link href={`/album/${artistSlug}_${albumSlug}`}>
+                                <img src={album.image} className="track_image" alt={album.name} />
+                            </Link>
+                            <div className="track_content">
+                                <p className="track_name">
+                                    <Link href={`/album/${artistSlug}_${albumSlug}`}>
+                                        <strong>{album.name}</strong>
+                                    </Link>
+                                </p>
+                                <p className="track_artist">
+                                    <Link href={`artist/${artistSlug}`}>
+                                        {album.artist}
+                                    </Link><br />
+                                    <span className="track_playcount"> {album.playcount} plays</span>
+                                </p>
                             </div>
-                        );
-                    })}
-                </div>
-            );
-        };
+                        </div>
+                    );
+                })}
+            </div>
+        );
+    };
 
     return (
         <div>
