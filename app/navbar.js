@@ -83,7 +83,7 @@ export default function NavBar() {
           }
 
           li {
-            flex: 0 1 auto; /* Items will wrap as needed but won't take up full width */
+            flex: 0 0.5 auto; /* Items will wrap as needed but won't take up full width */
           }
         }
       `}</style>
@@ -106,6 +106,6 @@ const ulStyle = {
 };
 
 const liStyle = {
-  margin: '0 0em',
+  margin: '0 0.1em',
   flexShrink: 0, // Prevents items from shrinking too much
 };
