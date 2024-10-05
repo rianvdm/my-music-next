@@ -1,11 +1,12 @@
 'use client';
 
+export const runtime = 'edge';
 import Head from 'next/head';
 import Link from 'next/link';
+import { generateArtistSlug, generateAlbumSlug, generateLastfmArtistSlug } from '../utils/slugify';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
-    const [recentTracksData, setRecentTracksData] = useState(null);
     const [topArtistsData, setTopArtistsData] = useState(null);
     const [topAlbumsData, setTopAlbumsData] = useState(null);
     const [dayGreeting, setDayGreeting] = useState('');
@@ -20,23 +21,6 @@ export default function Home() {
         };
 
         setGreeting();
-
-        const fetchRecentTracks = async () => {
-            try {
-                console.time('fetchRecentTracks');
-                const recentTracksResponse = await fetch('https://api-lastfm-recenttracks.rian-db8.workers.dev');
-                const recentTracksData = await recentTracksResponse.json();
-                console.timeEnd('fetchRecentTracks');
-                setRecentTracksData(recentTracksData);
-
-                // Fetch the artist summary for the last artist
-                if (recentTracksData.last_artist) {
-                    fetchArtistSummary(recentTracksData.last_artist);
-                }
-            } catch (error) {
-                console.error('Error fetching recent tracks data:', error);
-            }
-        };
 
         const fetchTopArtists = async () => {
             try {
@@ -82,22 +66,9 @@ export default function Home() {
             }
         };
 
-        fetchRecentTracks();
         fetchTopArtists();
         fetchTopAlbums();
     }, []);
-
-    const renderRecentTracks = () => {
-        if (!recentTracksData) {
-            return <p>Loading recent stats...</p>;
-        }
-
-        return (
-            <p>
-                Over the last 7 days I listened to <strong>{new Intl.NumberFormat().format(recentTracksData.playcount)} tracks</strong> across <strong>{new Intl.NumberFormat().format(recentTracksData.artist_count)} artists</strong> and <strong>{new Intl.NumberFormat().format(recentTracksData.album_count)} albums</strong>. The last artist I listened to was <Link href={`artist/${encodeURIComponent(recentTracksData.last_artist)}`} rel="noopener noreferrer"><strong>{recentTracksData.last_artist}</strong></Link>. {artistSummary}
-            </p>
-        );
-    };
 
     const renderTopArtists = () => {
         if (!topArtistsData) {
@@ -124,30 +95,40 @@ export default function Home() {
         );
     };
 
-    const renderTopAlbums = () => {
-        if (!topAlbumsData) {
-            return <p>Loading albums...</p>;
-        }
+        const renderTopAlbums = () => {
+            if (!topAlbumsData) {
+                return <p>Loading albums...</p>;
+            }
 
-        return (
-            <div className="track-grid">
-                {topAlbumsData.map(album => (
-                    <div className="track" key={album.name}>
-                        <a href={album.albumUrl} target="_blank" rel="noopener noreferrer">
-                            <img src={album.image} className="track_image" alt={album.name} />
-                        </a>
-                        <div className="track_content">
-                            <p className="track_name"><strong>{album.name}</strong></p>
-                            <p className="track_artist">
-                                <Link href={`artist/${encodeURIComponent(album.artist)}`} rel="noopener noreferrer">
-                                    {album.artist}
-                                </Link></p>
-                        </div>
-                    </div>
-                ))}
-            </div>
-        );
-    };
+            return (
+                <div className="track-grid">
+                    {topAlbumsData.map(album => {
+                        const artistSlug = generateArtistSlug(album.artist);
+                        const albumSlug = generateAlbumSlug(album.name);
+
+                        return (
+                            <div className="track" key={album.name}>
+                                <Link href={`/album/${artistSlug}_${albumSlug}`}>
+                                    <img src={album.image} className="track_image" alt={album.name} />
+                                </Link>
+                                <div className="track_content">
+                                    <p className="track_name">
+                                        <Link href={`/album/${artistSlug}_${albumSlug}`}>
+                                            <strong>{album.name}</strong>
+                                        </Link>
+                                    </p>
+                                    <p className="track_artist">
+                                        <Link href={`artist/${artistSlug}`}>
+                                            {album.artist}
+                                        </Link>
+                                    </p>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            );
+        };
 
     return (
         <div>
@@ -156,7 +137,6 @@ export default function Home() {
             </header>
             <main>
                 <section id="lastfm-stats">
-                    {renderRecentTracks()}
                     <h2>👩‍🎤 Top Artists</h2>
                     <p style={{ textAlign: 'center' }}>
                         <strong>The top artists I listened to in the past 7 days.</strong>
