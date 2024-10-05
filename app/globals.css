@@ -133,6 +133,13 @@ nav li.active a {
   font-weight: bold;
 }
 
+.highlight {
+  background-color: var(--c-accent);
+  color: var(--c-bg); /* Text color should contrast the background */
+  padding: 0 4px;
+  border-radius: 4px;
+}
+
 #mode-toggle {
   cursor: pointer;
 }

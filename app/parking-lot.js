@@ -39,33 +39,3 @@
             )}
             <div style={{ marginTop: '40px' }}></div>
 
-
-
-function TopArtists({ data }) {
-    if (!data) return <p>Loading artists...</p>;
-
-    return (
-        <div className="track-grid">
-            {data.map(artist => {
-                const artistSlug = encodeURIComponent(artist.name.replace(/ /g, '-').toLowerCase());
-                const artistUrl = `artist/${artistSlug}`;
-                const artistImage = artist.image || 'https://file.elezea.com/noun-no-image.png';
-
-                return (
-                    <div className="track" key={artist.name}>
-                        <Link href={artistUrl} rel="noopener noreferrer">
-                            <img src={artistImage} className="track_image" alt={artist.name} />
-                        </Link>
-                        <div className="track_content">
-                            <h2 className="track_artist">
-                                <Link href={artistUrl} rel="noopener noreferrer">
-                                    {artist.name}
-                                </Link>
-                            </h2>
-                        </div>
-                    </div>
-                );
-            })}
-        </div>
-    );
-}
