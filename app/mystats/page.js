@@ -15,32 +15,21 @@ export default function Home() {
 
         const fetchTopArtists = async () => {
             try {
-                const topArtistsResponse = await fetch('https://api-lastfm-topartists.rian-db8.workers.dev');
+                const topArtistsResponse = await fetch('https://kv-fetch-top-artists.rian-db8.workers.dev/');
                 const topArtistsData = await topArtistsResponse.json();
 
-                const detailedArtistsData = await Promise.all(topArtistsData.map(async (artist) => {
-                    const detailResponse = await fetch(`https://api-lastfm-artistdetail.rian-db8.workers.dev?artist=${encodeURIComponent(artist.name)}`);
-                    const detailData = await detailResponse.json();
-                    return {
-                        name: detailData.name,
-                        playcount: artist.playcount,
-                        url: detailData.url,
-                        image: detailData.image,
-                        bio: detailData.bio,
-                    };
-                }));
-
-                setTopArtistsData(detailedArtistsData);
+                setTopArtistsData(topArtistsData);
             } catch (error) {
-                console.error('Error fetching top artists data:', error);
+                console.error('Error fetching top artists:', error);
             }
         };
 
         const fetchTopAlbums = async () => {
             try {
-                const topAlbumsResponse = await fetch('https://api-lastfm-topalbums.rian-db8.workers.dev');
+                const topAlbumsResponse = await fetch('https://kv-fetch-top-albums.rian-db8.workers.dev/');
                 const topAlbumsData = await topAlbumsResponse.json();
-                setTopAlbumsData(topAlbumsData.slice(0, 6)); // Limit to top 6 albums
+
+                setTopAlbumsData(topAlbumsData);
             } catch (error) {
                 console.error('Error fetching top albums:', error);
             }
@@ -57,7 +46,7 @@ export default function Home() {
 
         return (
             <div className="track-grid">
-                {topArtistsData.slice(0, 6).map(artist => {
+                {topArtistsData.map(artist => {
                     const artistSlug = generateArtistSlug(artist.name); // If you are using a slug generator
                     return (
                         <div className="track" key={artist.name}>
