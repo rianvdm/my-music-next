@@ -309,8 +309,7 @@ export default function AlbumPage({ params }) {
                     </div>
                     {renderOpenAISummary(openAISummary)}
                     <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                        <h2>Ask a follow-up question about the album</h2>
-                        <p style={{ marginBottom: 0 }}>(This is an experiment. If you manage to break it, please <a href="https://github.com/rianvdm/my-music-next/issues">submit a bug report</a> and let me know how you did it!)</p>
+                        <h2 style={{ marginBottom: 0 }}>Ask a follow-up question about the album</h2>
                         <div id="search-form">
                             <input
                                 id="follow-up-search" 
