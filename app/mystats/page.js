@@ -124,6 +124,7 @@ export default function MyStats() {
       <div className="track-grid">
         {topArtistsData.map(artist => {
           const artistSlug = generateArtistSlug(artist.name);
+          const genre = artist.tags[0] || 'No genre';
           return (
             <div className="track" key={artist.name}>
               <Link href={`artist/${artistSlug}`} rel="noopener noreferrer">
@@ -131,9 +132,11 @@ export default function MyStats() {
               </Link>
               <div className="track_content">
                 <p className="track_artist">
-                  <Link href={`artist/${artistSlug}`} rel="noopener noreferrer">
+                  <strong><Link href={`artist/${artistSlug}`} rel="noopener noreferrer">
                     {artist.name}
-                  </Link>
+                  </Link></strong>
+                  <br />
+                  <Link href={`genre/${genre}`} rel="noopener noreferrer">{genre}</Link>
                   <br />
                   <span className="track_playcount"> {artist.playcount} plays</span>
                 </p>
