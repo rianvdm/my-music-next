@@ -40,25 +40,26 @@ export default function GuessMe() {
         }
     };
 
-    const renderCurrentQA = () => {
-        return (
-            <>
-                {currentQuestion && (
-                    <div className="user track_ul2">
-                        <strong>Q: </strong>
-                        <span>{currentQuestion}</span>
+        const renderCurrentQA = () => {
+            return (
+                <>
+                    {currentQuestion && (
+                        <div className="user track_ul2" style={{ marginBottom: '0' }}>
+                            <strong>Q: </strong>
+                            <span>{currentQuestion}</span>
+                        </div>
+                    )}
+                    <div className="assistant track_ul2" style={{ marginBottom: '0' }}>
+                        <span dangerouslySetInnerHTML={{ __html: marked(currentAnswer) }} />
                     </div>
-                )}
-                <div className="assistant track_ul2">
-                    <span dangerouslySetInnerHTML={{ __html: marked(currentAnswer) }} />
-                </div>
-            </>
-        );
-    };
+                </>
+            );
+        };
 
     return (
         <div className="track_ul2">
             <h1>Guess the Musical Personality!</h1>
+            <h3 style={{ textAlign: 'center' }}>Guess Me #1: October 6, 2024</h3>
             <div id="search-form" style={{ marginBottom: '20px' }}>
                 <input
                     ref={inputRef}
