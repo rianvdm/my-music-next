@@ -20,10 +20,12 @@ export default function AlbumPage({ params }) {
     const [trackCount, setTrackCount] = useState('Loading...');
     const [genres, setGenres] = useState('Loading...');
     const [openAISummary, setOpenAISummary] = useState('Generating summary...');
+    const [showExtendedMessage, setShowExtendedMessage] = useState(false); // New state for extended message
     const [artistId, setArtistId] = useState(null);
     const [error, setError] = useState(null);
     const [kvKey, setKvKey] = useState(null);  // kvKey for the follow-up worker
     const fetchedOpenAISummary = useRef(false);
+    const timerRef = useRef(null);  // Timer reference for the extended message
     const [recommendation, setRecommendation] = useState('');
     const [loadingRecommendation, setLoadingRecommendation] = useState(false);
     const [followUpQuestion, setFollowUpQuestion] = useState('');
@@ -38,12 +40,26 @@ export default function AlbumPage({ params }) {
     const artist = decodePrettyUrl(prettyArtist);
     const album = decodePrettyUrl(prettyAlbum);
 
+    // Timer effect for showing extended message after 2 seconds
+    useEffect(() => {
+        if (openAISummary === 'Generating summary...') {
+            timerRef.current = setTimeout(() => {
+                setShowExtendedMessage(true);
+            }, 2000); // Show extended message after 2 seconds
+
+            return () => {
+                if (timerRef.current) {
+                    clearTimeout(timerRef.current);
+                }
+            };
+        }
+    }, [openAISummary]);
+
     // Fetch album details
     useEffect(() => {
         if (artist && album) {
             async function fetchAlbumData() {
                 try {
-                    // const spotifyQuery = `album:${album} artist:${artist}`;
                     const spotifyQuery = `album:"${album}" artist:${artist}`;
                     const spotifyResponse = await fetch(
                         `https://api-spotify-search.rian-db8.workers.dev/?q=${encodeURIComponent(spotifyQuery)}&type=album`
@@ -148,6 +164,18 @@ export default function AlbumPage({ params }) {
     };
 
     const renderOpenAISummary = (summary) => {
+        if (summary === 'Generating summary...') {
+            return (
+                <div>
+                    {summary}
+                    {showExtendedMessage && (
+                        <span>
+                            {" It's taking a little while to make sure the robots don't say dumb things, but hang in there, it really is coming..."}
+                        </span>
+                    )}
+                </div>
+            );
+        }
         return <div dangerouslySetInnerHTML={{ __html: marked(summary) }} />;
     };
 
