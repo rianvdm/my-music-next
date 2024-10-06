@@ -8,17 +8,34 @@ import { marked } from 'marked';
 export default function GenrePage({ params }) {
     const { genre: prettyGenre } = params;
     const [genreSummary, setGenreSummary] = useState('Generating summary...');
+    const [showExtendedMessage, setShowExtendedMessage] = useState(false);
     const [error, setError] = useState(null);
     const fetchedGenreSummary = useRef(false);
+    const timerRef = useRef(null);
 
-const decodePrettyUrl = (prettyUrl) => {
-    return decodeURIComponent(prettyUrl.replace(/-/g, ' '))
-        .replace(/\b\w/g, char => char.toUpperCase());
-};
+    const decodePrettyUrl = (prettyUrl) => {
+        return decodeURIComponent(prettyUrl.replace(/-/g, ' '))
+            .replace(/\b\w/g, char => char.toUpperCase());
+    };
 
     const genre = decodePrettyUrl(prettyGenre);
 
-    // Fetch OpenAI genre summary
+    // Separate effect for the timer
+    useEffect(() => {
+        if (genreSummary === 'Generating summary...') {
+            timerRef.current = setTimeout(() => {
+                setShowExtendedMessage(true);
+            }, 2000);
+
+            return () => {
+                if (timerRef.current) {
+                    clearTimeout(timerRef.current);
+                }
+            };
+        }
+    }, [genreSummary]);
+
+    // Effect for fetching data
     useEffect(() => {
         if (genre && !fetchedGenreSummary.current) {
             fetchedGenreSummary.current = true;
@@ -26,9 +43,7 @@ const decodePrettyUrl = (prettyUrl) => {
             async function fetchGenreSummary() {
                 try {
                     const encodedGenre = encodeURIComponent(genre);
-
                     const summaryResponse = await fetch(
-                    //    `https://api-openai-genresummary.rian-db8.workers.dev?genre=${encodedGenre}`
                         `https://api-perplexity-genresummary.rian-db8.workers.dev?genre=${encodedGenre}`
                     );
                     const summaryData = await summaryResponse.json();
@@ -38,15 +53,24 @@ const decodePrettyUrl = (prettyUrl) => {
                     setGenreSummary('Failed to load genre summary.');
                 }
             }
+            
             fetchGenreSummary();
         }
     }, [genre]);
 
-    if (error) {
-        return <p>{error}</p>;
-    }
-
     const renderGenreSummary = (summary) => {
+        if (summary === 'Generating summary...') {
+            return (
+                <div>
+                    {summary}
+                    {showExtendedMessage && (
+                        <span>
+                            {" It's taking a little while to make sure the robots don't say dumb things, but hang in there, it really is coming..."}
+                        </span>
+                    )}
+                </div>
+            );
+        }
         return <div dangerouslySetInnerHTML={{ __html: marked(summary) }} />;
     };
 
