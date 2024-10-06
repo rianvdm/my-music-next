@@ -20,7 +20,7 @@ If you are part of a Discord server where you share music with each other, the c
 
 As an example, the `/listento`, `listenurl`, and `/listenlast` commands show details like this:
 
-![](https://file.elezea.com/20240929-SWf6K1Be-2x.png)
+![](https://file.elezea.com/20241006-diqSo8zX-2x.png)
 
 ## Nerdy details
 
