@@ -7,16 +7,16 @@ export default function GuessMe() {
     const [currentQuestion, setCurrentQuestion] = useState('');
     const [currentAnswer, setCurrentAnswer] = useState('');
     const [loading, setLoading] = useState(false);
+    const [isCorrectGuess, setIsCorrectGuess] = useState(false);
+    const [correctName, setCorrectName] = useState('');
     const inputRef = useRef(null);
 
     useEffect(() => {
         const initialMessage = "Welcome to today's Guess the Musical Personality game! Ask me (almost) anything.";
         setCurrentAnswer(initialMessage);
-        // Focus the input field when the component mounts
         inputRef.current?.focus();
     }, []);
 
-    // Add this new useEffect to refocus after each render
     useEffect(() => {
         inputRef.current?.focus();
     });
@@ -30,31 +30,40 @@ export default function GuessMe() {
             const data = await response.json();
             setCurrentQuestion(userGuess);
             setCurrentAnswer(data.response);
+            setIsCorrectGuess(data.isCorrectGuess);
+            if (data.isCorrectGuess) {
+                setCorrectName(data.correctName);
+            }
         } catch (error) {
             console.error('Error submitting guess:', error);
             setCurrentAnswer('Failed to submit your guess. Please try again.');
         } finally {
             setLoading(false);
             setUserGuess('');
-            // No need to focus here as the useEffect will handle it
         }
     };
 
-        const renderCurrentQA = () => {
-            return (
-                <>
-                    {currentQuestion && (
-                        <div className="user track_ul2" style={{ marginBottom: '0' }}>
-                            <strong>Q: </strong>
-                            <span>{currentQuestion}</span>
-                        </div>
-                    )}
-                    <div className="assistant track_ul2" style={{ marginBottom: '0' }}>
-                        <span dangerouslySetInnerHTML={{ __html: marked(currentAnswer) }} />
+    const renderCurrentQA = () => {
+        return (
+            <>
+                {currentQuestion && (
+                    <div className="user track_ul2" style={{ marginBottom: '0' }}>
+                        <strong>Q: </strong>
+                        <span>{currentQuestion}</span>
                     </div>
-                </>
-            );
-        };
+                )}
+                <div className="assistant track_ul2" style={{ marginBottom: '0' }}>
+                    <span dangerouslySetInnerHTML={{ __html: marked(currentAnswer) }} />
+                </div>
+                {isCorrectGuess && (
+                    <div className="correct-guess track_ul2" style={{ marginTop: '20px', fontWeight: 'bold', color: 'green' }}>
+                        Congratulations! You've correctly guessed that the musical personality is {correctName}. 
+                        Come back tomorrow for a new game!
+                    </div>
+                )}
+            </>
+        );
+    };
 
     return (
         <div className="track_ul2">
@@ -68,7 +77,7 @@ export default function GuessMe() {
                     value={userGuess}
                     onChange={(e) => setUserGuess(e.target.value)}
                     placeholder="Enter your question or guess..."
-                    disabled={loading}
+                    disabled={loading || isCorrectGuess}
                     onKeyPress={(e) => {
                         if (e.key === 'Enter') {
                             handleGuess();
@@ -78,7 +87,7 @@ export default function GuessMe() {
                 <button 
                     className="button"
                     onClick={handleGuess} 
-                    disabled={loading || !userGuess.trim()}
+                    disabled={loading || !userGuess.trim() || isCorrectGuess}
                 >
                     {loading ? 'Thinking...' : 'Ask or Guess'}
                 </button>
