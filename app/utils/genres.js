@@ -14,7 +14,7 @@ export const genres = [
     "new-wave", "nu-metal", "opera", "pagode", "pop", "post-dubstep", 
     "post-rock", "power-pop", "progressive-house", "psych-rock", "punk", 
     "punk-rock", "r-n-b", "reggae", "reggaeton", "riot-grrrl", "rock", 
-    "rockabilly", "shoegaze", "show-tunes", "singer-songwriter", "ska", 
+    "rockabilly", "shoegaze", "singer-songwriter", "ska", "ska-punk", 
     "sludge-metal", "soul", "synth-pop", "synthwave", "techno", "trance", 
     "trip-hop", "vaporwave", "world-music"
 ];
