@@ -77,7 +77,7 @@ export default function NavBar() {
           }
 
           li {
-            margin: 0 0.2em; /* Reduced margin for smaller screens */
+            margin: 0 0.1em; /* Reduced margin for smaller screens */
             flex: 0 0.5 auto;
           }
         }
