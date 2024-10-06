@@ -251,9 +251,9 @@ const renderDiscogsCollection = () => {
               <p className="track_artist">
                 <Link href={`artist/${artistSlug}`}>{artistName}</Link>
               </p>
-              <p className="track_album">{format} added on {addedDate}.</p>
               <p className="track_album">
-                {item.genre} album on the {item.label} label, 
+                {format} added on {addedDate}.{' '}
+                {item.genre} album
                 {item.year ? ` released in ${item.year}.` : ' unknown release date.'}
               </p>
             </div>
