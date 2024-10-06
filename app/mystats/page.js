@@ -275,13 +275,13 @@ const renderDiscogsCollection = () => {
           </p>
           {renderTopArtists()}
 
-          <h2>🏆 Top Albums</h2>
+          <h2 style={{ marginTop: '4em' }}>🏆 Top Albums</h2>
           <p style={{ textAlign: 'center' }}>
             <strong>The top albums I listened to in the past 7 days.</strong>
           </p>
           {renderTopAlbums()}
 
-          <h2>💿 Recent Collection Additions</h2>
+          <h2 style={{ marginTop: '4em' }}>💿 Recent Collection Additions</h2>
           <p style={{ textAlign: 'center' }}>
             <strong>The most recent additions to my physical music collection.</strong>
           </p>
