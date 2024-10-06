@@ -37,6 +37,9 @@ export default function NavBar() {
           <Link href="/recommendations">Get rec’d</Link>
         </li>
         <li style={liStyle}>
+          <Link href="/guessme">Guess Me</Link>
+        </li>
+        <li style={liStyle}>
           <Link href="/mystats">Stats</Link>
         </li>
         <li style={liStyle}>

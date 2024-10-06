@@ -598,3 +598,39 @@ pre {
   background-color: rgba(var(--c-accent-rgb), 0.2);
   color: var(--c-base);
 }
+
+/* GuessMe Game Styles */
+.conversation-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid var(--c-accent);
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.ai-label {
+    color: var(--c-accent);
+}
+
+.user, .assistant {
+    margin-bottom: 15px;
+}
+
+.user strong, .assistant strong {
+    font-weight: bold;
+}
+
+#search-form {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+#follow-up-search {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.button {
+    min-width: 100px;
+}
