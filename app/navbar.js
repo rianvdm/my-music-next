@@ -7,25 +7,19 @@ export default function NavBar() {
   const [theme, setTheme] = useState('light');
 
   useEffect(() => {
-    // Detect system theme preference
     const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    
-    // Set the theme based on system preference
     setTheme(systemTheme);
     document.documentElement.setAttribute('data-theme', systemTheme);
 
-    // Listener for changes in system theme
     const themeChangeListener = (e) => {
       const newSystemTheme = e.matches ? 'dark' : 'light';
       setTheme(newSystemTheme);
       document.documentElement.setAttribute('data-theme', newSystemTheme);
     };
 
-    // Add event listener for system theme changes
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', themeChangeListener);
 
     return () => {
-      // Clean up event listener
       window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', themeChangeListener);
     };
   }, []);
@@ -63,7 +57,7 @@ export default function NavBar() {
         li {
           margin: 0 0.5em;
           white-space: nowrap;
-          flex-shrink: 0; /* Prevents the items from shrinking too much */
+          flex-shrink: 0;
         }
 
         @media (max-width: 768px) {
@@ -72,18 +66,19 @@ export default function NavBar() {
           }
 
           li {
-            flex: 1 0 auto; /* Allows items to use available space and wrap as needed */
+            flex: 1 0 auto;
             text-align: center;
           }
         }
 
         @media (max-width: 480px) {
           ul {
-            justify-content: space-between; /* Ensure items use available horizontal space */
+            justify-content: space-between;
           }
 
           li {
-            flex: 0 0.5 auto; /* Items will wrap as needed but won't take up full width */
+            margin: 0 0.2em; /* Reduced margin for smaller screens */
+            flex: 0 0.5 auto;
           }
         }
       `}</style>
@@ -107,5 +102,5 @@ const ulStyle = {
 
 const liStyle = {
   margin: '0 0.1em',
-  flexShrink: 0, // Prevents items from shrinking too much
+  flexShrink: 0,
 };
