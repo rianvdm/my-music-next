@@ -198,66 +198,71 @@ export default function MyStats() {
   };
 
 const renderDiscogsCollection = () => {
-    if (!discogsData) {
-      return <p>Loading collection...</p>;
-    }
+  if (!discogsData) {
+    return <p>Loading collection...</p>;
+  }
 
-    return (
-      <div className="track-grid">
-        {discogsData.slice(0, 9).map(item => {
-          const artistSlug = generateArtistSlug(item.artist);
-          const albumSlug = generateAlbumSlug(item.title);
-          const addedDate = new Date(item.addedDate).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          });
+  return (
+    <div className="track-grid">
+      {discogsData.slice(0, 9).map(item => {
+        // Remove the version number in parentheses from the artist name
+        const artistName = item.artist.replace(/\s*\(.*?\)\s*/g, '').trim();
+        const artistSlug = generateArtistSlug(artistName);
+        const albumSlug = generateAlbumSlug(item.title);
+        const addedDate = new Date(item.addedDate).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
 
-          return (
-            <div className="track" key={item.discogsUrl}>
-              <a href={item.discogsUrl} target="_blank" rel="noopener noreferrer">
-                <div style={{
-                  position: 'relative',
-                  width: '100%',
-                  paddingBottom: '100%', // This creates a square aspect ratio
-                  overflow: 'hidden'
-                }}>
-                  <img 
-                    src={item.imageUrl} 
-                    className="track_image" 
-                    alt={item.title}
-                    style={{
-                      position: 'absolute',
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover', // This ensures the image covers the square container
-                      top: 0,
-                      left: 0
-                    }}
-                  />
-                </div>
-              </a>
-              <div className="track_content">
-                <p className="track_name">
-                  <Link href={`/album/${artistSlug}_${albumSlug}`}>
-                    <strong>{item.title}</strong>
-                  </Link>
-                </p>
-                <p className="track_artist">
-                  <Link href={`artist/${artistSlug}`}>{item.artist}</Link>
-                </p>
-                <p className="track_album">{item.format} added on {addedDate}.</p>
-                <p className="track_album">
-                  {item.genre} album on the {item.label} label, 
-                  {item.year ? ` released in ${item.year}.` : ' unknown release date.'}
-                </p>
+        // Split the format string by comma and use the first format
+        const format = item.format.split(',')[0].trim();
+
+        return (
+          <div className="track" key={item.discogsUrl}>
+            <a href={item.discogsUrl} target="_blank" rel="noopener noreferrer">
+              <div style={{
+                position: 'relative',
+                width: '100%',
+                paddingBottom: '100%', // This creates a square aspect ratio
+                overflow: 'hidden'
+              }}>
+                <img 
+                  src={item.imageUrl} 
+                  className="track_image" 
+                  alt={item.title}
+                  style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover', // This ensures the image covers the square container
+                    top: 0,
+                    left: 0
+                  }}
+                />
               </div>
+            </a>
+            <div className="track_content">
+              <p className="track_name">
+                <Link href={`/album/${artistSlug}_${albumSlug}`}>
+                  <strong>{item.title}</strong>
+                </Link>
+              </p>
+              <p className="track_artist">
+                <Link href={`artist/${artistSlug}`}>{artistName}</Link>
+              </p>
+              <p className="track_album">{format} added on {addedDate}.</p>
+              <p className="track_album">
+                {item.genre} album on the {item.label} label, 
+                {item.year ? ` released in ${item.year}.` : ' unknown release date.'}
+              </p>
             </div>
-          );
-        })}
-      </div>
-    );
-  };
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
   return (
     <div>
