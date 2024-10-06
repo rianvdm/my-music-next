@@ -68,26 +68,27 @@ const RecentTrackDisplay = ({ recentTracks, listeningStats, isLoading }) => {
   const albumSlug = generateAlbumSlug(last_album);
 
   return (
-        <p>
-          Over the last week I listened to{' '}
-          <strong className="highlight">{listeningStats.totalTracks} tracks</strong> across{' '}
-          <strong className="highlight">{listeningStats.uniqueArtists} artists</strong> and{' '}
-          <strong className="highlight">{listeningStats.uniqueAlbums} albums</strong>. Most recently I listened to{' '}
-          <Link href={`/album/${generateArtistSlug(last_artist)}_${albumSlug}`}>
-            <strong>{last_album}</strong>
-          </Link>{' '}
-          by{' '}
-          <Link href={`/artist/${artistSlug}`}>
-            <strong>{last_artist}</strong>
-          </Link>
-          . {artistSummary}
-        </p>
+    <p>
+      Over the last week I listened to{' '}
+      <strong className="highlight">{listeningStats.totalTracks} tracks</strong> across{' '}
+      <strong className="highlight">{listeningStats.uniqueArtists} artists</strong> and{' '}
+      <strong className="highlight">{listeningStats.uniqueAlbums} albums</strong>. Most recently I listened to{' '}
+      <Link href={`/album/${generateArtistSlug(last_artist)}_${albumSlug}`}>
+        <strong>{last_album}</strong>
+      </Link>{' '}
+      by{' '}
+      <Link href={`/artist/${artistSlug}`}>
+        <strong>{last_artist}</strong>
+      </Link>
+      . {artistSummary}
+    </p>
   );
 };
 
 export default function MyStats() {
   const [topArtistsData, setTopArtistsData] = useState(null);
   const [topAlbumsData, setTopAlbumsData] = useState(null);
+  const [discogsData, setDiscogsData] = useState(null);
   const { recentTracks, listeningStats, isLoading: isLoadingTracks } = useRecentTracks();
 
   useEffect(() => {
@@ -111,8 +112,19 @@ export default function MyStats() {
       }
     };
 
+    const fetchDiscogsCollection = async () => {
+      try {
+        const discogsResponse = await fetch('https://kv-fetch-discogs-collection.rian-db8.workers.dev/');
+        const discogsData = await discogsResponse.json();
+        setDiscogsData(discogsData);
+      } catch (error) {
+        console.error('Error fetching Discogs collection:', error);
+      }
+    };
+
     fetchTopArtists();
     fetchTopAlbums();
+    fetchDiscogsCollection();
   }, []);
 
   const renderTopArtists = () => {
@@ -132,9 +144,11 @@ export default function MyStats() {
               </Link>
               <div className="track_content">
                 <p className="track_artist">
-                  <strong><Link href={`artist/${artistSlug}`} rel="noopener noreferrer">
-                    {artist.name}
-                  </Link></strong>
+                  <strong>
+                    <Link href={`artist/${artistSlug}`} rel="noopener noreferrer">
+                      {artist.name}
+                    </Link>
+                  </strong>
                   <br />
                   <Link href={`genre/${genre}`} rel="noopener noreferrer">{genre}</Link>
                   <br />
@@ -183,6 +197,68 @@ export default function MyStats() {
     );
   };
 
+const renderDiscogsCollection = () => {
+    if (!discogsData) {
+      return <p>Loading collection...</p>;
+    }
+
+    return (
+      <div className="track-grid">
+        {discogsData.slice(0, 9).map(item => {
+          const artistSlug = generateArtistSlug(item.artist);
+          const albumSlug = generateAlbumSlug(item.title);
+          const addedDate = new Date(item.addedDate).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          });
+
+          return (
+            <div className="track" key={item.discogsUrl}>
+              <a href={item.discogsUrl} target="_blank" rel="noopener noreferrer">
+                <div style={{
+                  position: 'relative',
+                  width: '100%',
+                  paddingBottom: '100%', // This creates a square aspect ratio
+                  overflow: 'hidden'
+                }}>
+                  <img 
+                    src={item.imageUrl} 
+                    className="track_image" 
+                    alt={item.title}
+                    style={{
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover', // This ensures the image covers the square container
+                      top: 0,
+                      left: 0
+                    }}
+                  />
+                </div>
+              </a>
+              <div className="track_content">
+                <p className="track_name">
+                  <Link href={`/album/${artistSlug}_${albumSlug}`}>
+                    <strong>{item.title}</strong>
+                  </Link>
+                </p>
+                <p className="track_artist">
+                  <Link href={`artist/${artistSlug}`}>{item.artist}</Link>
+                </p>
+                <p className="track_album">{item.format} added on {addedDate}.</p>
+                <p className="track_album">
+                  {item.genre} album on the {item.label} label, 
+                  {item.year ? ` released in ${item.year}.` : ' unknown release date.'}
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
     <div>
       <header>
@@ -204,6 +280,12 @@ export default function MyStats() {
             <strong>The top albums I listened to in the past 7 days.</strong>
           </p>
           {renderTopAlbums()}
+
+          <h2>💿 Recent Collection Additions</h2>
+          <p style={{ textAlign: 'center' }}>
+            <strong>The most recent additions to my physical music collection.</strong>
+          </p>
+          {renderDiscogsCollection()}
         </section>
       </main>
     </div>

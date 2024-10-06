@@ -3,10 +3,11 @@
 export const generateArtistSlug = (artistName) => {
     return encodeURIComponent(
         artistName
-            .split(',')[0]               // Remove text after the first comma
-            .replace(/[\'’]/g, '')       // Remove single quotation marks and backticks
-            .replace(/\//g, '-')         // Replace / with hyphens
-            .replace(/\s+/g, '-')        // Replace spaces with hyphens
+            .split(',')[0]                  // Remove text after the first comma
+            .replace(/\s*\(.*?\)\s*/g, '')  // Remove any text inside parentheses
+            .replace(/[\'’]/g, '')          // Remove single quotation marks and backticks
+            .replace(/\//g, '-')            // Replace / with hyphens
+            .replace(/\s+/g, '-')           // Replace spaces with hyphens
             .toLowerCase()
     );
 };
