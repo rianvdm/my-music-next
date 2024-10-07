@@ -40,4 +40,4 @@ next-env.d.ts
 .dev.vars
 **/wrangler.toml
 
-/workers
+personalities
