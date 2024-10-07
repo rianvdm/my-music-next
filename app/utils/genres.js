@@ -7,7 +7,7 @@ export const genres = [
     "edm", "electro", "electroclash", "electronic", "emo", "folk", 
     "folk-metal", "funk", "garage", "glitch", "gospel", "goth", 
     "grindcore", "grunge", "hard-bop", "hard-rock", "hard-trance", 
-    "hardcore", "hardstyle", "heavy-metal", "hip-hop", "honky-tonk", 
+    "hardcore", "heavy-metal", "hip-hop",
     "house", "idm", "indie", "indie-pop", "industrial", "j-pop", "jazz", 
     "jungle", "k-pop", "krautrock", "latin", "mandopop", "math-rock", 
     "metal", "metalcore", "metropopolis", "neoclassical", "new-age", 
