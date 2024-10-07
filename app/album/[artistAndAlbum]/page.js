@@ -45,7 +45,7 @@ export default function AlbumPage({ params }) {
         if (openAISummary === 'Generating summary...') {
             timerRef.current = setTimeout(() => {
                 setShowExtendedMessage(true);
-            }, 2000); // Show extended message after 2 seconds
+            }, 3000); // Show extended message after 3 seconds
 
             return () => {
                 if (timerRef.current) {
