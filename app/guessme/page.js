@@ -12,7 +12,7 @@ export default function GuessMe() {
     const inputRef = useRef(null);
 
     useEffect(() => {
-        const initialMessage = "Welcome to today's Guess the Musical Personality game! Ask me (almost) anything.";
+        const initialMessage = "Welcome to today's Guess the Musical Personality game! Ask me (almost) anything. My hints might seem vague, but pay close attention to the details and you'll figure it out...";
         setCurrentAnswer(initialMessage);
         inputRef.current?.focus();
     }, []);
