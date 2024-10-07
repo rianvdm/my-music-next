@@ -25,7 +25,7 @@ export default function GuessMe() {
         if (!userGuess.trim()) return;
         setLoading(true);
         try {
-            const promptWithContext = `user: ${userGuess}`;
+            const promptWithContext = `${userGuess}`;
             const response = await fetch(`https://api-openai-personalities.rian-db8.workers.dev/?prompt=${encodeURIComponent(promptWithContext)}`);
             const data = await response.json();
             setCurrentQuestion(userGuess);
