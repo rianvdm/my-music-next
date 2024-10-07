@@ -86,8 +86,10 @@ export default function GuessMe() {
     };
 
     const formatDate = (dateString) => {
+        const [year, month, day] = dateString.split('-').map(num => parseInt(num, 10));
+        const date = new Date(year, month - 1, day); // month is 0-indexed in JavaScript Date
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString('en-US', options);
+        return date.toLocaleDateString('en-US', options);
     };
 
     return (
