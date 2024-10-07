@@ -9,12 +9,32 @@ export default function GuessMe() {
     const [loading, setLoading] = useState(false);
     const [isCorrectGuess, setIsCorrectGuess] = useState(false);
     const [correctName, setCorrectName] = useState('');
+    const [gameData, setGameData] = useState(null);
+    const [gameDataLoading, setGameDataLoading] = useState(true);
     const inputRef = useRef(null);
 
     useEffect(() => {
         const initialMessage = "Welcome to today's Guess the Musical Personality game! Ask me (almost) anything. My hints might seem vague, but pay close attention to the details and you'll figure it out...";
         setCurrentAnswer(initialMessage);
         inputRef.current?.focus();
+
+        // Fetch game data from KV store
+        const fetchGameData = async () => {
+            setGameDataLoading(true);
+            try {
+                const response = await fetch('https://personality-api.rian-db8.workers.dev/api/game-data');
+                if (response.ok) {
+                    const data = await response.json();
+                    setGameData(data);
+                }
+            } catch (error) {
+                console.error('Error fetching game data:', error);
+            } finally {
+                setGameDataLoading(false);
+            }
+        };
+
+        fetchGameData();
     }, []);
 
     useEffect(() => {
@@ -65,10 +85,19 @@ export default function GuessMe() {
         );
     };
 
+    const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString('en-US', options);
+    };
+
     return (
         <div className="track_ul2">
             <h1>Guess the Musical Personality!</h1>
-            <h3 style={{ textAlign: 'center' }}>Guess Me #2: October 7, 2024</h3>
+            {gameDataLoading ? (
+                <h3 style={{ textAlign: 'center' }}>Loading...</h3>
+            ) : gameData ? (
+                <h3 style={{ textAlign: 'center' }}>Guess Me #{gameData.gameVersion}: {formatDate(gameData.gameDate)}</h3>
+            ) : null}
             <div id="search-form" style={{ marginBottom: '20px' }}>
                 <input
                     ref={inputRef}
