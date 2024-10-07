@@ -68,7 +68,7 @@ export default function GuessMe() {
     return (
         <div className="track_ul2">
             <h1>Guess the Musical Personality!</h1>
-            <h3 style={{ textAlign: 'center' }}>Guess Me #1: October 6, 2024</h3>
+            <h3 style={{ textAlign: 'center' }}>Guess Me #2: October 7, 2024</h3>
             <div id="search-form" style={{ marginBottom: '20px' }}>
                 <input
                     ref={inputRef}
