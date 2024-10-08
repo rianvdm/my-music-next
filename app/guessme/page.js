@@ -14,7 +14,7 @@ export default function GuessMe() {
     const inputRef = useRef(null);
 
     useEffect(() => {
-        const initialMessage = "Welcome to today's Guess the Musical Personality game! Ask me (almost) anything. My hints might seem vague, but pay close attention to the details and you'll figure it out...";
+        const initialMessage = "Welcome to today's Guess the Music Personality game! Ask me (almost) anything. My hints might seem vague, but pay close attention to the details and you'll figure it out...";
         setCurrentAnswer(initialMessage);
         inputRef.current?.focus();
 
@@ -94,7 +94,7 @@ export default function GuessMe() {
 
     return (
         <div className="track_ul2">
-            <h1>Guess the Musical Personality!</h1>
+            <h1>Guess the Music Personality</h1>
             {gameDataLoading ? (
                 <h3 style={{ textAlign: 'center' }}>Loading...</h3>
             ) : gameData ? (
