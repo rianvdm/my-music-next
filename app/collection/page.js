@@ -8,7 +8,9 @@ const DiscogsStatsPage = () => {
   const [collectionData, setCollectionData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedGenre, setSelectedGenre] = useState('All');
+  const [selectedFormat, setSelectedFormat] = useState('All');
   const [topGenres, setTopGenres] = useState([]);
+  const [topFormats, setTopFormats] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,6 +33,22 @@ const DiscogsStatsPage = () => {
           .map(([genre]) => genre);
 
         setTopGenres(['All', ...sortedGenres, 'Other']);
+
+        // Calculate top 5 formats
+        const formatCounts = data.data.releases.reduce((acc, release) => {
+          release.basic_information.formats.forEach(format => {
+            acc[format.name] = (acc[format.name] || 0) + 1;
+          });
+          return acc;
+        }, {});
+
+        const sortedFormats = Object.entries(formatCounts)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 5)
+          .map(([format]) => format);
+
+        setTopFormats(['All', ...sortedFormats, 'Other']);
+
         setLoading(false);
       } catch (error) {
         console.error('Error fetching Discogs collection:', error);
@@ -51,11 +69,17 @@ const DiscogsStatsPage = () => {
 
   const { stats, data } = collectionData;
 
-  // Filter releases based on selected genre
+  // Filter releases based on selected genre and format
   const filteredReleases = data.releases.filter(release => {
-    if (selectedGenre === 'All') return true;
-    if (selectedGenre === 'Other') return !topGenres.slice(1, -1).some(genre => release.basic_information.genres.includes(genre));
-    return release.basic_information.genres.includes(selectedGenre);
+    const genreMatch = selectedGenre === 'All' || 
+      (selectedGenre === 'Other' ? !topGenres.slice(1, -1).some(genre => release.basic_information.genres.includes(genre)) :
+      release.basic_information.genres.includes(selectedGenre));
+
+    const formatMatch = selectedFormat === 'All' ||
+      (selectedFormat === 'Other' ? !topFormats.slice(1, -1).some(format => release.basic_information.formats.some(f => f.name === format)) :
+      release.basic_information.formats.some(f => f.name === selectedFormat));
+
+    return genreMatch && formatMatch;
   });
 
   // Prepare data for genre distribution chart
@@ -139,7 +163,7 @@ const DiscogsStatsPage = () => {
 
   const COLORS = ['#FF6C00', '#FFA500', '#FFD700', '#FF4500', '#FF8C00', '#FF7F50', '#FF69B4', '#FF1493', '#4B0082'];
 
-  return (
+ return (
     <div>
       <header>
         <h1>Discogs Collection Statistics</h1>
@@ -147,32 +171,48 @@ const DiscogsStatsPage = () => {
       <main>
         <section id="discogs-stats">
           <div className="track_ul2">
-            <p>
-              My Discogs collection contains <strong className="highlight">{totalFilteredReleases} releases</strong>
-              {selectedGenre !== 'All' && <> in the <strong className="highlight">{selectedGenre}</strong> {selectedGenre === 'Other' ? 'genres' : 'genre'}</>}.
-              <br /><em><a href="https://www.discogs.com/user/elezea-records/collection" target="_blank">Data from Discogs</a> last updated {new Intl.DateTimeFormat('en-US', {
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true
-              }).format(new Date(stats.lastUpdated))}{'.'}</em>
-            </p>
-            <div>
-              <label htmlFor="genre-select">Filter by Genre: </label>
-              <select 
-                id="genre-select" 
-                value={selectedGenre} 
-                onChange={(e) => setSelectedGenre(e.target.value)}
-                className="genre-select"
-              >
-                {topGenres.map(genre => (
-                  <option key={genre} value={genre}>{genre}</option>
-                ))}
-              </select>
+              <p>
+                My Discogs collection contains <strong className="highlight">{totalFilteredReleases} releases</strong>
+                {selectedGenre !== 'All' && <> in the <strong className="highlight">{selectedGenre}</strong> {selectedGenre === 'Other' ? 'genres' : 'genre'}</>}
+                {selectedFormat !== 'All' && <> on <strong className="highlight">{selectedFormat}</strong> {selectedFormat === 'Other' ? 'formats' : 'format'}</>}.
+                <br /><em><a href="https://www.discogs.com/user/elezea-records/collection" target="_blank">Data from Discogs</a> last updated {new Intl.DateTimeFormat('en-US', {
+                  month: 'long',
+                  day: 'numeric',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: true
+                }).format(new Date(stats.lastUpdated))}{'.'}</em>
+              </p>
+              <div style={{ display: 'flex', gap: '2rem', marginBottom: '1rem' }}>
+                <div>
+                  <label htmlFor="genre-select">Filter by Genre: </label>
+                  <select 
+                    id="genre-select" 
+                    value={selectedGenre} 
+                    onChange={(e) => setSelectedGenre(e.target.value)}
+                    className="genre-select"
+                  >
+                    {topGenres.map(genre => (
+                      <option key={genre} value={genre}>{genre}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="format-select">Filter by Format: </label>
+                  <select 
+                    id="format-select" 
+                    value={selectedFormat} 
+                    onChange={(e) => setSelectedFormat(e.target.value)}
+                    className="genre-select"
+                  >
+                    {topFormats.map(format => (
+                      <option key={format} value={format}>{format}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
             </div>
-          </div>
 
           <h2>Genre Distribution</h2>
           <div className="track_ul2" style={{ height: '400px' }}>
