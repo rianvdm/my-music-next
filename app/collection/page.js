@@ -99,15 +99,20 @@ const DiscogsStatsPage = () => {
   const otherGenreCount = Object.values(genreCounts).reduce((sum, count) => sum + count, 0) -
     sortedGenres.reduce((sum, [, count]) => sum + count, 0);
 
-  const genreData = [
-    ...sortedGenres.map(([name, value]) => ({ name, value })),
-    { name: 'Other', value: otherGenreCount }
-  ];
+  const totalGenreCount = sortedGenres.reduce((sum, [, count]) => sum + count, 0) + otherGenreCount;
 
-  const totalFilteredReleases = filteredReleases.length;
-  genreData.forEach(item => {
-    item.percentage = ((item.value / totalFilteredReleases) * 100).toFixed(1) + '%';
-  });
+  const genreData = [
+    ...sortedGenres.map(([name, value]) => ({ 
+      name, 
+      value,
+      percentage: Math.round((value / totalGenreCount) * 100)
+    })),
+    { 
+      name: 'Other', 
+      value: otherGenreCount,
+      percentage: Math.round((otherGenreCount / totalGenreCount) * 100)
+    }
+  ];
 
   // Prepare data for format distribution chart
   const formatCounts = filteredReleases.reduce((acc, release) => {
@@ -124,14 +129,20 @@ const DiscogsStatsPage = () => {
   const otherFormatCount = Object.values(formatCounts).reduce((sum, count) => sum + count, 0) -
     sortedFormats.reduce((sum, [, count]) => sum + count, 0);
 
-  const formatData = [
-    ...sortedFormats.map(([name, value]) => ({ name, value })),
-    { name: 'Other', value: otherFormatCount }
-  ];
+  const totalFormatCount = sortedFormats.reduce((sum, [, count]) => sum + count, 0) + otherFormatCount;
 
-  formatData.forEach(item => {
-    item.percentage = ((item.value / totalFilteredReleases) * 100).toFixed(1) + '%';
-  });
+  const formatData = [
+    ...sortedFormats.map(([name, value]) => ({ 
+      name, 
+      value,
+      percentage: Math.round((value / totalFormatCount) * 100)
+    })),
+    { 
+      name: 'Other', 
+      value: otherFormatCount,
+      percentage: Math.round((otherFormatCount / totalFormatCount) * 100)
+    }
+  ];
 
   // Prepare data for top 10 artists chart
   const artistCounts = filteredReleases.reduce((acc, release) => {
@@ -163,7 +174,7 @@ const DiscogsStatsPage = () => {
 
   const COLORS = ['#FF6C00', '#FFA500', '#FFD700', '#FF4500', '#FF8C00', '#FF7F50', '#FF69B4', '#FF1493', '#4B0082'];
 
- return (
+  return (
     <div>
       <header>
         <h1>Discogs Collection Statistics</h1>
@@ -172,7 +183,7 @@ const DiscogsStatsPage = () => {
         <section id="discogs-stats">
           <div className="track_ul2">
               <p>
-                My Discogs collection contains <strong className="highlight">{totalFilteredReleases} releases</strong>
+                My Discogs collection contains <strong className="highlight">{filteredReleases.length} releases</strong>
                 {selectedGenre !== 'All' && <> in the <strong className="highlight">{selectedGenre}</strong> {selectedGenre === 'Other' ? 'genres' : 'genre'}</>}
                 {selectedFormat !== 'All' && <> on <strong className="highlight">{selectedFormat}</strong> {selectedFormat === 'Other' ? 'formats' : 'format'}</>}.
                 <br /><em><a href="https://www.discogs.com/user/elezea-records/collection" target="_blank">Data from Discogs</a> last updated {new Intl.DateTimeFormat('en-US', {
@@ -226,13 +237,13 @@ const DiscogsStatsPage = () => {
                   cy="50%"
                   outerRadius={150}
                   fill="#8884d8"
-                  label={({ name, percentage }) => `${name}: ${percentage}`}
+                  label={({ name, percentage }) => `${name}: ${percentage}%`}
                 >
                   {genreData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value, name, props) => [`${props.payload.percentage} (${value})`, name]} />
+                <Tooltip formatter={(value, name, props) => [`${props.payload.percentage}% (${value})`, name]} />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
@@ -250,13 +261,13 @@ const DiscogsStatsPage = () => {
                   cy="50%"
                   outerRadius={150}
                   fill="#8884d8"
-                  label={({ name, percentage }) => `${name}: ${percentage}`}
+                  label={({ name, percentage }) => `${name}: ${percentage}%`}
                 >
                   {formatData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value, name, props) => [`${props.payload.percentage} (${value})`, name]} />
+                <Tooltip formatter={(value, name, props) => [`${props.payload.percentage}% (${value})`, name]} />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
