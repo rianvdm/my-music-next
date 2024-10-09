@@ -204,7 +204,7 @@ const renderDiscogsCollection = () => {
 
   return (
     <div className="track-grid">
-      {discogsData.slice(0, 9).map(item => {
+      {discogsData.slice(0, 6).map(item => {
         // Remove the version number in parentheses from the artist name
         const artistName = item.artist.replace(/\s*\(.*?\)\s*/g, '').trim();
         const artistSlug = generateArtistSlug(artistName);
@@ -288,7 +288,8 @@ const renderDiscogsCollection = () => {
 
           <h2 style={{ marginTop: '4em' }}>💿 Recent Collection Additions</h2>
           <p style={{ textAlign: 'center' }}>
-            <strong>The most recent additions to my physical music collection.</strong>
+            <strong>The most recent additions to my physical music collection.</strong><br />
+            You can see a whole bunch of stats and graphs about my collection <a href="/collection">here</a>.
           </p>
           {renderDiscogsCollection()}
         </section>
