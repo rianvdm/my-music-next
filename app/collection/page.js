@@ -150,7 +150,15 @@ const DiscogsStatsPage = () => {
             <p>
               My Discogs collection contains <strong className="highlight">{totalFilteredReleases} releases</strong>
               {selectedGenre !== 'All' && <> in the <strong className="highlight">{selectedGenre}</strong> {selectedGenre === 'Other' ? 'genres' : 'genre'}</>}.
-              <br />Data last updated: {new Date(stats.lastUpdated).toLocaleString()}
+              <br /><em><a href="https://www.discogs.com/user/elezea-records/collection" target="_blank">Data from Discogs</a> last updated {new Intl.DateTimeFormat('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZoneName: 'short',
+                hour12: true
+              }).format(new Date(stats.lastUpdated))}{'.'}</em>
             </p>
             <div>
               <label htmlFor="genre-select">Filter by Genre: </label>
