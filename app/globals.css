@@ -634,3 +634,58 @@ pre {
 .button {
     min-width: 100px;
 }
+
+.genre-select {
+  background-color: var(--c-bg);
+  color: var(--c-base);
+  border: 2px solid var(--c-accent);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 16px;
+  font-family: Optima, Candara, 'Noto Sans', source-sans-pro, sans-serif;
+  cursor: pointer;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  margin-left: 10px;
+  max-width: 200px;
+}
+
+.genre-select:hover {
+  border-color: var(--c-accent);
+}
+
+.genre-select:focus {
+  outline: none;
+  border-color: var(--c-accent);
+  box-shadow: 0 0 5px var(--c-accent);
+}
+
+/* Style for the dropdown arrow */
+.genre-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23FF6C00' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+  background-repeat: no-repeat;
+  background-position-x: calc(100% - 10px);
+  background-position-y: 50%;
+  padding-right: 30px;
+}
+
+/* For Firefox */
+.genre-select:-moz-focusring {
+  color: transparent;
+  text-shadow: 0 0 0 var(--c-base);
+}
+
+/* For IE and Edge */
+.genre-select::-ms-expand {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .genre-select {
+    max-width: 100%;
+    margin-left: 0;
+    margin-top: 10px;
+  }
+}
