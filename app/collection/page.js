@@ -160,17 +160,28 @@ const DiscogsStatsPage = () => {
   const artistData = sortedArtists.map(([name, value]) => ({ name, value }));
 
   // Prepare data for releases by year chart
+  let totalWithOriginalYear = 0;
   const releasesByYear = filteredReleases.reduce((acc, release) => {
-    const year = release.basic_information.year;
+    // Prioritize original_year, fall back to basic_information.year if original_year is not available
+    const year = release.original_year || release.basic_information.year;
     if (year) {
       acc[year] = (acc[year] || 0) + 1;
     }
+    
+    // Count items with original_year
+    if (release.original_year) {
+      totalWithOriginalYear++;
+    }
+    
     return acc;
   }, {});
 
   const yearData = Object.entries(releasesByYear)
     .map(([year, count]) => ({ year: parseInt(year), count }))
     .sort((a, b) => a.year - b.year);
+
+  // Calculate percentage of items with original_year
+  const percentageWithOriginalYear = (totalWithOriginalYear / filteredReleases.length * 100).toFixed(2);
 
   const COLORS = ['#FF6C00', '#FFA500', '#FFD700', '#FF4500', '#FF8C00', '#FF7F50', '#FF69B4', '#FF1493', '#4B0082'];
 
@@ -286,7 +297,7 @@ const DiscogsStatsPage = () => {
                 <YAxis 
                   dataKey="name" 
                   type="category" 
-                  width={140}
+                  width={150}
                   tickFormatter={(value) => value.length > 20 ? value.substr(0, 18) + '...' : value}
                 />
                 <Tooltip formatter={(value, name, props) => [value, props.payload.name]} />
@@ -296,7 +307,7 @@ const DiscogsStatsPage = () => {
             </ResponsiveContainer>
           </div>
 
-          <h2>Releases by Year</h2>
+          <h2>Releases by Original Release Year</h2>
           <div className="track_ul2" style={{ height: '400px' }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={yearData}>
