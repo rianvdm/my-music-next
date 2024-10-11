@@ -298,12 +298,12 @@ const DiscogsStatsPage = () => {
           </div>
 
           <h2>Top 10 Artists</h2>
-          <div className="track_ul2" style={{ height: '500px', minWidth: '300px' }}>
+          <div className="track_ul2" style={{ height: '500px', width: '100%' }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 layout="vertical"
                 data={artistData}
-                margin={{ top: 5, right: 30, left: 50, bottom: 5 }}
+                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis type="number" />
@@ -311,9 +311,12 @@ const DiscogsStatsPage = () => {
                   dataKey="name" 
                   type="category" 
                   width={150}
-                  tickFormatter={(value) => value.length > 20 ? value.substr(0, 18) + '...' : value}
+                  tickFormatter={(value) => value.length > 15 ? value.substr(0, 13) + '...' : value}
                 />
-                <Tooltip formatter={(value, name, props) => [value, props.payload.name]} />
+                <Tooltip 
+                  formatter={(value, name, props) => [value, props.payload.name]}
+                  wrapperStyle={{ width: 200, backgroundColor: '#ccc' }}
+                />
                 <Legend />
                 <Bar dataKey="value" fill="#FF6C00" />
               </BarChart>
