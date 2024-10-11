@@ -36,15 +36,16 @@ const DiscogsStatsPage = () => {
 
         // Calculate top 5 formats
         const formatCounts = data.data.releases.reduce((acc, release) => {
-          release.basic_information.formats.forEach(format => {
-            acc[format.name] = (acc[format.name] || 0) + 1;
-          });
+          const format = release.basic_information.formats[0]?.name;
+          if (format) {
+            acc[format] = (acc[format] || 0) + 1;
+          }
           return acc;
         }, {});
 
         const sortedFormats = Object.entries(formatCounts)
           .sort((a, b) => b[1] - a[1])
-          .slice(0, 5)
+          .slice(0, 4)
           .map(([format]) => format);
 
         setTopFormats(['All', ...sortedFormats, 'Other']);
@@ -75,9 +76,10 @@ const DiscogsStatsPage = () => {
       (selectedGenre === 'Other' ? !topGenres.slice(1, -1).some(genre => release.basic_information.genres.includes(genre)) :
       release.basic_information.genres.includes(selectedGenre));
 
-    const formatMatch = selectedFormat === 'All' ||
-      (selectedFormat === 'Other' ? !topFormats.slice(1, -1).some(format => release.basic_information.formats.some(f => f.name === format)) :
-      release.basic_information.formats.some(f => f.name === selectedFormat));
+  const format = release.basic_information.formats[0]?.name;
+  const formatMatch = selectedFormat === 'All' ||
+    (selectedFormat === 'Other' ? !topFormats.slice(1, -1).includes(format) :
+    format === selectedFormat);
 
     return genreMatch && formatMatch;
   });
@@ -116,9 +118,10 @@ const DiscogsStatsPage = () => {
 
   // Prepare data for format distribution chart
   const formatCounts = filteredReleases.reduce((acc, release) => {
-    release.basic_information.formats.forEach(format => {
-      acc[format.name] = (acc[format.name] || 0) + 1;
-    });
+    const format = release.basic_information.formats[0]?.name;
+    if (format) {
+      acc[format] = (acc[format] || 0) + 1;
+    }
     return acc;
   }, {});
 
@@ -176,9 +179,19 @@ const DiscogsStatsPage = () => {
     return acc;
   }, {});
 
-  const yearData = Object.entries(releasesByYear)
-    .map(([year, count]) => ({ year: parseInt(year), count }))
-    .sort((a, b) => a.year - b.year);
+  // Find the min and max years
+  const years = Object.keys(releasesByYear).map(Number);
+  const minYear = Math.min(...years);
+  const maxYear = Math.max(...years);
+
+  // Create an array with all years in the range
+  const yearData = [];
+  for (let year = minYear; year <= maxYear; year++) {
+    yearData.push({
+      year: year,
+      count: releasesByYear[year] || 0
+    });
+  }
 
   // Calculate percentage of items with original_year
   const percentageWithOriginalYear = (totalWithOriginalYear / filteredReleases.length * 100).toFixed(2);
@@ -307,23 +320,43 @@ const DiscogsStatsPage = () => {
             </ResponsiveContainer>
           </div>
 
-          <h2>Releases by Original Release Year</h2>
-          <div className="track_ul2" style={{ height: '400px' }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={yearData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="year" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="count" fill="#FF6C00" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+        <h2>Releases by Original Release Year</h2>
+        <div className="track_ul2" style={{ height: '400px' }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={yearData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis 
+                dataKey="year"
+                type="number"
+                domain={[minYear, maxYear]}
+                ticks={generateYearTicks(minYear, maxYear)}
+              />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="count" fill="#FF6C00" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
         </section>
       </main>
     </div>
   );
 };
+
+function generateYearTicks(minYear, maxYear) {
+  const yearRange = maxYear - minYear;
+  const tickCount = Math.min(10, yearRange); // Limit to 10 ticks maximum
+  const yearStep = Math.ceil(yearRange / tickCount);
+  
+  const ticks = [];
+  for (let year = minYear; year <= maxYear; year += yearStep) {
+    ticks.push(year);
+  }
+  if (ticks[ticks.length - 1] !== maxYear) {
+    ticks.push(maxYear);
+  }
+  return ticks;
+}
 
 export default DiscogsStatsPage;
