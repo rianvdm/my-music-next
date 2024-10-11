@@ -178,7 +178,7 @@ export default function Home() {
             <strong>
               <Link href="/recommendations">get rec'd</Link>
             </strong>
-            . Or maybe explore a random genre like{' '}
+            . You can also play today's <strong><a href="/guessme">guess me game</a></strong>, or maybe explore a random genre like{' '}
             <strong>
               <Link href={`/genre/${urlGenre}`}>{displayGenre}</Link>
             </strong>
