@@ -2,28 +2,47 @@
 
 export const runtime = 'edge';
 import { useEffect, useState } from 'react';
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { useRouter } from 'next/navigation'; // Import useRouter
+import {
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const DiscogsStatsPage = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const initialGenre = searchParams.get('genre') || 'All';
+  const initialFormat = searchParams.get('format') || 'All';
+
+  const [selectedGenre, setSelectedGenre] = useState(initialGenre);
+  const [selectedFormat, setSelectedFormat] = useState(initialFormat);
   const [collectionData, setCollectionData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedGenre, setSelectedGenre] = useState('All');
-  const [selectedFormat, setSelectedFormat] = useState('All');
   const [topGenres, setTopGenres] = useState([]);
   const [topFormats, setTopFormats] = useState([]);
-  const router = useRouter(); // Initialize router
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://kv-fetch-discogs-all.rian-db8.workers.dev');
+        const response = await fetch(
+          'https://kv-fetch-discogs-all.rian-db8.workers.dev'
+        );
         const data = await response.json();
         setCollectionData(data);
 
         // Calculate top 7 genres
         const genreCounts = data.data.releases.reduce((acc, release) => {
-          release.basic_information.genres.forEach(genre => {
+          release.basic_information.genres.forEach((genre) => {
             acc[genre] = (acc[genre] || 0) + 1;
           });
           return acc;
@@ -62,6 +81,27 @@ const DiscogsStatsPage = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    // Update the URL when filters change
+    const queryParams = new URLSearchParams();
+    if (selectedGenre !== 'All') {
+      queryParams.set('genre', selectedGenre);
+    }
+    if (selectedFormat !== 'All') {
+      queryParams.set('format', selectedFormat);
+    }
+    const queryString = queryParams.toString();
+    const newUrl =
+      window.location.pathname + (queryString ? `?${queryString}` : '');
+
+    const currentUrl = window.location.pathname + window.location.search;
+
+    // Only update the URL if it has changed
+    if (newUrl !== currentUrl) {
+      router.replace(newUrl);
+    }
+  }, [selectedGenre, selectedFormat]);
+
   if (loading) {
     return <div className="track_ul2">Loading collection data...</div>;
   }
@@ -73,15 +113,21 @@ const DiscogsStatsPage = () => {
   const { stats, data } = collectionData;
 
   // Filter releases based on selected genre and format
-  const filteredReleases = data.releases.filter(release => {
-    const genreMatch = selectedGenre === 'All' || 
-      (selectedGenre === 'Other' ? !topGenres.slice(1, -1).some(genre => release.basic_information.genres.includes(genre)) :
-      release.basic_information.genres.includes(selectedGenre));
+  const filteredReleases = data.releases.filter((release) => {
+    const genreMatch =
+      selectedGenre === 'All' ||
+      (selectedGenre === 'Other'
+        ? !topGenres
+            .slice(1, -1)
+            .some((genre) => release.basic_information.genres.includes(genre))
+        : release.basic_information.genres.includes(selectedGenre));
 
-  const format = release.basic_information.formats[0]?.name;
-  const formatMatch = selectedFormat === 'All' ||
-    (selectedFormat === 'Other' ? !topFormats.slice(1, -1).includes(format) :
-    format === selectedFormat);
+    const format = release.basic_information.formats[0]?.name;
+    const formatMatch =
+      selectedFormat === 'All' ||
+      (selectedFormat === 'Other'
+        ? !topFormats.slice(1, -1).includes(format)
+        : format === selectedFormat);
 
     return genreMatch && formatMatch;
   });
@@ -225,56 +271,98 @@ const DiscogsStatsPage = () => {
       <main>
         <section id="discogs-stats">
           <div className="track_ul2">
-              <p>
-                My Discogs collection contains <strong className="highlight">{filteredReleases.length} releases</strong>
-                {selectedGenre !== 'All' && <> in the <strong className="highlight">{selectedGenre}</strong> {selectedGenre === 'Other' ? 'genres' : 'genre'}</>}
-                {selectedFormat !== 'All' && <> on <strong className="highlight">{selectedFormat}</strong> {selectedFormat === 'Other' ? 'formats' : 'format'}</>}.
-                <br /><em><a href="https://www.discogs.com/user/elezea-records/collection" target="_blank">Data from Discogs</a> last updated {new Intl.DateTimeFormat('en-US', {
+            <p>
+              <em>
+                <a
+                  href="https://www.discogs.com/user/elezea-records/collection"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Data from Discogs
+                </a>{' '}
+                last updated{' '}
+                {new Intl.DateTimeFormat('en-US', {
                   month: 'long',
                   day: 'numeric',
                   year: 'numeric',
                   hour: '2-digit',
                   minute: '2-digit',
-                  hour12: true
-                }).format(new Date(stats.lastUpdated))}{'.'}</em>
-              </p>
-              <div style={{ display: 'flex', gap: '2rem', marginBottom: '1rem' }}>
-                <div>
-                  <label htmlFor="genre-select">Filter by Genre: </label>
-                  <select 
-                    id="genre-select" 
-                    value={selectedGenre} 
-                    onChange={(e) => setSelectedGenre(e.target.value)}
-                    className="genre-select"
-                  >
-                    {topGenres.map(genre => (
-                      <option key={genre} value={genre}>{genre}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label htmlFor="format-select">Filter by Format: </label>
-                  <select 
-                    id="format-select" 
-                    value={selectedFormat} 
-                    onChange={(e) => setSelectedFormat(e.target.value)}
-                    className="genre-select"
-                  >
-                    {topFormats.map(format => (
-                      <option key={format} value={format}>{format}</option>
-                    ))}
-                  </select>
-                </div>
+                  hour12: true,
+                }).format(new Date(stats.lastUpdated))}
+                {'.'}
+              </em></p>
+              <p>My Discogs collection contains{' '}
+              <strong className="highlight">
+                {filteredReleases.length} releases
+              </strong>
+              {selectedGenre !== 'All' && (
+                <>
+                  {' '}
+                  in the <strong className="highlight">{selectedGenre}</strong>{' '}
+                  {selectedGenre === 'Other' ? 'genres' : 'genre'}
+                </>
+              )}
+              {selectedFormat !== 'All' && (
+                <>
+                  {' '}
+                  on <strong className="highlight">{selectedFormat}</strong>{' '}
+                  {selectedFormat === 'Other' ? 'formats' : 'format'}
+                </>
+              )}
+              .
+            </p>
+            <div
+              style={{
+                display: 'flex',
+                gap: '2rem',
+                marginBottom: '1rem',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+              }}
+            >
+              <div>
+                <label htmlFor="genre-select">Filter by Genre: </label>
+                <select
+                  id="genre-select"
+                  value={selectedGenre}
+                  onChange={(e) => setSelectedGenre(e.target.value)}
+                  className="genre-select"
+                >
+                  {topGenres.map((genre) => (
+                    <option key={genre} value={genre}>
+                      {genre}
+                    </option>
+                  ))}
+                </select>
               </div>
-{/*                <div style={{ marginTop: '1rem' }}>
-                    <button onClick={handleShowReleases} className="button">
-                      Show releases &gt;&gt;
-                    </button>
-                </div>*/}
+              <div>
+                <label htmlFor="format-select">Filter by Format: </label>
+                <select
+                  id="format-select"
+                  value={selectedFormat}
+                  onChange={(e) => setSelectedFormat(e.target.value)}
+                  className="genre-select"
+                >
+                  {topFormats.map((format) => (
+                    <option key={format} value={format}>
+                      {format}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {/* Uncomment if you want to display the "Show releases >>" button */}
+              {/* <div style={{ marginTop: '1rem' }}>
+                <button onClick={handleShowReleases} className="button">
+                  Show releases &gt;&gt;
+                </button>
+              </div> */}
             </div>
+          </div>
 
-          <h2>Genre Distribution</h2>
-          <div className="track_ul2" style={{ height: '400px' }}>
+ {selectedGenre === 'All' && (
+  <>
+    <h2>Genre Distribution</h2>
+    <div className="track_ul2" style={{ height: '400px' }}>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -296,7 +384,11 @@ const DiscogsStatsPage = () => {
               </PieChart>
             </ResponsiveContainer>
           </div>
+      </>
+)}
 
+{selectedFormat === 'All' && (
+  <>
           <h2>Format Distribution</h2>
           <div className="track_ul2" style={{ height: '400px' }}>
             <ResponsiveContainer width="100%" height="100%">
@@ -320,6 +412,8 @@ const DiscogsStatsPage = () => {
               </PieChart>
             </ResponsiveContainer>
           </div>
+    </>
+)}
 
           <h2>Top 10 Artists</h2>
           <div className="track_ul2" style={{ height: '500px', width: '100%' }}>
