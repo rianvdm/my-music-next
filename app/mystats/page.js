@@ -273,6 +273,7 @@ const renderDiscogsCollection = () => {
         <section id="lastfm-stats">
           <h2>🎧 Recent Listening</h2>
           <RecentTrackDisplay recentTracks={recentTracks} listeningStats={listeningStats} isLoading={isLoadingTracks} />
+          <p>If you like graphs and things, check out the <a href="/collection">stats about my physical collection</a>.</p>
 
           <h2>👩‍🎤 Top Artists</h2>
           <p style={{ textAlign: 'center' }}>

@@ -291,7 +291,7 @@ const DiscogsStatsPage = () => {
                 }).format(new Date(stats.lastUpdated))}
                 {'.'}
               </em></p>
-              <p>My Discogs collection contains{' '}
+              <p>My phyisal music collection contains{' '}
               <strong className="highlight">
                 {filteredReleases.length} releases
               </strong>
