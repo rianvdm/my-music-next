@@ -3,6 +3,7 @@
 export const runtime = 'edge';
 import { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useRouter } from 'next/navigation'; // Import useRouter
 
 const DiscogsStatsPage = () => {
   const [collectionData, setCollectionData] = useState(null);
@@ -11,6 +12,7 @@ const DiscogsStatsPage = () => {
   const [selectedFormat, setSelectedFormat] = useState('All');
   const [topGenres, setTopGenres] = useState([]);
   const [topFormats, setTopFormats] = useState([]);
+  const router = useRouter(); // Initialize router
 
   useEffect(() => {
     const fetchData = async () => {
@@ -184,6 +186,23 @@ const DiscogsStatsPage = () => {
   const minYear = Math.min(...years);
   const maxYear = Math.max(...years);
 
+  const handleBarClick = (data, index) => {
+    const year = data.year;
+    router.push(
+      `/collection/results?year=${year}&genre=${encodeURIComponent(
+        selectedGenre
+      )}&format=${encodeURIComponent(selectedFormat)}`
+    );
+  };
+
+  const handleShowReleases = () => {
+    router.push(
+      `/collection/results?genre=${encodeURIComponent(
+        selectedGenre
+      )}&format=${encodeURIComponent(selectedFormat)}`
+    );
+  };
+
   // Create an array with all years in the range
   const yearData = [];
   for (let year = minYear; year <= maxYear; year++) {
@@ -247,6 +266,11 @@ const DiscogsStatsPage = () => {
                   </select>
                 </div>
               </div>
+                <div style={{ marginTop: '1rem' }}>
+                    <button onClick={handleShowReleases} className="button">
+                      Show releases &gt;&gt;
+                    </button>
+                </div>
             </div>
 
           <h2>Genre Distribution</h2>
@@ -314,7 +338,7 @@ const DiscogsStatsPage = () => {
                   tickFormatter={(value) => value.length > 15 ? value.substr(0, 13) + '...' : value}
                 />
                 <Tooltip 
-                  formatter={(value, name, props) => [value, props.payload.name]}
+                  formatter={(value, name, props) => [value]}
                   wrapperStyle={{ width: 200, backgroundColor: '#ccc' }}
                 />
                 <Legend />
@@ -323,10 +347,10 @@ const DiscogsStatsPage = () => {
             </ResponsiveContainer>
           </div>
 
-        <h2>Releases by Original Release Year</h2>
-        <div className="track_ul2" style={{ height: '400px' }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={yearData}>
+    <h2>Releases by Original Release Year</h2>
+    <div className="track_ul2" style={{ height: '400px' }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={yearData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis 
                 dataKey="year"
@@ -337,7 +361,12 @@ const DiscogsStatsPage = () => {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="count" fill="#FF6C00" />
+              <Bar
+                dataKey="count"
+                fill="#FF6C00"
+                onClick={handleBarClick}
+                style={{ cursor: 'pointer' }} // Add pointer cursor
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>
