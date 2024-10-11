@@ -266,11 +266,11 @@ const DiscogsStatsPage = () => {
                   </select>
                 </div>
               </div>
-                <div style={{ marginTop: '1rem' }}>
+{/*                <div style={{ marginTop: '1rem' }}>
                     <button onClick={handleShowReleases} className="button">
                       Show releases &gt;&gt;
                     </button>
-                </div>
+                </div>*/}
             </div>
 
           <h2>Genre Distribution</h2>
