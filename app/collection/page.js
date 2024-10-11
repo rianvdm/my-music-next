@@ -266,7 +266,7 @@ const DiscogsStatsPage = () => {
   return (
     <div>
       <header>
-        <h1>Discogs Collection Statistics</h1>
+        <h1>Physical Collection Stats</h1>
       </header>
       <main>
         <section id="discogs-stats">
