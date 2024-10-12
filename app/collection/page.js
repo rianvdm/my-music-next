@@ -23,13 +23,16 @@ const DiscogsStatsPage = () => {
 
   const initialGenre = searchParams.get('genre') || 'All';
   const initialFormat = searchParams.get('format') || 'All';
+  const initialDecade = searchParams.get('decade') || 'All';
 
   const [selectedGenre, setSelectedGenre] = useState(initialGenre);
   const [selectedFormat, setSelectedFormat] = useState(initialFormat);
+  const [selectedDecade, setSelectedDecade] = useState(initialDecade);
   const [collectionData, setCollectionData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [topGenres, setTopGenres] = useState([]);
   const [topFormats, setTopFormats] = useState([]);
+  const [decades, setDecades] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,6 +74,19 @@ const DiscogsStatsPage = () => {
 
         setTopFormats(['All', ...sortedFormats, 'Other']);
 
+        // Calculate decades
+        const years = data.data.releases
+          .map(release => release.original_year || release.basic_information.year)
+          .filter(year => year);
+        const decadesSet = new Set();
+        years.forEach(year => {
+          const decade = Math.floor(year / 10) * 10;
+          decadesSet.add(decade);
+        });
+
+        const decadesArray = Array.from(decadesSet).sort((a, b) => a - b).map(decade => decade.toString());
+        setDecades(['All', ...decadesArray]);
+
         setLoading(false);
       } catch (error) {
         console.error('Error fetching Discogs collection:', error);
@@ -90,6 +106,9 @@ const DiscogsStatsPage = () => {
     if (selectedFormat !== 'All') {
       queryParams.set('format', selectedFormat);
     }
+    if (selectedDecade !== 'All') {
+      queryParams.set('decade', selectedDecade);
+    }
     const queryString = queryParams.toString();
     const newUrl =
       window.location.pathname + (queryString ? `?${queryString}` : '');
@@ -100,7 +119,7 @@ const DiscogsStatsPage = () => {
     if (newUrl !== currentUrl) {
       router.replace(newUrl);
     }
-  }, [selectedGenre, selectedFormat]);
+  }, [selectedGenre, selectedFormat, selectedDecade]);
 
   if (loading) {
     return <div className="track_ul2">Loading collection data...</div>;
@@ -112,7 +131,7 @@ const DiscogsStatsPage = () => {
 
   const { stats, data } = collectionData;
 
-  // Filter releases based on selected genre and format
+  // Filter releases based on selected genre, format, and decade
   const filteredReleases = data.releases.filter((release) => {
     const genreMatch =
       selectedGenre === 'All' ||
@@ -129,7 +148,13 @@ const DiscogsStatsPage = () => {
         ? !topFormats.slice(1, -1).includes(format)
         : format === selectedFormat);
 
-    return genreMatch && formatMatch;
+    const releaseYear = release.original_year || release.basic_information.year;
+    const releaseDecade = releaseYear ? Math.floor(releaseYear / 10) * 10 : null;
+    const decadeMatch =
+      selectedDecade === 'All' ||
+      (releaseDecade && releaseDecade.toString() === selectedDecade);
+
+    return genreMatch && formatMatch && decadeMatch;
   });
 
   // Prepare data for genre distribution chart
@@ -152,13 +177,13 @@ const DiscogsStatsPage = () => {
   const totalGenreCount = sortedGenres.reduce((sum, [, count]) => sum + count, 0) + otherGenreCount;
 
   const genreData = [
-    ...sortedGenres.map(([name, value]) => ({ 
-      name, 
+    ...sortedGenres.map(([name, value]) => ({
+      name,
       value,
       percentage: Math.round((value / totalGenreCount) * 100)
     })),
-    { 
-      name: 'Other', 
+    {
+      name: 'Other',
       value: otherGenreCount,
       percentage: Math.round((otherGenreCount / totalGenreCount) * 100)
     }
@@ -183,13 +208,13 @@ const DiscogsStatsPage = () => {
   const totalFormatCount = sortedFormats.reduce((sum, [, count]) => sum + count, 0) + otherFormatCount;
 
   const formatData = [
-    ...sortedFormats.map(([name, value]) => ({ 
-      name, 
+    ...sortedFormats.map(([name, value]) => ({
+      name,
       value,
       percentage: Math.round((value / totalFormatCount) * 100)
     })),
-    { 
-      name: 'Other', 
+    {
+      name: 'Other',
       value: otherFormatCount,
       percentage: Math.round((otherFormatCount / totalFormatCount) * 100)
     }
@@ -218,12 +243,12 @@ const DiscogsStatsPage = () => {
     if (year) {
       acc[year] = (acc[year] || 0) + 1;
     }
-    
+
     // Count items with original_year
     if (release.original_year) {
       totalWithOriginalYear++;
     }
-    
+
     return acc;
   }, {});
 
@@ -232,22 +257,9 @@ const DiscogsStatsPage = () => {
   const minYear = Math.min(...years);
   const maxYear = Math.max(...years);
 
-  const handleBarClick = (data, index) => {
-    const year = data.year;
-    router.push(
-      `/collection/results?year=${year}&genre=${encodeURIComponent(
-        selectedGenre
-      )}&format=${encodeURIComponent(selectedFormat)}`
-    );
-  };
+  const percentageWithOriginalYear = (totalWithOriginalYear / filteredReleases.length * 100).toFixed(2);
 
-  const handleShowReleases = () => {
-    router.push(
-      `/collection/results?genre=${encodeURIComponent(
-        selectedGenre
-      )}&format=${encodeURIComponent(selectedFormat)}`
-    );
-  };
+  const COLORS = ['#FF6C00', '#FFA500', '#FFD700', '#FF4500', '#FF8C00', '#FF7F50', '#FF69B4', '#FF1493', '#4B0082'];
 
   // Create an array with all years in the range
   const yearData = [];
@@ -258,10 +270,35 @@ const DiscogsStatsPage = () => {
     });
   }
 
-  // Calculate percentage of items with original_year
-  const percentageWithOriginalYear = (totalWithOriginalYear / filteredReleases.length * 100).toFixed(2);
+  function generateYearTicks(minYear, maxYear) {
+    const yearRange = maxYear - minYear;
+    const tickCount = Math.min(10, yearRange); // Limit to 10 ticks maximum
+    const yearStep = Math.ceil(yearRange / tickCount);
 
-  const COLORS = ['#FF6C00', '#FFA500', '#FFD700', '#FF4500', '#FF8C00', '#FF7F50', '#FF69B4', '#FF1493', '#4B0082'];
+    const ticks = [];
+    for (let year = minYear; year <= maxYear; year += yearStep) {
+      ticks.push(year);
+    }
+    if (ticks[ticks.length - 1] !== maxYear) {
+      ticks.push(maxYear);
+    }
+    return ticks;
+  }
+
+  const handleShowReleases = () => {
+    const queryParams = new URLSearchParams();
+    if (selectedGenre !== 'All') {
+      queryParams.set('genre', selectedGenre);
+    }
+    if (selectedFormat !== 'All') {
+      queryParams.set('format', selectedFormat);
+    }
+    if (selectedDecade !== 'All') {
+      queryParams.set('decade', selectedDecade);
+    }
+    const queryString = queryParams.toString();
+    router.push(`/collection/all${queryString ? `?${queryString}` : ''}`);
+  };
 
   return (
     <div>
@@ -309,6 +346,12 @@ const DiscogsStatsPage = () => {
                   {selectedFormat === 'Other' ? 'formats' : 'format'}
                 </>
               )}
+              {selectedDecade !== 'All' && (
+                <>
+                  {' '}
+                  from the <strong className="highlight">{selectedDecade}s</strong>
+                </>
+              )}
               .
             </p>
             <div
@@ -321,7 +364,7 @@ const DiscogsStatsPage = () => {
               }}
             >
               <div>
-                <label htmlFor="genre-select">Filter by Genre: </label>
+                <label htmlFor="genre-select">Genre: </label>
                 <select
                   id="genre-select"
                   value={selectedGenre}
@@ -336,7 +379,7 @@ const DiscogsStatsPage = () => {
                 </select>
               </div>
               <div>
-                <label htmlFor="format-select">Filter by Format: </label>
+                <label htmlFor="format-select">Format: </label>
                 <select
                   id="format-select"
                   value={selectedFormat}
@@ -350,70 +393,84 @@ const DiscogsStatsPage = () => {
                   ))}
                 </select>
               </div>
-              {/* Uncomment if you want to display the "Show releases >>" button */}
-              {/* <div style={{ marginTop: '1rem' }}>
-                <button onClick={handleShowReleases} className="button">
-                  Show releases &gt;&gt;
-                </button>
-              </div> */}
+              <div>
+                <label htmlFor="decade-select">Decade: </label>
+                <select
+                  id="decade-select"
+                  value={selectedDecade}
+                  onChange={(e) => setSelectedDecade(e.target.value)}
+                  className="genre-select"
+                >
+                  {decades.map((decade) => (
+                    <option key={decade} value={decade}>
+                      {decade === 'All' ? 'All' : `${decade}s`}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div style={{ marginTop: '1rem' }}>
+              <button onClick={handleShowReleases} className="button">
+                Show releases &gt;&gt;
+              </button>
             </div>
           </div>
 
- {selectedGenre === 'All' && (
-  <>
-    <h2>Genre Distribution</h2>
-    <div className="track_ul2" style={{ height: '400px' }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={genreData}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={150}
-                  fill="#8884d8"
-                  label={({ name, percentage }) => `${name}: ${percentage}%`}
-                >
-                  {genreData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip formatter={(value, name, props) => [`${props.payload.percentage}% (${value})`, name]} />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-      </>
-)}
+          {selectedGenre === 'All' && (
+            <>
+              <h2>Genre Distribution</h2>
+              <div className="track_ul2" style={{ height: '400px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={genreData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={150}
+                      fill="#8884d8"
+                      label={({ name, percentage }) => `${name}: ${percentage}%`}
+                    >
+                      {genreData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value, name, props) => [`${props.payload.percentage}% (${value})`, name]} />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </>
+          )}
 
-{selectedFormat === 'All' && (
-  <>
-          <h2>Format Distribution</h2>
-          <div className="track_ul2" style={{ height: '400px' }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={formatData}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={150}
-                  fill="#8884d8"
-                  label={({ name, percentage }) => `${name}: ${percentage}%`}
-                >
-                  {formatData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip formatter={(value, name, props) => [`${props.payload.percentage}% (${value})`, name]} />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-    </>
-)}
+          {selectedFormat === 'All' && (
+            <>
+              <h2>Format Distribution</h2>
+              <div className="track_ul2" style={{ height: '400px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={formatData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={150}
+                      fill="#8884d8"
+                      label={({ name, percentage }) => `${name}: ${percentage}%`}
+                    >
+                      {formatData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value, name, props) => [`${props.payload.percentage}% (${value})`, name]} />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </>
+          )}
 
           <h2>Top 10 Artists</h2>
           <div className="track_ul2" style={{ height: '500px', width: '100%' }}>
@@ -441,48 +498,31 @@ const DiscogsStatsPage = () => {
             </ResponsiveContainer>
           </div>
 
-    <h2>Releases by Original Release Year</h2>
-    <div className="track_ul2" style={{ height: '400px' }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={yearData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis 
-                dataKey="year"
-                type="number"
-                domain={[minYear, maxYear]}
-                ticks={generateYearTicks(minYear, maxYear)}
-              />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar
-                dataKey="count"
-                fill="#FF6C00"
-                onClick={handleBarClick}
-                style={{ cursor: 'pointer' }} // Add pointer cursor
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+          <h2>Releases by Original Release Year</h2>
+          <div className="track_ul2" style={{ height: '400px' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={yearData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="year"
+                  type="number"
+                  domain={[minYear, maxYear]}
+                  ticks={generateYearTicks(minYear, maxYear)}
+                />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar
+                  dataKey="count"
+                  fill="#FF6C00"
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </section>
       </main>
     </div>
   );
 };
-
-function generateYearTicks(minYear, maxYear) {
-  const yearRange = maxYear - minYear;
-  const tickCount = Math.min(10, yearRange); // Limit to 10 ticks maximum
-  const yearStep = Math.ceil(yearRange / tickCount);
-  
-  const ticks = [];
-  for (let year = minYear; year <= maxYear; year += yearStep) {
-    ticks.push(year);
-  }
-  if (ticks[ticks.length - 1] !== maxYear) {
-    ticks.push(maxYear);
-  }
-  return ticks;
-}
 
 export default DiscogsStatsPage;
