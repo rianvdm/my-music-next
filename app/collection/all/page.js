@@ -274,19 +274,23 @@ const CollectionListPage = () => {
           const albumSlug = generateAlbumSlug(release.basic_information.title);
           return (
             <div key={release.id} className="track_item track_item_responsive">
-              <div className="artist_image_wrapper">
-                {release.basic_information.cover_image ? (
-                  <Link href={`/album/${artistSlug}_${albumSlug}`}>
-                    <img
-                      src={release.basic_information.cover_image}
-                      alt={release.basic_information.title}
-                      className="artist_image loaded"
-                    />
-                  </Link>
-                ) : (
-                  <div className="placeholder-image">No Image</div>
-                )}
-              </div>            
+            <div className="artist_image_wrapper">
+              {release.basic_information.cover_image ? (
+                
+                  <a href={`https://www.discogs.com/release/${release.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src={release.basic_information.cover_image}
+                    alt={release.basic_information.title}
+                    className="artist_image loaded"
+                  />
+                </a>
+              ) : (
+                <div className="placeholder-image">No Image</div>
+              )}
+            </div>   
               <div className="no-wrap-text">
                 <p>
                   <Link href={`/artist/${artistSlug}`}>
