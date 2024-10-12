@@ -4,6 +4,8 @@ export const runtime = 'edge';
 
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { generateArtistSlug, generateAlbumSlug } from '../../utils/slugify';
 
 const ITEMS_PER_PAGE = 20;
 
@@ -87,7 +89,6 @@ const CollectionListPage = () => {
       });
   }, [collectionData, selectedGenre, selectedFormat, selectedDecade, selectedStyle]);
 
-  // Updated useMemo for availableStyles
   const availableStyles = useMemo(() => {
     if (!collectionData) return ['All'];
 
@@ -161,6 +162,14 @@ const CollectionListPage = () => {
     setCurrentPage(newPage);
   };
 
+  const resetFilters = () => {
+    setSelectedGenre('All');
+    setSelectedFormat('All');
+    setSelectedDecade('All');
+    setSelectedStyle('All');
+    setCurrentPage(1);
+  };
+
   if (loading) {
     return <div className="track_ul2">Loading collection data...</div>;
   }
@@ -202,7 +211,7 @@ const CollectionListPage = () => {
           )}
           .
         </p>
-        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
           <div>
             <label htmlFor="genre-select">Genre: </label>
             <select
@@ -256,44 +265,51 @@ const CollectionListPage = () => {
               ))}
             </select>
           </div>
+          <a href="#" onClick={(e) => { e.preventDefault(); resetFilters(); }} style={{ marginLeft: '1rem' }}>Reset filters</a>
         </div>
       </div>
       <div className="track_ul">
-        {currentReleases.map((release) => (
-          <div key={release.id} className="track_item track_item_responsive">
-            <div className="artist_image_wrapper">
-              {release.basic_information.cover_image ? (
-                <a
-                  href={`https://www.discogs.com/release/${release.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src={release.basic_information.cover_image}
-                    alt={release.basic_information.title}
-                    className="artist_image loaded"
-                  />
-                </a>
-              ) : (
-                <div className="placeholder-image">No Image</div>
-              )}
-            </div>            
-            <div className="no-wrap-text">
-              <p>
-                <strong>{release.basic_information.artists[0].name}</strong> - {release.basic_information.title}
-              </p>
-              <p>
-                Format: {release.basic_information.formats[0]?.name || 'Unknown'}
-                <br />
-                Release Year: {release.original_year || release.basic_information.year}
-                <br />
-                Genres: {release.basic_information.genres.join(', ')}
-                <br />
-                Styles: {release.basic_information.styles.join(', ')}
-              </p>
+        {currentReleases.map((release) => {
+          const artistSlug = generateArtistSlug(release.basic_information.artists[0].name);
+          const albumSlug = generateAlbumSlug(release.basic_information.title);
+          return (
+            <div key={release.id} className="track_item track_item_responsive">
+              <div className="artist_image_wrapper">
+                {release.basic_information.cover_image ? (
+                  <Link href={`/album/${artistSlug}_${albumSlug}`}>
+                    <img
+                      src={release.basic_information.cover_image}
+                      alt={release.basic_information.title}
+                      className="artist_image loaded"
+                    />
+                  </Link>
+                ) : (
+                  <div className="placeholder-image">No Image</div>
+                )}
+              </div>            
+              <div className="no-wrap-text">
+                <p>
+                  <Link href={`/artist/${artistSlug}`}>
+                    <strong>{release.basic_information.artists[0].name}</strong>
+                  </Link>
+                  {' - '}
+                  <Link href={`/album/${artistSlug}_${albumSlug}`}>
+                    {release.basic_information.title}
+                  </Link>
+                </p>
+                <p>
+                  Format: {release.basic_information.formats[0]?.name || 'Unknown'}
+                  <br />
+                  Release Year: {release.original_year || release.basic_information.year}
+                  <br />
+                  Genres: {release.basic_information.genres.join(', ')}
+                  <br />
+                  Styles: {release.basic_information.styles.join(', ')}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
       <div className="track_ul2" style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '1rem' }}>
         <button
