@@ -87,15 +87,22 @@ const CollectionListPage = () => {
       });
   }, [collectionData, selectedGenre, selectedFormat, selectedDecade, selectedStyle]);
 
+  // Updated useMemo for availableStyles
   const availableStyles = useMemo(() => {
     if (!collectionData) return ['All'];
 
     const stylesCount = new Map();
-    stylesCount.set('All', 0);
 
     collectionData.data.releases.forEach(release => {
-      if (selectedGenre === 'All' || release.basic_information.genres.includes(selectedGenre)) {
-        stylesCount.set('All', stylesCount.get('All') + 1);
+      const releaseYear = release.original_year || release.basic_information.year;
+      const releaseDecade = Math.floor(releaseYear / 10) * 10;
+      const releaseFormat = release.basic_information.formats[0]?.name;
+
+      const matchesGenre = selectedGenre === 'All' || release.basic_information.genres.includes(selectedGenre);
+      const matchesFormat = selectedFormat === 'All' || releaseFormat === selectedFormat;
+      const matchesDecade = selectedDecade === 'All' || releaseDecade === parseInt(selectedDecade, 10);
+
+      if (matchesGenre && matchesFormat && matchesDecade) {
         release.basic_information.styles.forEach(style => {
           stylesCount.set(style, (stylesCount.get(style) || 0) + 1);
         });
@@ -103,10 +110,10 @@ const CollectionListPage = () => {
     });
 
     return ['All', ...Array.from(stylesCount.entries())
-      .filter(([style, count]) => style !== 'All' && count > 0)
+      .filter(([style, count]) => count > 0)
       .map(([style]) => style)
       .sort((a, b) => a.localeCompare(b))];
-  }, [collectionData, selectedGenre]);
+  }, [collectionData, selectedGenre, selectedFormat, selectedDecade]);
 
   const totalPages = Math.ceil(filteredAndSortedReleases.length / ITEMS_PER_PAGE);
 
