@@ -15,6 +15,7 @@ export const generateArtistSlug = (artistName) => {
 export const generateAlbumSlug = (albumName) => {
     return encodeURIComponent(
         albumName
+            .replace(/\./g, '')             // Remove periods
             .replace(/\s*\(.*?\)\s*/g, '')  // Remove any text inside parentheses
             .replace(/[\'’]/g, '')          // Remove single quotation marks and backticks
             .replace(/\//g, '-')            // Replace / with hyphens
