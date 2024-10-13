@@ -30,8 +30,6 @@ const useRandomFact = () => {
   return fact;
 };
 
-
-
 const useRandomGenre = () => {
   const [genreData, setGenreData] = useState({ urlGenre: null, displayGenre: null });
 
