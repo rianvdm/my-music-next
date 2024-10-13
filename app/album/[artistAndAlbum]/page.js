@@ -25,19 +25,20 @@ export default function AlbumPage({ params }) {
   const [trackCount, setTrackCount] = useState('Loading...');
   const [genres, setGenres] = useState('Loading...');
   const [openAISummary, setOpenAISummary] = useState('Generating summary...');
-  const [showExtendedMessage, setShowExtendedMessage] = useState(false); // New state for extended message
+  const [showExtendedMessage, setShowExtendedMessage] = useState(false);
   const [artistId, setArtistId] = useState(null);
   const [error, setError] = useState(null);
-  const [kvKey, setKvKey] = useState(null); // kvKey for the follow-up worker
+  const [kvKey, setKvKey] = useState(null);
   const fetchedOpenAISummary = useRef(false);
-  const timerRef = useRef(null); // Timer reference for the extended message
-  const [recommendation, setRecommendation] = useState('');
-  const [loadingRecommendation, setLoadingRecommendation] = useState(false);
+  const fetchedRecommendations = useRef(false); // New ref to track recommendation fetching
+  const timerRef = useRef(null);
+  const [recommendation, setRecommendation] = useState('Loading recommendations...');
+  const [loadingRecommendation, setLoadingRecommendation] = useState(true);
   const [followUpQuestion, setFollowUpQuestion] = useState('');
   const [conversationHistory, setConversationHistory] = useState([]);
   const [followUpResponse, setFollowUpResponse] = useState('');
   const [loadingFollowUp, setLoadingFollowUp] = useState(false);
-  const [followUpCount, setFollowUpCount] = useState(0); // <-- Track number of follow-up questions
+  const [followUpCount, setFollowUpCount] = useState(0);
 
   const decodePrettyUrl = (prettyUrl) =>
     decodeURIComponent(prettyUrl.replace(/-/g, ' '));
@@ -158,24 +159,30 @@ export default function AlbumPage({ params }) {
     }
   }, [artistId]);
 
-  // Fetch recommendations
-  const handleRecommendation = async () => {
-    setLoadingRecommendation(true);
-    try {
-      const response = await fetch(
-        `https://api-perplexity-albumrecs.rian-db8.workers.dev/?album=${encodeURIComponent(
-          album
-        )}&artist=${encodeURIComponent(artist)}`
-      );
-      const data = await response.json();
-      setRecommendation(marked(data.data));
-    } catch (error) {
-      console.error('Error fetching recommendations:', error);
-      setRecommendation('Failed to load recommendations.');
-    } finally {
-      setLoadingRecommendation(false);
+  // Automatically fetch recommendations on page load, ensuring it's only fetched once
+  useEffect(() => {
+    if (!fetchedRecommendations.current) {
+      fetchedRecommendations.current = true; // Ensure this block only runs once
+      const fetchRecommendations = async () => {
+        try {
+          const response = await fetch(
+            `https://api-perplexity-albumrecs.rian-db8.workers.dev/?album=${encodeURIComponent(
+              album
+            )}&artist=${encodeURIComponent(artist)}`
+          );
+          const data = await response.json();
+          setRecommendation(marked(data.data));
+        } catch (error) {
+          console.error('Error fetching recommendations:', error);
+          setRecommendation('Failed to load recommendations.');
+        } finally {
+          setLoadingRecommendation(false);
+        }
+      };
+
+      fetchRecommendations();
     }
-  };
+  }, [album, artist]);
 
   const renderOpenAISummary = (summary) => {
     if (summary === 'Generating summary...') {
@@ -218,54 +225,6 @@ export default function AlbumPage({ params }) {
   if (!albumDetails) {
     return <p>Loading...</p>;
   }
-
-  const handleFollowUpQuestion = async () => {
-    if (
-      !followUpQuestion ||
-      !artist ||
-      !album ||
-      followUpCount >= 3
-    )
-      return; // Limit to 3 follow-up questions
-
-    setLoadingFollowUp(true);
-
-    try {
-      const response = await fetch(
-        'https://api-perplexity-albumdetail-fu.rian-db8.workers.dev',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            kvKey, // Keep the kvKey
-            artistName: artist, // Send the artist name
-            albumName: album, // Send the album name
-            conversationHistory, // Send the conversation history
-            userQuestion: followUpQuestion, // Send the new follow-up question
-          }),
-        }
-      );
-
-      const data = await response.json();
-      setFollowUpResponse(data.data);
-
-      // Append the follow-up question and response to the conversation history
-      setConversationHistory([
-        ...conversationHistory,
-        { role: 'user', content: followUpQuestion },
-        { role: 'assistant', content: data.data },
-      ]);
-
-      setFollowUpQuestion(''); // Clear the input field
-      setFollowUpCount(followUpCount + 1); // Increment follow-up count
-    } catch (error) {
-      console.error('Error sending follow-up question:', error);
-    } finally {
-      setLoadingFollowUp(false);
-    }
-  };
 
   const prettySpotifyArtist = generateLastfmArtistSlug(albumDetails.artist);
   const albumImage =
@@ -369,78 +328,15 @@ export default function AlbumPage({ params }) {
             </div>
           </div>
           {renderOpenAISummary(openAISummary)}
-          {/* Commenting out the follow-up question section */}
-          {/*
-          <div style={{ textAlign: 'center', marginTop: '20px' }}>
-            <h2 style={{ marginBottom: 0 }}>Ask a follow-up question about the album</h2>
-            <div id="search-form">
-              <input
-                id="follow-up-search"
-                type="text"
-                value={followUpQuestion}
-                onChange={(e) => setFollowUpQuestion(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleFollowUpQuestion();  // Call the function when Enter is pressed
-                  }
-                }}
-                placeholder={
-                  followUpCount < 3
-                    ? 'Type your follow-up question...'
-                    : 'No more follow-up questions allowed'
-                } // Show message when limit is reached
-                disabled={followUpCount >= 3} // Disable input if follow-up limit is reached
-              />
-              <button
-                className="button"
-                onClick={handleFollowUpQuestion}
-                style={{ width: '100px' }}
-                disabled={
-                  loadingFollowUp ||
-                  !followUpQuestion.trim() ||
-                  followUpCount >= 3
-                } // Disable button if follow-up limit is reached
-              >
-                {loadingFollowUp ? 'Loading...' : 'Ask'}
-              </button>
-            </div>
-          </div>
-          {followUpResponse && (
-            <div style={{ marginTop: '20px' }}>
-              <p>
-                <strong>
-                  Q:{' '}
-                  {
-                    conversationHistory[
-                      conversationHistory.length - 2
-                    ]?.content
-                  }
-                </strong>
-              </p>
-              {renderFollowUpResponse(followUpResponse)}{' '}
-            </div>
-          )}
-          */}
           {/* New recommendation section */}
-          <div style={{ textAlign: 'center', marginTop: '20px' }}>
-            <h2>
-              Need some inspiration?
-            </h2>
-            <p>Click below to let the robots recommend some similar albums to you that are hopefully a little off the beaten path.</p>
-            <button
-              className="button"
-              onClick={handleRecommendation}
-              style={{ width: '100px' }}
-              disabled={loadingRecommendation}
-            >
-              {loadingRecommendation ? 'Loading...' : "Get rec'd"}
-            </button>
-          </div>
-          {recommendation && (
-            <div style={{ marginTop: '20px' }}>
+          <div style={{ marginTop: '20px' }}>
+            <h2>Album Recommendations</h2>
+            {loadingRecommendation ? (
+              <p>{recommendation}</p>
+            ) : (
               <div dangerouslySetInnerHTML={{ __html: recommendation }} />
-            </div>
-          )}
+            )}
+          </div>
         </section>
       </main>
     </div>
