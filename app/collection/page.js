@@ -308,27 +308,7 @@ const DiscogsStatsPage = () => {
       <main>
         <section id="discogs-stats">
           <div className="track_ul2">
-            <p>
-              <em>
-                <a
-                  href="https://www.discogs.com/user/elezea-records/collection"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Data from Discogs
-                </a>{' '}
-                last updated{' '}
-                {new Intl.DateTimeFormat('en-US', {
-                  month: 'long',
-                  day: 'numeric',
-                  year: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: true,
-                }).format(new Date(stats.lastUpdated))}
-                {'.'}
-              </em></p>
-              <p>My physical music collection contains{' '}
+              <p>My <a href="https://www.discogs.com/user/elezea-records/collection" target="_blank">physical music collection</a> contains{' '}
               <strong className="highlight">
                 {filteredReleases.length} releases
               </strong>
@@ -410,7 +390,7 @@ const DiscogsStatsPage = () => {
               </div>
             </div>
             <div style={{ marginTop: '1rem' }}>
-              <button onClick={handleShowReleases} className="button">
+              <button onClick={handleShowReleases} className="button" style={{ marginLeft: '0' }}>
                 Show releases &gt;&gt;
               </button>
             </div>
@@ -519,6 +499,26 @@ const DiscogsStatsPage = () => {
               </BarChart>
             </ResponsiveContainer>
           </div>
+                      <p><br />
+              <em>
+                <a
+                  href="https://www.discogs.com/user/elezea-records/collection"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Data from Discogs
+                </a>{' '}
+                last updated{' '}
+                {new Intl.DateTimeFormat('en-US', {
+                  month: 'long',
+                  day: 'numeric',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: true,
+                }).format(new Date(stats.lastUpdated))}
+                {'.'}
+              </em></p>
         </section>
       </main>
     </div>
