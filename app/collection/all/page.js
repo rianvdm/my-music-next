@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { generateArtistSlug, generateAlbumSlug } from '../../utils/slugify';
 
-const ITEMS_PER_PAGE = 20;
+const ITEMS_PER_PAGE = 50;
 
 const CollectionListPage = () => {
   const router = useRouter();
