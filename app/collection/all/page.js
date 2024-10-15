@@ -69,12 +69,20 @@ const CollectionListPage = () => {
         const releaseYear = release.original_year || release.basic_information.year;
         const releaseDecade = Math.floor(releaseYear / 10) * 10;
         const releaseFormat = release.basic_information.formats[0]?.name;
-        
+
+        const genres = release.master_genres && Array.isArray(release.master_genres)
+          ? release.master_genres
+          : release.basic_information.genres;
+
+        const styles = release.master_styles && Array.isArray(release.master_styles)
+          ? release.master_styles
+          : release.basic_information.styles;
+
         return (
-          (selectedGenre === 'All' || release.basic_information.genres.includes(selectedGenre)) &&
+          (selectedGenre === 'All' || genres?.includes(selectedGenre)) &&
           (selectedFormat === 'All' || releaseFormat === selectedFormat) &&
           (selectedDecade === 'All' || releaseDecade === parseInt(selectedDecade, 10)) &&
-          (selectedStyle === 'All' || release.basic_information.styles.includes(selectedStyle))
+          (selectedStyle === 'All' || styles?.includes(selectedStyle))
         );
       })
       .sort((a, b) => {
@@ -99,12 +107,20 @@ const CollectionListPage = () => {
       const releaseDecade = Math.floor(releaseYear / 10) * 10;
       const releaseFormat = release.basic_information.formats[0]?.name;
 
-      const matchesGenre = selectedGenre === 'All' || release.basic_information.genres.includes(selectedGenre);
+      const genres = release.master_genres && Array.isArray(release.master_genres)
+        ? release.master_genres
+        : release.basic_information.genres;
+
+      const styles = release.master_styles && Array.isArray(release.master_styles)
+        ? release.master_styles
+        : release.basic_information.styles;
+
+      const matchesGenre = selectedGenre === 'All' || genres?.includes(selectedGenre);
       const matchesFormat = selectedFormat === 'All' || releaseFormat === selectedFormat;
       const matchesDecade = selectedDecade === 'All' || releaseDecade === parseInt(selectedDecade, 10);
 
       if (matchesGenre && matchesFormat && matchesDecade) {
-        release.basic_information.styles.forEach(style => {
+        styles?.forEach(style => {
           stylesCount.set(style, (stylesCount.get(style) || 0) + 1);
         });
       }
@@ -306,9 +322,9 @@ const CollectionListPage = () => {
                   <br />
                   Release Year: {release.original_year || release.basic_information.year}
                   <br />
-                  Genres: {release.basic_information.genres.join(', ')}
+                  Genres: {(release.master_genres || release.basic_information.genres).join(', ')}
                   <br />
-                  Styles: {release.basic_information.styles.join(', ')}
+                  Styles: {(release.master_styles || release.basic_information.styles).join(', ')}
                 </p>
               </div>
             </div>
