@@ -1,3 +1,4 @@
+// ../pages/collection/all.js
 'use client';
 
 export const runtime = 'edge';
@@ -12,6 +13,7 @@ import GenreFilter from '../../components/GenreFilter';
 import StyleFilter from '../../components/StyleFilter';
 import FormatFilter from '../../components/FormatFilter';
 import DecadeFilter from '../../components/DecadeFilter';
+import ReleaseSummary from '../../components/ReleaseSummary';
 
 const ITEMS_PER_PAGE = 50;
 
@@ -186,7 +188,7 @@ const CollectionListPage = () => {
 
   const handleGenreChange = (e) => {
     setSelectedGenre(e.target.value);
-    setSelectedStyle('All');
+    setSelectedStyle('All'); // Reset Style filter when Genre changes
     setCurrentPage(1);
   };
 
@@ -225,39 +227,15 @@ const CollectionListPage = () => {
     <div>
       <h1>My Music Collection</h1>
       <div className="track_ul2">
-        <p>
-          My physical music collection contains{' '}
-          <strong className="highlight">
-            {filteredAndSortedReleases.length} releases
-          </strong>
-          {selectedGenre !== 'All' && (
-            <>
-              {' '}
-              in the <strong className="highlight">{selectedGenre}</strong>{' '}
-              {selectedGenre === 'Other' ? 'genres' : 'genre'}
-            </>
-          )}
-          {selectedStyle !== 'All' && (
-            <>
-              {' '}
-              with the <strong className="highlight">{selectedStyle}</strong> style
-            </>
-          )}
-          {selectedFormat !== 'All' && (
-            <>
-              {' '}
-              on <strong className="highlight">{selectedFormat}</strong>{' '}
-              {selectedFormat === 'Other' ? 'formats' : 'format'}
-            </>
-          )}
-          {selectedDecade !== 'All' && (
-            <>
-              {' '}
-              from the <strong className="highlight">{selectedDecade}s</strong>
-            </>
-          )}
-          .
-        </p>
+        {/* Use the ReleaseSummary component with additional styling and selectedStyle */}
+        <ReleaseSummary
+          releaseCount={filteredAndSortedReleases.length}
+          selectedGenre={selectedGenre}
+          selectedFormat={selectedFormat}
+          selectedDecade={selectedDecade}
+          selectedStyle={selectedStyle !== 'All' ? selectedStyle : null} // Pass selectedStyle only if it's not 'All'
+          className="custom-summary-class" // Add custom class for additional styling
+        />
         <div
           style={{
             display: 'flex',

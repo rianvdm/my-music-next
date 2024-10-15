@@ -1,3 +1,4 @@
+// ../pages/collection/page.js
 'use client';
 
 export const runtime = 'edge';
@@ -19,6 +20,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import GenreFilter from '../components/GenreFilter';
 import FormatFilter from '../components/FormatFilter';
 import DecadeFilter from '../components/DecadeFilter';
+import ReleaseSummary from '../components/ReleaseSummary';
 
 const DiscogsStatsPage = () => {
   const router = useRouter();
@@ -48,9 +50,10 @@ const DiscogsStatsPage = () => {
 
         // Calculate top 7 genres
         const genreCounts = data.data.releases.reduce((acc, release) => {
-          const genres = release.master_genres && Array.isArray(release.master_genres) 
-            ? release.master_genres 
-            : release.basic_information.genres;
+          const genres =
+            release.master_genres && Array.isArray(release.master_genres)
+              ? release.master_genres
+              : release.basic_information.genres;
 
           if (genres && Array.isArray(genres)) {
             genres.forEach((genre) => {
@@ -86,15 +89,19 @@ const DiscogsStatsPage = () => {
 
         // Calculate decades
         const years = data.data.releases
-          .map(release => release.original_year || release.basic_information.year)
-          .filter(year => year);
+          .map(
+            (release) => release.original_year || release.basic_information.year
+          )
+          .filter((year) => year);
         const decadesSet = new Set();
-        years.forEach(year => {
+        years.forEach((year) => {
           const decade = Math.floor(year / 10) * 10;
           decadesSet.add(decade);
         });
 
-        const decadesArray = Array.from(decadesSet).sort((a, b) => a - b).map(decade => decade.toString());
+        const decadesArray = Array.from(decadesSet)
+          .sort((a, b) => a - b)
+          .map((decade) => decade.toString());
         setDecades(['All', ...decadesArray]);
 
         setLoading(false);
@@ -143,9 +150,10 @@ const DiscogsStatsPage = () => {
 
   // Filter releases based on selected genre, format, and decade
   const filteredReleases = data.releases.filter((release) => {
-    const genres = release.master_genres && Array.isArray(release.master_genres) 
-      ? release.master_genres 
-      : release.basic_information.genres;
+    const genres =
+      release.master_genres && Array.isArray(release.master_genres)
+        ? release.master_genres
+        : release.basic_information.genres;
 
     const genreMatch =
       selectedGenre === 'All' ||
@@ -171,16 +179,18 @@ const DiscogsStatsPage = () => {
 
   // Prepare data for genre distribution chart
   const genreCounts = filteredReleases.reduce((acc, release) => {
-    const genres = release.master_genres && Array.isArray(release.master_genres)
-      ? release.master_genres
-      : release.basic_information.genres;
+    const genres =
+      release.master_genres && Array.isArray(release.master_genres)
+        ? release.master_genres
+        : release.basic_information.genres;
 
     if (genres && Array.isArray(genres)) {
       genres.forEach((genre) => {
         if (
-          selectedGenre === 'All' || 
-          genre === selectedGenre || 
-          (selectedGenre === 'Other' && !topGenres.slice(1, -1).includes(genre))
+          selectedGenre === 'All' ||
+          genre === selectedGenre ||
+          (selectedGenre === 'Other' &&
+            !topGenres.slice(1, -1).includes(genre))
         ) {
           acc[genre] = (acc[genre] || 0) + 1;
         }
@@ -194,22 +204,25 @@ const DiscogsStatsPage = () => {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 7);
 
-  const otherGenreCount = Object.values(genreCounts).reduce((sum, count) => sum + count, 0) -
+  const otherGenreCount =
+    Object.values(genreCounts).reduce((sum, count) => sum + count, 0) -
     sortedGenres.reduce((sum, [, count]) => sum + count, 0);
 
-  const totalGenreCount = sortedGenres.reduce((sum, [, count]) => sum + count, 0) + otherGenreCount;
+  const totalGenreCount =
+    sortedGenres.reduce((sum, [, count]) => sum + count, 0) +
+    otherGenreCount;
 
   const genreData = [
     ...sortedGenres.map(([name, value]) => ({
       name,
       value,
-      percentage: Math.round((value / totalGenreCount) * 100)
+      percentage: Math.round((value / totalGenreCount) * 100),
     })),
     {
       name: 'Other',
       value: otherGenreCount,
-      percentage: Math.round((otherGenreCount / totalGenreCount) * 100)
-    }
+      percentage: Math.round((otherGenreCount / totalGenreCount) * 100),
+    },
   ];
 
   // Prepare data for format distribution chart
@@ -225,27 +238,30 @@ const DiscogsStatsPage = () => {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 4);
 
-  const otherFormatCount = Object.values(formatCounts).reduce((sum, count) => sum + count, 0) -
+  const otherFormatCount =
+    Object.values(formatCounts).reduce((sum, count) => sum + count, 0) -
     sortedFormats.reduce((sum, [, count]) => sum + count, 0);
 
-  const totalFormatCount = sortedFormats.reduce((sum, [, count]) => sum + count, 0) + otherFormatCount;
+  const totalFormatCount =
+    sortedFormats.reduce((sum, [, count]) => sum + count, 0) +
+    otherFormatCount;
 
   const formatData = [
     ...sortedFormats.map(([name, value]) => ({
       name,
       value,
-      percentage: Math.round((value / totalFormatCount) * 100)
+      percentage: Math.round((value / totalFormatCount) * 100),
     })),
     {
       name: 'Other',
       value: otherFormatCount,
-      percentage: Math.round((otherFormatCount / totalFormatCount) * 100)
-    }
+      percentage: Math.round((otherFormatCount / totalFormatCount) * 100),
+    },
   ];
 
   // Prepare data for top 10 artists chart
   const artistCounts = filteredReleases.reduce((acc, release) => {
-    release.basic_information.artists.forEach(artist => {
+    release.basic_information.artists.forEach((artist) => {
       const artistName = artist.name;
       acc[artistName] = (acc[artistName] || 0) + 1;
     });
@@ -280,16 +296,29 @@ const DiscogsStatsPage = () => {
   const minYear = Math.min(...years);
   const maxYear = Math.max(...years);
 
-  const percentageWithOriginalYear = (totalWithOriginalYear / filteredReleases.length * 100).toFixed(2);
+  const percentageWithOriginalYear = (
+    (totalWithOriginalYear / filteredReleases.length) *
+    100
+  ).toFixed(2);
 
-  const COLORS = ['#FF6C00', '#FFA500', '#FFD700', '#FF4500', '#FF8C00', '#FF7F50', '#FF69B4', '#FF1493', '#4B0082'];
+  const COLORS = [
+    '#FF6C00',
+    '#FFA500',
+    '#FFD700',
+    '#FF4500',
+    '#FF8C00',
+    '#FF7F50',
+    '#FF69B4',
+    '#FF1493',
+    '#4B0082',
+  ];
 
   // Create an array with all years in the range
   const yearData = [];
   for (let year = minYear; year <= maxYear; year++) {
     yearData.push({
       year: year,
-      count: releasesByYear[year] || 0
+      count: releasesByYear[year] || 0,
     });
   }
 
@@ -331,37 +360,13 @@ const DiscogsStatsPage = () => {
       <main>
         <section id="discogs-stats">
           <div className="track_ul2">
-            <p>
-              My{' '}
-              <a href="https://www.discogs.com/user/elezea-records/collection" target="_blank" rel="noopener noreferrer">
-                physical music collection
-              </a>{' '}
-              contains{' '}
-              <strong className="highlight">
-                {filteredReleases.length} releases
-              </strong>
-              {selectedGenre !== 'All' && (
-                <>
-                  {' '}
-                  in the <strong className="highlight">{selectedGenre}</strong>{' '}
-                  {selectedGenre === 'Other' ? 'genres' : 'genre'}
-                </>
-              )}
-              {selectedFormat !== 'All' && (
-                <>
-                  {' '}
-                  on <strong className="highlight">{selectedFormat}</strong>{' '}
-                  {selectedFormat === 'Other' ? 'formats' : 'format'}
-                </>
-              )}
-              {selectedDecade !== 'All' && (
-                <>
-                  {' '}
-                  from the <strong className="highlight">{selectedDecade}s</strong>
-                </>
-              )}
-              .
-            </p>
+            {/* Use the ReleaseSummary component without selectedStyle */}
+            <ReleaseSummary
+              releaseCount={filteredReleases.length}
+              selectedGenre={selectedGenre}
+              selectedFormat={selectedFormat}
+              selectedDecade={selectedDecade}
+            />
             <div
               style={{
                 display: 'flex',
@@ -389,7 +394,11 @@ const DiscogsStatsPage = () => {
               />
             </div>
             <div style={{ marginTop: '1rem' }}>
-              <button onClick={handleShowReleases} className="button" style={{ marginLeft: '0' }}>
+              <button
+                onClick={handleShowReleases}
+                className="button"
+                style={{ marginLeft: '0' }}
+              >
                 Show releases &gt;&gt;
               </button>
             </div>
@@ -412,10 +421,18 @@ const DiscogsStatsPage = () => {
                       label={({ name, percentage }) => `${name}: ${percentage}%`}
                     >
                       {genreData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
                       ))}
                     </Pie>
-                    <Tooltip formatter={(value, name, props) => [`${props.payload.percentage}% (${value})`, name]} />
+                    <Tooltip
+                      formatter={(value, name, props) => [
+                        `${props.payload.percentage}% (${value})`,
+                        name,
+                      ]}
+                    />
                     <Legend />
                   </PieChart>
                 </ResponsiveContainer>
@@ -437,13 +454,23 @@ const DiscogsStatsPage = () => {
                       cy="50%"
                       outerRadius={150}
                       fill="#8884d8"
-                      label={({ name, percentage }) => `${name}: ${percentage}%`}
+                      label={({ name, percentage }) =>
+                        `${name}: ${percentage}%`
+                      }
                     >
                       {formatData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
                       ))}
                     </Pie>
-                    <Tooltip formatter={(value, name, props) => [`${props.payload.percentage}% (${value})`, name]} />
+                    <Tooltip
+                      formatter={(value, name, props) => [
+                        `${props.payload.percentage}% (${value})`,
+                        name,
+                      ]}
+                    />
                     <Legend />
                   </PieChart>
                 </ResponsiveContainer>
@@ -461,13 +488,15 @@ const DiscogsStatsPage = () => {
               >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis type="number" />
-                <YAxis 
-                  dataKey="name" 
-                  type="category" 
+                <YAxis
+                  dataKey="name"
+                  type="category"
                   width={150}
-                  tickFormatter={(value) => value.length > 15 ? value.substr(0, 13) + '...' : value}
+                  tickFormatter={(value) =>
+                    value.length > 15 ? value.substr(0, 13) + '...' : value
+                  }
                 />
-                <Tooltip 
+                <Tooltip
                   formatter={(value, name, props) => [value]}
                   wrapperStyle={{ width: 200, backgroundColor: '#ccc' }}
                 />
@@ -482,7 +511,7 @@ const DiscogsStatsPage = () => {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={yearData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis 
+                <XAxis
                   dataKey="year"
                   type="number"
                   domain={[minYear, maxYear]}
@@ -491,10 +520,7 @@ const DiscogsStatsPage = () => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar
-                  dataKey="count"
-                  fill="#FF6C00"
-                />
+                <Bar dataKey="count" fill="#FF6C00" />
               </BarChart>
             </ResponsiveContainer>
           </div>
