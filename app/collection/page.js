@@ -1,7 +1,7 @@
 'use client';
 
 export const runtime = 'edge';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import {
   PieChart,
   Pie,
@@ -16,6 +16,9 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { useRouter, useSearchParams } from 'next/navigation';
+import GenreFilter from '../components/GenreFilter';
+import FormatFilter from '../components/FormatFilter';
+import DecadeFilter from '../components/DecadeFilter';
 
 const DiscogsStatsPage = () => {
   const router = useRouter();
@@ -43,27 +46,27 @@ const DiscogsStatsPage = () => {
         const data = await response.json();
         setCollectionData(data);
 
-      // Calculate top 7 genres
-      const genreCounts = data.data.releases.reduce((acc, release) => {
-        const genres = release.master_genres && Array.isArray(release.master_genres) 
-          ? release.master_genres 
-          : release.basic_information.genres;
+        // Calculate top 7 genres
+        const genreCounts = data.data.releases.reduce((acc, release) => {
+          const genres = release.master_genres && Array.isArray(release.master_genres) 
+            ? release.master_genres 
+            : release.basic_information.genres;
 
-        if (genres && Array.isArray(genres)) {
-          genres.forEach((genre) => {
-            acc[genre] = (acc[genre] || 0) + 1;
-          });
-        }
+          if (genres && Array.isArray(genres)) {
+            genres.forEach((genre) => {
+              acc[genre] = (acc[genre] || 0) + 1;
+            });
+          }
 
-        return acc;
-      }, {});
+          return acc;
+        }, {});
 
-      const sortedGenres = Object.entries(genreCounts)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 7)
-        .map(([genre]) => genre);
+        const sortedGenres = Object.entries(genreCounts)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 7)
+          .map(([genre]) => genre);
 
-      setTopGenres(['All', ...sortedGenres, 'Other']);
+        setTopGenres(['All', ...sortedGenres, 'Other']);
 
         // Calculate top 5 formats
         const formatCounts = data.data.releases.reduce((acc, release) => {
@@ -126,7 +129,7 @@ const DiscogsStatsPage = () => {
     if (newUrl !== currentUrl) {
       router.replace(newUrl);
     }
-  }, [selectedGenre, selectedFormat, selectedDecade]);
+  }, [selectedGenre, selectedFormat, selectedDecade, router]);
 
   if (loading) {
     return <div className="track_ul2">Loading collection data...</div>;
@@ -139,53 +142,53 @@ const DiscogsStatsPage = () => {
   const { stats, data } = collectionData;
 
   // Filter releases based on selected genre, format, and decade
-    const filteredReleases = data.releases.filter((release) => {
-      const genres = release.master_genres && Array.isArray(release.master_genres) 
-        ? release.master_genres 
-        : release.basic_information.genres;
+  const filteredReleases = data.releases.filter((release) => {
+    const genres = release.master_genres && Array.isArray(release.master_genres) 
+      ? release.master_genres 
+      : release.basic_information.genres;
 
-      const genreMatch =
-        selectedGenre === 'All' ||
-        (selectedGenre === 'Other'
-          ? !topGenres.slice(1, -1).some((genre) => genres?.includes(genre))
-          : genres?.includes(selectedGenre));
+    const genreMatch =
+      selectedGenre === 'All' ||
+      (selectedGenre === 'Other'
+        ? !topGenres.slice(1, -1).some((genre) => genres?.includes(genre))
+        : genres?.includes(selectedGenre));
 
-      const format = release.basic_information.formats[0]?.name;
-      const formatMatch =
-        selectedFormat === 'All' ||
-        (selectedFormat === 'Other'
-          ? !topFormats.slice(1, -1).includes(format)
-          : format === selectedFormat);
+    const format = release.basic_information.formats[0]?.name;
+    const formatMatch =
+      selectedFormat === 'All' ||
+      (selectedFormat === 'Other'
+        ? !topFormats.slice(1, -1).includes(format)
+        : format === selectedFormat);
 
-      const releaseYear = release.original_year || release.basic_information.year;
-      const releaseDecade = releaseYear ? Math.floor(releaseYear / 10) * 10 : null;
-      const decadeMatch =
-        selectedDecade === 'All' ||
-        (releaseDecade && releaseDecade.toString() === selectedDecade);
+    const releaseYear = release.original_year || release.basic_information.year;
+    const releaseDecade = releaseYear ? Math.floor(releaseYear / 10) * 10 : null;
+    const decadeMatch =
+      selectedDecade === 'All' ||
+      (releaseDecade && releaseDecade.toString() === selectedDecade);
 
-      return genreMatch && formatMatch && decadeMatch;
-    });
+    return genreMatch && formatMatch && decadeMatch;
+  });
 
   // Prepare data for genre distribution chart
-    const genreCounts = filteredReleases.reduce((acc, release) => {
-      const genres = release.master_genres && Array.isArray(release.master_genres)
-        ? release.master_genres
-        : release.basic_information.genres;
+  const genreCounts = filteredReleases.reduce((acc, release) => {
+    const genres = release.master_genres && Array.isArray(release.master_genres)
+      ? release.master_genres
+      : release.basic_information.genres;
 
-      if (genres && Array.isArray(genres)) {
-        genres.forEach((genre) => {
-          if (
-            selectedGenre === 'All' || 
-            genre === selectedGenre || 
-            (selectedGenre === 'Other' && !topGenres.slice(1, -1).includes(genre))
-          ) {
-            acc[genre] = (acc[genre] || 0) + 1;
-          }
-        });
-      }
+    if (genres && Array.isArray(genres)) {
+      genres.forEach((genre) => {
+        if (
+          selectedGenre === 'All' || 
+          genre === selectedGenre || 
+          (selectedGenre === 'Other' && !topGenres.slice(1, -1).includes(genre))
+        ) {
+          acc[genre] = (acc[genre] || 0) + 1;
+        }
+      });
+    }
 
-      return acc;
-    }, {});
+    return acc;
+  }, {});
 
   const sortedGenres = Object.entries(genreCounts)
     .sort((a, b) => b[1] - a[1])
@@ -328,7 +331,12 @@ const DiscogsStatsPage = () => {
       <main>
         <section id="discogs-stats">
           <div className="track_ul2">
-              <p>My <a href="https://www.discogs.com/user/elezea-records/collection" target="_blank">physical music collection</a> contains{' '}
+            <p>
+              My{' '}
+              <a href="https://www.discogs.com/user/elezea-records/collection" target="_blank" rel="noopener noreferrer">
+                physical music collection
+              </a>{' '}
+              contains{' '}
               <strong className="highlight">
                 {filteredReleases.length} releases
               </strong>
@@ -363,51 +371,22 @@ const DiscogsStatsPage = () => {
                 alignItems: 'center',
               }}
             >
-              <div>
-                <label htmlFor="genre-select">Genre: </label>
-                <select
-                  id="genre-select"
-                  value={selectedGenre}
-                  onChange={(e) => setSelectedGenre(e.target.value)}
-                  className="genre-select"
-                >
-                  {topGenres.map((genre) => (
-                    <option key={genre} value={genre}>
-                      {genre}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label htmlFor="format-select">Format: </label>
-                <select
-                  id="format-select"
-                  value={selectedFormat}
-                  onChange={(e) => setSelectedFormat(e.target.value)}
-                  className="genre-select"
-                >
-                  {topFormats.map((format) => (
-                    <option key={format} value={format}>
-                      {format}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label htmlFor="decade-select">Decade: </label>
-                <select
-                  id="decade-select"
-                  value={selectedDecade}
-                  onChange={(e) => setSelectedDecade(e.target.value)}
-                  className="genre-select"
-                >
-                  {decades.map((decade) => (
-                    <option key={decade} value={decade}>
-                      {decade === 'All' ? 'All' : `${decade}s`}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              {/* Replacing Inline Filters with Reusable Components */}
+              <GenreFilter
+                selectedGenre={selectedGenre}
+                uniqueGenres={topGenres}
+                onChange={(e) => setSelectedGenre(e.target.value)}
+              />
+              <FormatFilter
+                selectedFormat={selectedFormat}
+                uniqueFormats={topFormats}
+                onChange={(e) => setSelectedFormat(e.target.value)}
+              />
+              <DecadeFilter
+                selectedDecade={selectedDecade}
+                uniqueDecades={decades}
+                onChange={(e) => setSelectedDecade(e.target.value)}
+              />
             </div>
             <div style={{ marginTop: '1rem' }}>
               <button onClick={handleShowReleases} className="button" style={{ marginLeft: '0' }}>
@@ -519,26 +498,28 @@ const DiscogsStatsPage = () => {
               </BarChart>
             </ResponsiveContainer>
           </div>
-                      <p><br />
-              <em>
-                <a
-                  href="https://www.discogs.com/user/elezea-records/collection"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Data from Discogs
-                </a>{' '}
-                last updated{' '}
-                {new Intl.DateTimeFormat('en-US', {
-                  month: 'long',
-                  day: 'numeric',
-                  year: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: true,
-                }).format(new Date(stats.lastUpdated))}
-                {'.'}
-              </em></p>
+          <p>
+            <br />
+            <em>
+              <a
+                href="https://www.discogs.com/user/elezea-records/collection"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Data from Discogs
+              </a>{' '}
+              last updated{' '}
+              {new Intl.DateTimeFormat('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+              }).format(new Date(stats.lastUpdated))}
+              {'.'}
+            </em>
+          </p>
         </section>
       </main>
     </div>

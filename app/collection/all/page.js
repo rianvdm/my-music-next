@@ -7,6 +7,12 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { generateArtistSlug, generateAlbumSlug } from '../../utils/slugify';
 
+// Importing Filter Components
+import GenreFilter from '../../components/GenreFilter';
+import StyleFilter from '../../components/StyleFilter';
+import FormatFilter from '../../components/FormatFilter';
+import DecadeFilter from '../../components/DecadeFilter';
+
 const ITEMS_PER_PAGE = 50;
 
 const CollectionListPage = () => {
@@ -40,12 +46,28 @@ const CollectionListPage = () => {
         setCollectionData(data);
 
         const genres = ['All', ...data.stats.uniqueGenres.sort()];
-        const formats = ['All', ...new Set(data.data.releases.map(release => 
-          release.basic_information.formats[0]?.name
-        ).filter(Boolean))].sort();
-        const decades = ['All', ...Array.from(new Set(data.data.releases.map(release => 
-          Math.floor((release.original_year || release.basic_information.year) / 10) * 10
-        ).filter(decade => decade))).sort((a, b) => a - b)];
+        const formats = [
+          'All',
+          ...new Set(
+            data.data.releases
+              .map((release) => release.basic_information.formats[0]?.name)
+              .filter(Boolean)
+          ),
+        ].sort();
+        const decades = [
+          'All',
+          ...Array.from(
+            new Set(
+              data.data.releases
+                .map((release) =>
+                  Math.floor(
+                    (release.original_year || release.basic_information.year) / 10
+                  ) * 10
+                )
+                .filter((decade) => decade)
+            )
+          ).sort((a, b) => a - b),
+        ];
 
         setUniqueGenres(genres);
         setUniqueFormats(formats);
@@ -65,23 +87,26 @@ const CollectionListPage = () => {
     if (!collectionData) return [];
 
     return collectionData.data.releases
-      .filter(release => {
+      .filter((release) => {
         const releaseYear = release.original_year || release.basic_information.year;
         const releaseDecade = Math.floor(releaseYear / 10) * 10;
         const releaseFormat = release.basic_information.formats[0]?.name;
 
-        const genres = release.master_genres && Array.isArray(release.master_genres)
-          ? release.master_genres
-          : release.basic_information.genres;
+        const genres =
+          release.master_genres && Array.isArray(release.master_genres)
+            ? release.master_genres
+            : release.basic_information.genres;
 
-        const styles = release.master_styles && Array.isArray(release.master_styles)
-          ? release.master_styles
-          : release.basic_information.styles;
+        const styles =
+          release.master_styles && Array.isArray(release.master_styles)
+            ? release.master_styles
+            : release.basic_information.styles;
 
         return (
           (selectedGenre === 'All' || genres?.includes(selectedGenre)) &&
           (selectedFormat === 'All' || releaseFormat === selectedFormat) &&
-          (selectedDecade === 'All' || releaseDecade === parseInt(selectedDecade, 10)) &&
+          (selectedDecade === 'All' ||
+            releaseDecade === parseInt(selectedDecade, 10)) &&
           (selectedStyle === 'All' || styles?.includes(selectedStyle))
         );
       })
@@ -102,34 +127,40 @@ const CollectionListPage = () => {
 
     const stylesCount = new Map();
 
-    collectionData.data.releases.forEach(release => {
+    collectionData.data.releases.forEach((release) => {
       const releaseYear = release.original_year || release.basic_information.year;
       const releaseDecade = Math.floor(releaseYear / 10) * 10;
       const releaseFormat = release.basic_information.formats[0]?.name;
 
-      const genres = release.master_genres && Array.isArray(release.master_genres)
-        ? release.master_genres
-        : release.basic_information.genres;
+      const genres =
+        release.master_genres && Array.isArray(release.master_genres)
+          ? release.master_genres
+          : release.basic_information.genres;
 
-      const styles = release.master_styles && Array.isArray(release.master_styles)
-        ? release.master_styles
-        : release.basic_information.styles;
+      const styles =
+        release.master_styles && Array.isArray(release.master_styles)
+          ? release.master_styles
+          : release.basic_information.styles;
 
       const matchesGenre = selectedGenre === 'All' || genres?.includes(selectedGenre);
       const matchesFormat = selectedFormat === 'All' || releaseFormat === selectedFormat;
-      const matchesDecade = selectedDecade === 'All' || releaseDecade === parseInt(selectedDecade, 10);
+      const matchesDecade =
+        selectedDecade === 'All' || releaseDecade === parseInt(selectedDecade, 10);
 
       if (matchesGenre && matchesFormat && matchesDecade) {
-        styles?.forEach(style => {
+        styles?.forEach((style) => {
           stylesCount.set(style, (stylesCount.get(style) || 0) + 1);
         });
       }
     });
 
-    return ['All', ...Array.from(stylesCount.entries())
-      .filter(([style, count]) => count > 0)
-      .map(([style]) => style)
-      .sort((a, b) => a.localeCompare(b))];
+    return [
+      'All',
+      ...Array.from(stylesCount.entries())
+        .filter(([style, count]) => count > 0)
+        .map(([style]) => style)
+        .sort((a, b) => a.localeCompare(b)),
+    ];
   }, [collectionData, selectedGenre, selectedFormat, selectedDecade]);
 
   const totalPages = Math.ceil(filteredAndSortedReleases.length / ITEMS_PER_PAGE);
@@ -151,7 +182,7 @@ const CollectionListPage = () => {
     const newUrl = window.location.pathname + (queryString ? `?${queryString}` : '');
 
     router.replace(newUrl);
-  }, [selectedGenre, selectedFormat, selectedDecade, selectedStyle, currentPage]);
+  }, [selectedGenre, selectedFormat, selectedDecade, selectedStyle, currentPage, router]);
 
   const handleGenreChange = (e) => {
     setSelectedGenre(e.target.value);
@@ -227,86 +258,73 @@ const CollectionListPage = () => {
           )}
           .
         </p>
-        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
-          <div>
-            <label htmlFor="genre-select">Genre: </label>
-            <select
-              id="genre-select"
-              value={selectedGenre}
-              onChange={handleGenreChange}
-              className="genre-select"
-            >
-              {uniqueGenres.map((genre) => (
-                <option key={genre} value={genre}>{genre}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label htmlFor="style-select">Style: </label>
-            <select
-              id="style-select"
-              value={selectedStyle}
-              onChange={handleStyleChange}
-              className="genre-select"
-              style={{ minWidth: '200px' }}
-            >
-              {availableStyles.map((style) => (
-                <option key={style} value={style}>{style}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label htmlFor="format-select">Format: </label>
-            <select
-              id="format-select"
-              value={selectedFormat}
-              onChange={handleFormatChange}
-              className="genre-select"
-            >
-              {uniqueFormats.map((format) => (
-                <option key={format} value={format}>{format}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label htmlFor="decade-select">Decade: </label>
-            <select
-              id="decade-select"
-              value={selectedDecade}
-              onChange={handleDecadeChange}
-              className="genre-select"
-            >
-              {uniqueDecades.map((decade) => (
-                <option key={decade} value={decade}>{decade === 'All' ? 'All' : `${decade}s`}</option>
-              ))}
-            </select>
-          </div>
-          <a href="#" onClick={(e) => { e.preventDefault(); resetFilters(); }} style={{ marginLeft: '1rem' }}>Reset filters</a>
+        <div
+          style={{
+            display: 'flex',
+            gap: '1rem',
+            marginBottom: '1rem',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+          }}
+        >
+          {/* Using the Filter Components */}
+          <GenreFilter
+            selectedGenre={selectedGenre}
+            uniqueGenres={uniqueGenres}
+            onChange={handleGenreChange}
+          />
+          <StyleFilter
+            selectedStyle={selectedStyle}
+            availableStyles={availableStyles}
+            onChange={handleStyleChange}
+          />
+          <FormatFilter
+            selectedFormat={selectedFormat}
+            uniqueFormats={uniqueFormats}
+            onChange={handleFormatChange}
+          />
+          <DecadeFilter
+            selectedDecade={selectedDecade}
+            uniqueDecades={uniqueDecades}
+            onChange={handleDecadeChange}
+          />
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              resetFilters();
+            }}
+            style={{ marginLeft: '1rem' }}
+          >
+            Reset filters
+          </a>
         </div>
       </div>
       <div className="track_ul">
         {currentReleases.map((release) => {
-          const artistSlug = generateArtistSlug(release.basic_information.artists[0].name);
+          const artistSlug = generateArtistSlug(
+            release.basic_information.artists[0].name
+          );
           const albumSlug = generateAlbumSlug(release.basic_information.title);
           return (
             <div key={release.id} className="track_item track_item_responsive">
-            <div className="artist_image_wrapper">
-              {release.basic_information.cover_image ? (
-                
-                  <a href={`https://www.discogs.com/release/${release.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src={release.basic_information.cover_image}
-                    alt={release.basic_information.title}
-                    className="artist_image loaded"
-                  />
-                </a>
-              ) : (
-                <div className="placeholder-image">No Image</div>
-              )}
-            </div>   
+              <div className="artist_image_wrapper">
+                {release.basic_information.cover_image ? (
+                  <a
+                    href={`https://www.discogs.com/release/${release.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src={release.basic_information.cover_image}
+                      alt={release.basic_information.title}
+                      className="artist_image loaded"
+                    />
+                  </a>
+                ) : (
+                  <div className="placeholder-image">No Image</div>
+                )}
+              </div>
               <div className="no-wrap-text">
                 <p>
                   <Link href={`/artist/${artistSlug}`}>
@@ -322,16 +340,26 @@ const CollectionListPage = () => {
                   <br />
                   Release Year: {release.original_year || release.basic_information.year}
                   <br />
-                  Genres: {(release.master_genres || release.basic_information.genres).join(', ')}
+                  Genres:{' '}
+                  {(release.master_genres || release.basic_information.genres).join(', ')}
                   <br />
-                  Styles: {(release.master_styles || release.basic_information.styles).join(', ')}
+                  Styles:{' '}
+                  {(release.master_styles || release.basic_information.styles).join(', ')}
                 </p>
               </div>
             </div>
           );
         })}
       </div>
-      <div className="track_ul2" style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '1rem' }}>
+      <div
+        className="track_ul2"
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '1rem',
+          marginTop: '1rem',
+        }}
+      >
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
@@ -339,7 +367,9 @@ const CollectionListPage = () => {
         >
           Previous
         </button>
-        <span>Page {currentPage} of {totalPages}</span>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
