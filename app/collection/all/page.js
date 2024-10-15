@@ -314,14 +314,14 @@ const CollectionListPage = () => {
                   </Link>
                 </p>
                 <p>
-                  Format: {release.basic_information.formats[0]?.name || 'Unknown'}
+                  <strong>Format:</strong> {release.basic_information.formats[0]?.name || 'Unknown'}
                   <br />
-                  Release Year: {release.original_year || release.basic_information.year}
+                  <strong>Released:</strong> {release.original_year || release.basic_information.year}
                   <br />
-                  Genres:{' '}
+                  <strong>Genres:</strong>{' '}
                   {(release.master_genres || release.basic_information.genres).join(', ')}
                   <br />
-                  Styles:{' '}
+                  <strong>Styles:</strong>{' '}
                   {(release.master_styles || release.basic_information.styles).join(', ')}
                 </p>
               </div>
