@@ -38,6 +38,9 @@ const CollectionListPage = () => {
   const [uniqueFormats, setUniqueFormats] = useState([]);
   const [uniqueDecades, setUniqueDecades] = useState([]);
 
+  // New state for random releases
+  const [randomReleases, setRandomReleases] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -167,10 +170,15 @@ const CollectionListPage = () => {
 
   const totalPages = Math.ceil(filteredAndSortedReleases.length / ITEMS_PER_PAGE);
 
-  const currentReleases = filteredAndSortedReleases.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
+  const currentReleases = useMemo(() => {
+    if (randomReleases.length > 0) {
+      return randomReleases;
+    }
+    return filteredAndSortedReleases.slice(
+      (currentPage - 1) * ITEMS_PER_PAGE,
+      currentPage * ITEMS_PER_PAGE
+    );
+  }, [filteredAndSortedReleases, currentPage, randomReleases]);
 
   useEffect(() => {
     const queryParams = new URLSearchParams();
@@ -186,37 +194,66 @@ const CollectionListPage = () => {
     router.replace(newUrl);
   }, [selectedGenre, selectedFormat, selectedDecade, selectedStyle, currentPage, router]);
 
+  // Handler for Genre filter change
   const handleGenreChange = (e) => {
     setSelectedGenre(e.target.value);
     setSelectedStyle('All'); // Reset Style filter when Genre changes
     setCurrentPage(1);
+    setRandomReleases([]); // Clear random releases when filters change
   };
 
+  // Handler for Format filter change
   const handleFormatChange = (e) => {
     setSelectedFormat(e.target.value);
     setCurrentPage(1);
+    setRandomReleases([]); // Clear random releases when filters change
   };
 
+  // Handler for Decade filter change
   const handleDecadeChange = (e) => {
     setSelectedDecade(e.target.value);
     setCurrentPage(1);
+    setRandomReleases([]); // Clear random releases when filters change
   };
 
+  // Handler for Style filter change
   const handleStyleChange = (e) => {
     setSelectedStyle(e.target.value);
     setCurrentPage(1);
+    setRandomReleases([]); // Clear random releases when filters change
   };
 
+  // Handler for page change
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
+    setRandomReleases([]); // Clear random releases when page changes
   };
 
+  // Handler to reset all filters
   const resetFilters = () => {
     setSelectedGenre('All');
     setSelectedFormat('All');
     setSelectedDecade('All');
     setSelectedStyle('All');
     setCurrentPage(1);
+    setRandomReleases([]); // Clear random releases when resetting filters
+  };
+
+  // Handler for Random Release click
+  const handleRandomReleaseClick = (e) => {
+    e.preventDefault();
+    if (filteredAndSortedReleases.length === 0) return;
+    const randomCount = Math.min(3, filteredAndSortedReleases.length);
+    const shuffled = [...filteredAndSortedReleases].sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, randomCount);
+    setRandomReleases(selected);
+    setCurrentPage(1); // Optionally reset to first page
+  };
+
+  // Handler to clear Random Releases
+  const handleClearRandomReleases = (e) => {
+    e.preventDefault();
+    setRandomReleases([]);
   };
 
   if (loading) {
@@ -229,7 +266,9 @@ const CollectionListPage = () => {
       <div className="track_ul2">
         {/* Use the ReleaseSummary component with additional styling and selectedStyle */}
         <ReleaseSummary
-          releaseCount={filteredAndSortedReleases.length}
+          releaseCount={
+            randomReleases.length > 0 ? randomReleases.length : filteredAndSortedReleases.length
+          }
           selectedGenre={selectedGenre}
           selectedFormat={selectedFormat}
           selectedDecade={selectedDecade}
@@ -276,6 +315,24 @@ const CollectionListPage = () => {
           >
             Reset filters
           </a>
+          {/* New "Random release" link */}
+          <a
+            href="#"
+            onClick={handleRandomReleaseClick}
+            style={{ marginLeft: '1rem' }}
+          >
+            Random release
+          </a>
+          {/* Show "Clear random selection" link if randomReleases is active */}
+          {randomReleases.length > 0 && (
+            <a
+              href="#"
+              onClick={handleClearRandomReleases}
+              style={{ marginLeft: '1rem' }}
+            >
+              Clear random selection
+            </a>
+          )}
         </div>
       </div>
       <div className="track_ul">
@@ -328,34 +385,41 @@ const CollectionListPage = () => {
             </div>
           );
         })}
+        {/* Display a message if no releases are found */}
+        {currentReleases.length === 0 && (
+          <div className="track_ul2">No releases found for the selected filters.</div>
+        )}
       </div>
-      <div
-        className="track_ul2"
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          gap: '1rem',
-          marginTop: '1rem',
-        }}
-      >
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="button"
+      {/* Show pagination only if randomReleases is not active */}
+      {randomReleases.length === 0 && (
+        <div
+          className="track_ul2"
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '1rem',
+            marginTop: '1rem',
+          }}
         >
-          Previous
-        </button>
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="button"
-        >
-          Next
-        </button>
-      </div>
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="button"
+          >
+            Previous
+          </button>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="button"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };
