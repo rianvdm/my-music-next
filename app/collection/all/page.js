@@ -340,7 +340,7 @@ const CollectionListPage = () => {
               onClick={handleRandomReleaseClick}
               style={{ marginRight: '2rem' }}
             >
-              Random release
+              Random selection
             </a>
             {randomReleases.length > 0 && (
               <a
