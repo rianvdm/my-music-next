@@ -699,3 +699,33 @@ pre {
   font-size: 16px;
   color: var(--c-base);
 }
+
+
+/* Styles for search input box */
+.search-input {
+  padding: 8px;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 4px;
+  border: 2px solid #ccc;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+/* Hover and focus effects for the search input */
+.search-input:focus {
+  border-color: var(--c-accent);
+  box-shadow: 0 0 5px var(--c-accent);
+}
+
+/* Clear search link */
+.clear-search-link {
+  color: var(--c-accent);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.clear-search-link:hover {
+  color: rgba(var(--c-accent-rgb), 0.8);
+}
