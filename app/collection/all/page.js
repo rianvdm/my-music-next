@@ -337,7 +337,7 @@ const CollectionListPage = () => {
             <a
               href="#"
               onClick={handleRandomReleaseClick}
-              style={{ marginRight: '1rem' }}
+              style={{ marginRight: '2rem' }}
             >
               Random release
             </a>
