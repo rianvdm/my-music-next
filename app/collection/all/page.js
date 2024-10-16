@@ -290,9 +290,10 @@ const CollectionListPage = () => {
           <div
             style={{
               display: 'flex',
-              gap: '1.5rem',
+              columnGap: '1.5rem', // Horizontal gap
+              rowGap: '0',    // Smaller vertical gap
               flexWrap: 'wrap',
-              alignItems: 'center'
+              alignItems: 'center',
             }}
           >
             <GenreFilter
