@@ -6,6 +6,7 @@ export const runtime = 'edge';
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { generateArtistSlug, generateAlbumSlug } from '../../utils/slugify';
 
 // Importing Filter Components
@@ -40,6 +41,7 @@ const CollectionListPage = () => {
 
   // New state for random releases
   const [randomReleases, setRandomReleases] = useState([]);
+  const [imagesLoaded, setImagesLoaded] = useState(false); // New state to load images after data fetch
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,6 +81,7 @@ const CollectionListPage = () => {
         setUniqueDecades(decades);
 
         setLoading(false);
+        setImagesLoaded(true); // Set image loading to true once the data is loaded
       } catch (error) {
         console.error('Error fetching Discogs collection:', error);
         setLoading(false);
@@ -351,22 +354,25 @@ const CollectionListPage = () => {
       </div>
       <div className="track_ul">
         {currentReleases.map((release) => {
-          const artistSlug = generateArtistSlug(
-            release.basic_information.artists[0].name
-          );
+          const artistSlug = generateArtistSlug(release.basic_information.artists[0].name);
           const albumSlug = generateAlbumSlug(release.basic_information.title);
           return (
             <div key={release.id} className="track_item track_item_responsive">
               <div className="artist_image_wrapper">
-                {release.basic_information.cover_image ? (
+                {imagesLoaded && release.basic_information.cover_image ? (
                   <a
                     href={`https://www.discogs.com/release/${release.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <img
+                    <Image
                       src={release.basic_information.cover_image}
                       alt={release.basic_information.title}
+                      width={200}  // Set an appropriate width for the image
+                      height={200} // Set an appropriate height for the image
+                      objectFit="cover" // Adjust how the image fits into the container
+                      quality={75}      // Set image quality
+                      loading="lazy"
                       className="artist_image loaded"
                     />
                   </a>
