@@ -321,9 +321,6 @@ const CollectionListPage = () => {
             />
           </div>
 
-        {/* SearchBox component */}
-        <SearchBox data={collectionData?.data?.releases || []} onSearchResults={setSearchResults} />
-
           {/* Container for Links */}
           <div
             style={{
@@ -357,6 +354,10 @@ const CollectionListPage = () => {
               </a>
             )}
           </div>
+                {/* Add SearchBox component */}
+        <SearchBox data={collectionData?.data?.releases || []} onSearchResults={setSearchResults} />
+
+
         </div>
       </div>
       <div className="track_ul">
