@@ -8,11 +8,18 @@ const SearchBox = ({ data, onSearchResults }) => {
   useEffect(() => {
     if (query.length >= 2) {
       const lowercasedQuery = query.toLowerCase();
+      const queryWords = lowercasedQuery.split(' ').filter(Boolean); // Split query into words and remove empty strings
+
       const filteredData = data.filter((release) => {
         const artistName = release.basic_information.artists[0].name.toLowerCase();
         const albumTitle = release.basic_information.title.toLowerCase();
-        return artistName.includes(lowercasedQuery) || albumTitle.includes(lowercasedQuery);
+
+        // Check if every word in queryWords is included in either artistName or albumTitle
+        return queryWords.every((word) =>
+          artistName.includes(word) || albumTitle.includes(word)
+        );
       });
+
       onSearchResults(filteredData);
     } else {
       onSearchResults(data); // Reset to all data if query is less than 2 characters
@@ -26,7 +33,14 @@ const SearchBox = ({ data, onSearchResults }) => {
   };
 
   return (
-    <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+    <div
+      style={{
+        marginBottom: '1rem',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '1rem',
+      }}
+    >
       <input
         type="text"
         value={query}

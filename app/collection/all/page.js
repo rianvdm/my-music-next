@@ -15,6 +15,7 @@ import StyleFilter from '../../components/StyleFilter';
 import FormatFilter from '../../components/FormatFilter';
 import DecadeFilter from '../../components/DecadeFilter';
 import ReleaseSummary from '../../components/ReleaseSummary';
+import SearchBox from '../../components/SearchBox';  // Import SearchBox component
 
 const ITEMS_PER_PAGE = 50;
 
@@ -42,6 +43,9 @@ const CollectionListPage = () => {
   // New state for random releases
   const [randomReleases, setRandomReleases] = useState([]);
   const [imagesLoaded, setImagesLoaded] = useState(false); // New state to load images after data fetch
+
+  // New state for search results
+  const [searchResults, setSearchResults] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -173,15 +177,20 @@ const CollectionListPage = () => {
 
   const totalPages = Math.ceil(filteredAndSortedReleases.length / ITEMS_PER_PAGE);
 
+  const handleSearchResults = (results) => {
+    setSearchResults(results);
+  };
+
   const currentReleases = useMemo(() => {
+    let releasesToDisplay = searchResults || filteredAndSortedReleases;
     if (randomReleases.length > 0) {
-      return randomReleases;
+      releasesToDisplay = randomReleases;
     }
-    return filteredAndSortedReleases.slice(
+    return releasesToDisplay.slice(
       (currentPage - 1) * ITEMS_PER_PAGE,
       currentPage * ITEMS_PER_PAGE
     );
-  }, [filteredAndSortedReleases, currentPage, randomReleases]);
+  }, [filteredAndSortedReleases, currentPage, randomReleases, searchResults]);
 
   useEffect(() => {
     const queryParams = new URLSearchParams();
@@ -203,6 +212,7 @@ const CollectionListPage = () => {
     setSelectedStyle('All'); // Reset Style filter when Genre changes
     setCurrentPage(1);
     setRandomReleases([]); // Clear random releases when filters change
+    setSearchResults(null); // Clear search results when filters change
   };
 
   // Handler for Format filter change
@@ -210,6 +220,7 @@ const CollectionListPage = () => {
     setSelectedFormat(e.target.value);
     setCurrentPage(1);
     setRandomReleases([]); // Clear random releases when filters change
+    setSearchResults(null); // Clear search results when filters change
   };
 
   // Handler for Decade filter change
@@ -217,6 +228,7 @@ const CollectionListPage = () => {
     setSelectedDecade(e.target.value);
     setCurrentPage(1);
     setRandomReleases([]); // Clear random releases when filters change
+    setSearchResults(null); // Clear search results when filters change
   };
 
   // Handler for Style filter change
@@ -224,6 +236,7 @@ const CollectionListPage = () => {
     setSelectedStyle(e.target.value);
     setCurrentPage(1);
     setRandomReleases([]); // Clear random releases when filters change
+    setSearchResults(null); // Clear search results when filters change
   };
 
   // Handler for page change
@@ -240,6 +253,7 @@ const CollectionListPage = () => {
     setSelectedStyle('All');
     setCurrentPage(1);
     setRandomReleases([]); // Clear random releases when resetting filters
+    setSearchResults(null); // Clear search results when resetting filters
   };
 
   // Handler for Random Release click
@@ -251,6 +265,7 @@ const CollectionListPage = () => {
     const selected = shuffled.slice(0, randomCount);
     setRandomReleases(selected);
     setCurrentPage(1); // Optionally reset to first page
+    setSearchResults(null); // Clear search results when random selection is made
   };
 
   // Handler to clear Random Releases
@@ -270,7 +285,11 @@ const CollectionListPage = () => {
         {/* Use the ReleaseSummary component with additional styling and selectedStyle */}
         <ReleaseSummary
           releaseCount={
-            randomReleases.length > 0 ? randomReleases.length : filteredAndSortedReleases.length
+            randomReleases.length > 0
+              ? randomReleases.length
+              : searchResults
+              ? searchResults.length
+              : filteredAndSortedReleases.length
           }
           selectedGenre={selectedGenre}
           selectedFormat={selectedFormat}
@@ -291,7 +310,7 @@ const CollectionListPage = () => {
             style={{
               display: 'flex',
               columnGap: '1.5rem', // Horizontal gap
-              rowGap: '0',    // Smaller vertical gap
+              rowGap: '0', // Smaller vertical gap
               flexWrap: 'wrap',
               alignItems: 'center',
             }}
@@ -318,11 +337,17 @@ const CollectionListPage = () => {
             />
           </div>
 
+          {/* Add SearchBox component */}
+          <SearchBox
+            data={filteredAndSortedReleases}
+            onSearchResults={handleSearchResults}
+          />
+
           {/* Container for Links */}
           <div
             style={{
               marginTop: '0',
-              marginBottom: '1rem'
+              marginBottom: '1rem',
             }}
           >
             <a
@@ -343,10 +368,7 @@ const CollectionListPage = () => {
               Random selection
             </a>
             {randomReleases.length > 0 && (
-              <a
-                href="#"
-                onClick={handleClearRandomReleases}
-              >
+              <a href="#" onClick={handleClearRandomReleases}>
                 Clear random selection
               </a>
             )}
@@ -355,7 +377,9 @@ const CollectionListPage = () => {
       </div>
       <div className="track_ul">
         {currentReleases.map((release) => {
-          const artistSlug = generateArtistSlug(release.basic_information.artists[0].name);
+          const artistSlug = generateArtistSlug(
+            release.basic_information.artists[0].name
+          );
           const albumSlug = generateAlbumSlug(release.basic_information.title);
           return (
             <div key={release.id} className="track_item track_item_responsive">
@@ -369,10 +393,10 @@ const CollectionListPage = () => {
                     <Image
                       src={release.basic_information.cover_image}
                       alt={release.basic_information.title}
-                      width={200}  // Set an appropriate width for the image
+                      width={200} // Set an appropriate width for the image
                       height={200} // Set an appropriate height for the image
                       objectFit="cover" // Adjust how the image fits into the container
-                      quality={75}      // Set image quality
+                      quality={75} // Set image quality
                       loading="lazy"
                       className="artist_image loaded"
                     />
@@ -392,15 +416,21 @@ const CollectionListPage = () => {
                   </Link>
                 </p>
                 <p>
-                  <strong>Format:</strong> {release.basic_information.formats[0]?.name || 'Unknown'}
+                  <strong>Format:</strong>{' '}
+                  {release.basic_information.formats[0]?.name || 'Unknown'}
                   <br />
-                  <strong>Released:</strong> {release.original_year || release.basic_information.year}
+                  <strong>Released:</strong>{' '}
+                  {release.original_year || release.basic_information.year}
                   <br />
                   <strong>Genres:</strong>{' '}
-                  {(release.master_genres || release.basic_information.genres).join(', ')}
+                  {(release.master_genres || release.basic_information.genres).join(
+                    ', '
+                  )}
                   <br />
                   <strong>Styles:</strong>{' '}
-                  {(release.master_styles || release.basic_information.styles).join(', ')}
+                  {(release.master_styles || release.basic_information.styles).join(
+                    ', '
+                  )}
                 </p>
               </div>
             </div>
