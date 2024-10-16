@@ -3,7 +3,7 @@
 
 export const runtime = 'edge';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -177,12 +177,15 @@ const CollectionListPage = () => {
 
   const totalPages = Math.ceil(filteredAndSortedReleases.length / ITEMS_PER_PAGE);
 
-  const handleSearchResults = (results) => {
+  // Modify the handleSearchResults function
+  const handleSearchResults = useCallback((results) => {
     setSearchResults(results);
-  };
+    setCurrentPage(1); // Reset to first page when search results change
+  }, []);
 
+  // Modify the currentReleases calculation
   const currentReleases = useMemo(() => {
-    let releasesToDisplay = searchResults || filteredAndSortedReleases;
+    let releasesToDisplay = searchResults !== null ? searchResults : filteredAndSortedReleases;
     if (randomReleases.length > 0) {
       releasesToDisplay = randomReleases;
     }
@@ -272,6 +275,12 @@ const CollectionListPage = () => {
   const handleClearRandomReleases = (e) => {
     e.preventDefault();
     setRandomReleases([]);
+  };
+
+  // Add a new function to handle link clicks
+  const handleLinkClick = (e, href) => {
+    e.preventDefault();
+    router.push(href);
   };
 
   if (loading) {
@@ -407,13 +416,19 @@ const CollectionListPage = () => {
               </div>
               <div className="no-wrap-text">
                 <p>
-                  <Link href={`/artist/${artistSlug}`}>
+                  <a
+                    href={`/artist/${artistSlug}`}
+                    onClick={(e) => handleLinkClick(e, `/artist/${artistSlug}`)}
+                  >
                     <strong>{release.basic_information.artists[0].name}</strong>
-                  </Link>
+                  </a>
                   {' - '}
-                  <Link href={`/album/${artistSlug}_${albumSlug}`}>
+                  <a
+                    href={`/album/${artistSlug}_${albumSlug}`}
+                    onClick={(e) => handleLinkClick(e, `/album/${artistSlug}_${albumSlug}`)}
+                  >
                     {release.basic_information.title}
-                  </Link>
+                  </a>
                 </p>
                 <p>
                   <strong>Format:</strong>{' '}
