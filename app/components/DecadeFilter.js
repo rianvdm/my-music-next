@@ -5,8 +5,8 @@ import React from 'react';
 
 const DecadeFilter = ({ selectedDecade, uniqueDecades, onChange }) => {
   return (
-    <div>
-      <label htmlFor="decade-select">Decade: </label>
+    <div className="filter-container">
+      <label htmlFor="decade-select">Decade:</label>
       <select
         id="decade-select"
         value={selectedDecade}

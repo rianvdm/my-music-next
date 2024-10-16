@@ -254,9 +254,9 @@ blockquote {
 }
 
 .track_playcount {
-  color: var(--c-base); 
-  margin-left: 0;       
-  font-size: 14px;      
+  color: var(--c-base);
+  margin-left: 0;
+  font-size: 14px;
 }
 
 .track_none,
@@ -492,22 +492,16 @@ img.center-image {
   }
 
   .image-text-wrapper .no-wrap-text {
-    align-self: flex-start; /* Aligns the text container to the left */
-    width: 100%;            /* Ensures the text container takes full width */
+    align-self: flex-start;
+    width: 100%;
   }
 }
 
 /* Adjust margins of elements inside .image-text-wrapper on smaller screens */
 @media (max-width: 768px) {
-  /* Option 1: Add margin-bottom to the image */
   .image-text-wrapper img {
     margin-bottom: 15px;
   }
-
-  /* Option 2: Alternatively, add margin-top to the text container */
-  /* .image-text-wrapper .no-wrap-text {
-    margin-top: 15px;
-  } */
 }
 
 /* Artist Image Styles */
@@ -517,7 +511,7 @@ img.center-image {
   position: relative;
   overflow: hidden;
   border-radius: 10px;
-  margin-right: 15px; /* This margin is suitable for larger screens */
+  margin-right: 15px;
   flex-shrink: 0;
 }
 
@@ -547,8 +541,8 @@ img.center-image {
 /* Adjust margins for smaller screens */
 @media (max-width: 768px) {
   .artist_image_wrapper {
-    margin-right: 0;       /* Remove right margin */
-    margin-bottom: 15px;   /* Add bottom margin to create vertical space */
+    margin-right: 0;
+    margin-bottom: 15px;
   }
 }
 
@@ -561,13 +555,13 @@ img.center-image {
 .track_item_responsive {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center items when in column direction */
+  align-items: center;
 }
 
 @media (min-width: 769px) {
   .track_item_responsive {
     flex-direction: row;
-    align-items: flex-start; /* Top-align items when in row direction */
+    align-items: flex-start;
   }
 }
 
@@ -589,7 +583,7 @@ pre {
   overflow-x: auto;
   max-width: 100%;
   line-height: 1.6em;
-  white-space: pre-wrap; /* Ensures text wraps on smaller screens */
+  white-space: pre-wrap;
 }
 
 /* Dark Theme Code Block */
@@ -601,38 +595,40 @@ pre {
 
 /* GuessMe Game Styles */
 .conversation-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid var(--c-accent);
-    border-radius: 5px;
-    margin-bottom: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid var(--c-accent);
+  border-radius: 5px;
+  margin-bottom: 20px;
 }
 
 .ai-label {
-    color: var(--c-accent);
+  color: var(--c-accent);
 }
 
-.user, .assistant {
-    margin-bottom: 15px;
+.user,
+.assistant {
+  margin-bottom: 15px;
 }
 
-.user strong, .assistant strong {
-    font-weight: bold;
+.user strong,
+.assistant strong {
+  font-weight: bold;
 }
 
 #search-form {
-    max-width: 800px;
-    margin: 0 auto;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 #follow-up-search {
-    flex-grow: 1;
-    margin-right: 10px;
+  flex-grow: 1;
+  margin-right: 10px;
 }
 
 .button {
-    min-width: 100px;
+  min-width: 100px;
 }
 
 .genre-select {
@@ -645,7 +641,7 @@ pre {
   font-family: Optima, Candara, 'Noto Sans', source-sans-pro, sans-serif;
   cursor: pointer;
   transition: border-color 0.3s, box-shadow 0.3s;
-  margin-left: 10px;
+  margin-left: 0px;
   max-width: 200px;
 }
 
@@ -688,4 +684,18 @@ pre {
     margin-left: 0;
     margin-top: 10px;
   }
+}
+
+/* New Styles for Filter Container */
+.filter-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 1em;
+}
+
+.filter-container label {
+  margin-bottom: 0.5em;
+  font-size: 16px;
+  color: var(--c-base);
 }

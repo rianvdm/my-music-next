@@ -5,8 +5,8 @@ import React from 'react';
 
 const GenreFilter = ({ selectedGenre, uniqueGenres, onChange }) => {
   return (
-    <div>
-      <label htmlFor="genre-select">Genre: </label>
+    <div className="filter-container">
+      <label htmlFor="genre-select">Genre:</label>
       <select
         id="genre-select"
         value={selectedGenre}

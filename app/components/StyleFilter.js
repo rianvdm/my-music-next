@@ -5,8 +5,8 @@ import React from 'react';
 
 const StyleFilter = ({ selectedStyle, availableStyles, onChange }) => {
   return (
-    <div>
-      <label htmlFor="style-select">Style: </label>
+    <div className="filter-container">
+      <label htmlFor="style-select">Style:</label>
       <select
         id="style-select"
         value={selectedStyle}

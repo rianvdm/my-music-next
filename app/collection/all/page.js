@@ -278,61 +278,75 @@ const CollectionListPage = () => {
         <div
           style={{
             display: 'flex',
+            flexDirection: 'column',
             gap: '1rem',
             marginBottom: '1rem',
-            flexWrap: 'wrap',
-            alignItems: 'center',
           }}
         >
-          {/* Using the Filter Components */}
-          <GenreFilter
-            selectedGenre={selectedGenre}
-            uniqueGenres={uniqueGenres}
-            onChange={handleGenreChange}
-          />
-          <StyleFilter
-            selectedStyle={selectedStyle}
-            availableStyles={availableStyles}
-            onChange={handleStyleChange}
-          />
-          <FormatFilter
-            selectedFormat={selectedFormat}
-            uniqueFormats={uniqueFormats}
-            onChange={handleFormatChange}
-          />
-          <DecadeFilter
-            selectedDecade={selectedDecade}
-            uniqueDecades={uniqueDecades}
-            onChange={handleDecadeChange}
-          />
-          <a
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              resetFilters();
+          {/* Container for Filter Components */}
+          <div
+            style={{
+              display: 'flex',
+              gap: '1.5rem',
+              flexWrap: 'wrap',
+              alignItems: 'center'
             }}
-            style={{ marginLeft: '1rem' }}
           >
-            Reset filters
-          </a>
-          {/* New "Random release" link */}
-          <a
-            href="#"
-            onClick={handleRandomReleaseClick}
-            style={{ marginLeft: '1rem' }}
+            <GenreFilter
+              selectedGenre={selectedGenre}
+              uniqueGenres={uniqueGenres}
+              onChange={handleGenreChange}
+            />
+            <StyleFilter
+              selectedStyle={selectedStyle}
+              availableStyles={availableStyles}
+              onChange={handleStyleChange}
+            />
+            <FormatFilter
+              selectedFormat={selectedFormat}
+              uniqueFormats={uniqueFormats}
+              onChange={handleFormatChange}
+            />
+            <DecadeFilter
+              selectedDecade={selectedDecade}
+              uniqueDecades={uniqueDecades}
+              onChange={handleDecadeChange}
+            />
+          </div>
+
+          {/* Container for Links */}
+          <div
+            style={{
+              marginTop: '0',
+              marginBottom: '1rem'
+            }}
           >
-            Random release
-          </a>
-          {/* Show "Clear random selection" link if randomReleases is active */}
-          {randomReleases.length > 0 && (
             <a
               href="#"
-              onClick={handleClearRandomReleases}
-              style={{ marginLeft: '1rem' }}
+              onClick={(e) => {
+                e.preventDefault();
+                resetFilters();
+              }}
+              style={{ marginRight: '2rem' }}
             >
-              Clear random selection
+              Reset filters
             </a>
-          )}
+            <a
+              href="#"
+              onClick={handleRandomReleaseClick}
+              style={{ marginRight: '1rem' }}
+            >
+              Random release
+            </a>
+            {randomReleases.length > 0 && (
+              <a
+                href="#"
+                onClick={handleClearRandomReleases}
+              >
+                Clear random selection
+              </a>
+            )}
+          </div>
         </div>
       </div>
       <div className="track_ul">
