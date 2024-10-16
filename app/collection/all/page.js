@@ -1,3 +1,4 @@
+// ../pages/collection/all.js
 'use client';
 
 export const runtime = 'edge';
@@ -14,7 +15,6 @@ import StyleFilter from '../../components/StyleFilter';
 import FormatFilter from '../../components/FormatFilter';
 import DecadeFilter from '../../components/DecadeFilter';
 import ReleaseSummary from '../../components/ReleaseSummary';
-import SearchBox from '../../components/SearchBox'; // Import SearchBox component
 
 const ITEMS_PER_PAGE = 50;
 
@@ -38,7 +38,6 @@ const CollectionListPage = () => {
   const [uniqueGenres, setUniqueGenres] = useState([]);
   const [uniqueFormats, setUniqueFormats] = useState([]);
   const [uniqueDecades, setUniqueDecades] = useState([]);
-  const [searchResults, setSearchResults] = useState(null); // Add search result state
 
   // New state for random releases
   const [randomReleases, setRandomReleases] = useState([]);
@@ -95,9 +94,7 @@ const CollectionListPage = () => {
   const filteredAndSortedReleases = useMemo(() => {
     if (!collectionData) return [];
 
-    const dataToFilter = searchResults || collectionData.data.releases; // Use search results if available
-
-    return dataToFilter
+    return collectionData.data.releases
       .filter((release) => {
         const releaseYear = release.original_year || release.basic_information.year;
         const releaseDecade = Math.floor(releaseYear / 10) * 10;
@@ -131,7 +128,7 @@ const CollectionListPage = () => {
         const yearB = b.original_year || b.basic_information.year;
         return yearA - yearB;
       });
-  }, [collectionData, selectedGenre, selectedFormat, selectedDecade, selectedStyle, searchResults]);
+  }, [collectionData, selectedGenre, selectedFormat, selectedDecade, selectedStyle]);
 
   const availableStyles = useMemo(() => {
     if (!collectionData) return ['All'];
@@ -281,7 +278,6 @@ const CollectionListPage = () => {
           selectedStyle={selectedStyle !== 'All' ? selectedStyle : null} // Pass selectedStyle only if it's not 'All'
           className="custom-summary-class" // Add custom class for additional styling
         />
-
         <div
           style={{
             display: 'flex',
@@ -354,10 +350,6 @@ const CollectionListPage = () => {
               </a>
             )}
           </div>
-                {/* Add SearchBox component */}
-        <SearchBox data={collectionData?.data?.releases || []} onSearchResults={setSearchResults} />
-
-
         </div>
       </div>
       <div className="track_ul">
