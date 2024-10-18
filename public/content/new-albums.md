@@ -1,5 +1,5 @@
-Oof, a slow week it seems. Only one release on my radar the week of October 11, 2024:
+Here are the releases I'm checking out the week of October 18, 2024:
 
-* **[Wide Awake by HAEVN](https://listentomore.com/album/haevn_wide-awake)**. I liked their indie pop / electronica debut [Eyes Closed](https://listentomore.com/album/haevn_eyes-closed), so will give this one a go.
-
-Hoping for a stronger week next week!
+* **[Tell My Therapist I'm Fine by Bishop Briggs](https://listentomore.com/album/bishop-briggs_tell-my-therapist-im-fine)**. Some good ol' pop-rock to start the weekend right.
+* **[Memory Of A Day by Phantogram](https://listentomore.com/album/phantogram_memory-of-a-day)**. I always have time for a new album from the electronice / trip-hop duo.
+* **[In The Real World by Eric Bibb](https://listentomore.com/album/eric-bibb_in-the-real-world)**. One of my favorite Blues guitarists. If you like Keb' Mo' or Buddy Guy, you'll probably love this.
