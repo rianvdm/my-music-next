@@ -15,7 +15,7 @@ If you are part of a Discord server where you share music with each other, the c
 | `/listenlast`  | Enter your Last.fm username, get the same details for the last album you listened to.       |
 | `/whois`       | One-sentence summary of an artist.                                                                      |
 | `/whatis`      | Two-sentence summary of a musical genre, with a link to history, artists, and albums to check out. |
-| `/ask`		 | An excuse to play with prompting and open-source AI models, this is a guessing game. Can you figure out who the artist is? |
+| `/ask`		 | An excuse to play with prompting and open-source AI models, this is gives you short answers to your most pressing questions, using HAL 9000 as the personality. |
 
 
 As an example, the `/listento`, `listenurl`, and `/listenlast` commands show details like this:
