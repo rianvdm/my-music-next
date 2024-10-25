@@ -5,18 +5,15 @@ export const runtime = 'edge';
 import { useEffect, useState } from 'react';
 import { marked } from 'marked';
 import Link from 'next/link';
+import LazyImage from '../components/LazyImage'; 
 
 export default function RecommendationsPage() {
     const [lovedTracks, setLovedTracks] = useState([]);
     const [trackSummaries, setTrackSummaries] = useState({});
     const [artistImages, setArtistImages] = useState({});
     const [spotifyLinks, setSpotifyLinks] = useState({});
-    const [album, setAlbum] = useState('');
-    const [artist, setArtist] = useState('');
-    const [recommendation, setRecommendation] = useState('');
     const [newAlbumsContent, setNewAlbumsContent] = useState('');
     const [lastUpdatedDate, setLastUpdatedDate] = useState('');
-    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchLovedTracks = async () => {
@@ -108,24 +105,17 @@ export default function RecommendationsPage() {
       }
     }, [lovedTracks]);
 
-    const handleImageLoad = (artist) => {
-        const imageElement = document.getElementById(`artist-image-${artist}`);
-        if (imageElement) {
-            imageElement.classList.add('loaded');
-        }
-    };
-
     return (
         <div>
-            <h1>Recommendations</h1>
-            <h2 style={{ marginBottom: 0, marginTop: "1em" }}>New Releases</h2>
-            <div className="track_ul2" dangerouslySetInnerHTML={{ __html: newAlbumsContent }} />
-            <h2 style={{ marginTop: "1.5em" }}>Song Recommendations</h2>
+{/*             <h1>Recommendations</h1>
+            <h1 style={{ marginBottom: 0, marginTop: "1em" }}>New Releases</h1>
+            <div className="track_ul2" dangerouslySetInnerHTML={{ __html: newAlbumsContent }} /> */}
+            <h1 style={{ marginTop: "1.5em" }}>Song Recommendations</h1> 
             <div style={{ textAlign: 'center' }}>
                 <p>
                     <strong>A selection of tracks I recently liked</strong>
                     {lastUpdatedDate && (
-                        <><br />Last updated on {lastUpdatedDate}</>
+                        <><br />Last updated on {lastUpdatedDate}<br/><br/></>
                     )}
                 </p>
             </div>
@@ -134,12 +124,11 @@ export default function RecommendationsPage() {
                     <div key={index} className="track_item track_item_responsive">
                         <div className="artist_image_wrapper">
                             {artistImages[track.artist] ? (
-                                <img
-                                    id={`artist-image-${track.artist}`}
+                                <LazyImage
                                     src={artistImages[track.artist]}
                                     alt={track.artist}
-                                    className="artist_image"
-                                    onLoad={() => handleImageLoad(track.artist)}
+                                    width={150}
+                                    height={150}
                                 />
                             ) : (
                                 <div className="placeholder-image">Loading...</div>
@@ -148,9 +137,9 @@ export default function RecommendationsPage() {
                         <div className="no-wrap-text">
                             <p>
                                 <strong>{track.title}</strong> by{' '}
-                                    <Link href={`/artist/${encodeURIComponent(track.artist.replace(/ /g, '-').toLowerCase())}`}>
-                                        {track.artist}
-                                    </Link>
+                                <Link href={`/artist/${encodeURIComponent(track.artist.replace(/ /g, '-').toLowerCase())}`}>
+                                    {track.artist}
+                                </Link>
                                 {spotifyLinks[`${track.title}_${track.artist}`]?.songlinkUrl && (
                                     <>
                                         {' '}
@@ -172,7 +161,6 @@ export default function RecommendationsPage() {
                                     <p>Loading...</p>
                                 )}
                             </div>
-                            {/* Added audio player */}
                             <div>
                                 {spotifyLinks[`${track.title}_${track.artist}`]?.previewUrl ? (
                                     <audio controls>
