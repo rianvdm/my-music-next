@@ -549,7 +549,7 @@ img.center-image {
 /* Track Item Styles */
 .track_item {
   display: flex;
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 
 .track_item_responsive {
