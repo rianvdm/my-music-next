@@ -16,6 +16,7 @@ import FormatFilter from '../../components/FormatFilter';
 import DecadeFilter from '../../components/DecadeFilter';
 import ReleaseSummary from '../../components/ReleaseSummary';
 import SearchBox from '../../components/SearchBox';  // Import SearchBox component
+import LazyImage from '../../components/LazyImage'; // Import LazyImage component
 
 const ITEMS_PER_PAGE = 50;
 
@@ -392,28 +393,22 @@ const CollectionListPage = () => {
           const albumSlug = generateAlbumSlug(release.basic_information.title);
           return (
             <div key={release.id} className="track_item track_item_responsive">
-              <div className="artist_image_wrapper">
-                {imagesLoaded && release.basic_information.cover_image ? (
-                  <a
-                    href={`https://www.discogs.com/release/${release.id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Image
-                      src={release.basic_information.cover_image}
-                      alt={release.basic_information.title}
-                      width={200} // Set an appropriate width for the image
-                      height={200} // Set an appropriate height for the image
-                      objectFit="cover" // Adjust how the image fits into the container
-                      quality={75} // Set image quality
-                      loading="lazy"
-                      className="artist_image loaded"
-                    />
-                  </a>
+              <a
+                href={`https://www.discogs.com/release/${release.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {release.basic_information.cover_image ? (
+                  <LazyImage
+                    src={release.basic_information.cover_image}
+                    alt={release.basic_information.title}
+                    width={200}
+                    height={200}
+                  />
                 ) : (
                   <div className="placeholder-image">No Image</div>
                 )}
-              </div>
+              </a>
               <div className="no-wrap-text">
                 <p>
                   <a
