@@ -16,7 +16,7 @@ import ReleaseSummary from '../../components/ReleaseSummary';
 import SearchBox from '../../components/SearchBox';  // Import SearchBox component
 import LazyImage from '../../components/LazyImage'; // Import LazyImage component
 
-const ITEMS_PER_PAGE = 50;
+const ITEMS_PER_PAGE = 25;
 
 const CollectionListPage = () => {
   const router = useRouter();
