@@ -40,7 +40,7 @@ export default function NavBar() {
           <Link href="/mystats">Stats</Link>
         </li>
         <li style={liStyle}>
-          <Link href="/collection">Collection</Link>
+          <Link href="/collection/all">Collection</Link>
         </li>
         <li style={liStyle}>
           <Link href="/about">About</Link>
