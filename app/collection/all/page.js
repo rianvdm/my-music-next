@@ -122,14 +122,10 @@ const CollectionListPage = () => {
         );
       })
       .sort((a, b) => {
-        const artistA = a.basic_information.artists[0].name.toLowerCase();
-        const artistB = b.basic_information.artists[0].name.toLowerCase();
-        if (artistA < artistB) return -1;
-        if (artistA > artistB) return 1;
-
-        const yearA = a.original_year || a.basic_information.year;
-        const yearB = b.original_year || b.basic_information.year;
-        return yearA - yearB;
+        // Sort by date_added in descending order (newest first)
+        const dateA = new Date(a.date_added || 0);
+        const dateB = new Date(b.date_added || 0);
+        return dateB - dateA;
       });
   }, [collectionData, selectedGenre, selectedFormat, selectedDecade, selectedStyle]);
 
@@ -389,6 +385,14 @@ const CollectionListPage = () => {
             release.basic_information.artists[0].name
           );
           const albumSlug = generateAlbumSlug(release.basic_information.title);
+          
+          // Format the date
+          const addedDate = release.date_added ? new Date(release.date_added).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          }) : 'Unknown date';
+
           return (
             <div key={release.id} className="track_item track_item_responsive">
               <a
@@ -439,6 +443,9 @@ const CollectionListPage = () => {
                   {(release.master_styles || release.basic_information.styles).join(
                     ', '
                   )}
+                  <br />
+                  <strong>Added:</strong>{' '}
+                  {addedDate}
                 </p>
               </div>
             </div>
