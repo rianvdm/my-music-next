@@ -5,8 +5,6 @@ export const runtime = 'edge';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
-import Image from 'next/image';
 import { generateArtistSlug, generateAlbumSlug } from '../../utils/slugify';
 
 // Importing Filter Components
