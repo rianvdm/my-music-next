@@ -63,7 +63,7 @@ export default function RecommendationsPage() {
           const trackKey = `${track.title}_${track.artist}`;
           try {
             // Fetch Summary
-            const summaryResponse = await fetch(`https://api-openai-artistsentence.rian-db8.workers.dev/?name=${encodeURIComponent(track.artist)}`);
+            const summaryResponse = await fetch(`https://api-perplexity-artistsentence.rian-db8.workers.dev/?name=${encodeURIComponent(track.artist)}`);
             const summaryData = await summaryResponse.json();
             setTrackSummaries(prev => ({ ...prev, [trackKey]: summaryData.data }));
 
