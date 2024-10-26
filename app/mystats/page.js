@@ -49,7 +49,7 @@ const RecentTrackDisplay = ({ recentTracks, listeningStats, isLoading }) => {
       const fetchArtistSummary = async () => {
         try {
           const encodedArtistName = encodeURIComponent(recentTracks.last_artist);
-          const summaryResponse = await fetch(`https://api-openai-artistsentence.rian-db8.workers.dev?name=${encodedArtistName}`);
+          const summaryResponse = await fetch(`https://api-perplexity-artistsentence.rian-db8.workers.dev?name=${encodedArtistName}`);
           const summaryData = await summaryResponse.json();
           setArtistSummary(summaryData.data);
         } catch (error) {
