@@ -5,7 +5,6 @@ export const runtime = 'edge';
 import { useState } from 'react';
 
 export default function PlaylistCoverPage() {
-  // Add this style constant at the top of your component
   const inputWidth = '400px';
 
   const [formData, setFormData] = useState({
@@ -14,7 +13,6 @@ export default function PlaylistCoverPage() {
     vibe: '',
     objects: '',
     colors: '',
-    fontStyle: '', // Add this new field
   });
   const [generatedPrompt, setGeneratedPrompt] = useState(null);
   const [generatedImage, setGeneratedImage] = useState(null);
@@ -31,8 +29,8 @@ export default function PlaylistCoverPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setGeneratedPrompt(null); // Reset prompt when starting new generation
-    setGeneratedImage(null); // Reset image when starting new generation
+    setGeneratedPrompt(null);
+    setGeneratedImage(null);
 
     try {
       const promptInput = `Create a playlist cover with these details:
@@ -49,10 +47,9 @@ export default function PlaylistCoverPage() {
         throw new Error('No prompt received from prompt generation API');
       }
       
-      setGeneratedPrompt(promptData.data); // Store the generated prompt
+      setGeneratedPrompt(promptData.data);
       console.log('Generated prompt:', promptData.data);
 
-      // Then use that prompt with DALL-E
       const imageResponse = await fetch(`https://api-openai-images.rian-db8.workers.dev/?prompt=${encodeURIComponent(promptData.data)}`);
       if (!imageResponse.ok) {
         throw new Error(`Image API responded with status: ${imageResponse.status}`);
@@ -89,101 +86,57 @@ export default function PlaylistCoverPage() {
             gap: '1rem',
             alignItems: 'flex-start'
           }}>
-            <div className="filter-container" style={{ width: inputWidth }}>
-              <label htmlFor="playlist-name">Playlist Name</label>
-              <input
-                id="playlist-name"
-                type="text"
-                name="playlistName"
-                value={formData.playlistName}
-                onChange={handleInputChange}
-                placeholder="Enter playlist name..."
-                required
-                style={{ width: '100%' }}
-              />
-            </div>
-
-            <div className="filter-container" style={{ width: inputWidth }}>
-              <label htmlFor="genres-input">Genres/Styles</label>
-              <input
-                id="genres-input"
-                type="text"
-                name="genres"
-                value={formData.genres}
-                onChange={handleInputChange}
-                placeholder="Enter genres/styles..."
-                required
-                style={{ width: '100%' }}
-              />
-            </div>
-
-            <div className="filter-container" style={{ width: inputWidth }}>
-              <label htmlFor="vibe-input">Vibe/Mood</label>
-              <input
-                id="vibe-input"
-                type="text"
-                name="vibe"
-                value={formData.vibe}
-                onChange={handleInputChange}
-                placeholder="Enter the vibe/mood..."
-                required
-                style={{ width: '100%' }}
-              />
-            </div>
-
-            <div className="filter-container" style={{ width: inputWidth }}>
-              <label htmlFor="objects-input">Objects to Include</label>
-              <input
-                id="objects-input"
-                type="text"
-                name="objects"
-                value={formData.objects}
-                onChange={handleInputChange}
-                placeholder="Enter objects to include..."
-                required
-                style={{ width: '100%' }}
-              />
-            </div>
-
-            <div className="filter-container" style={{ width: inputWidth }}>
-              <label htmlFor="colors-input">Color Style</label>
-              <input
-                id="colors-input"
-                type="text"
-                name="colors"
-                value={formData.colors}
-                onChange={handleInputChange}
-                placeholder="Enter color style..."
-                required
-                style={{ width: '100%' }}
-              />
-            </div>
-
-    {/*             <div className="filter-container" style={{ width: inputWidth }}>
-                <label htmlFor="font-input">Font Style</label>
+            {/* Input fields with inline labels */}
+            {[
+              { id: 'playlist-name', label: 'Playlist Name', name: 'playlistName' },
+              { id: 'genres-input', label: 'Genres/Styles', name: 'genres' },
+              { id: 'vibe-input', label: 'Vibe/Mood', name: 'vibe' },
+              { id: 'objects-input', label: 'Objects to Include', name: 'objects' },
+              { id: 'colors-input', label: 'Color Style', name: 'colors' }
+            ].map(field => (
+              <div key={field.id} style={{ 
+                display: 'flex', 
+                alignItems: 'center',
+                width: '100%',
+                maxWidth: '600px',
+                gap: '1rem'
+              }}>
+                <label htmlFor={field.id} style={{ 
+                  width: '150px',
+                  flexShrink: 0
+                }}>
+                  {field.label}
+                </label>
                 <input
-                    id="font-input"
-                    type="text"
-                    name="fontStyle"
-                    value={formData.fontStyle}
-                    onChange={handleInputChange}
-                    placeholder="Enter font style (e.g., bold serif, elegant script)..."
-                    required
-                    style={{ width: '100%' }}
+                  id={field.id}
+                  type="text"
+                  name={field.name}
+                  value={formData[field.name]}
+                  onChange={handleInputChange}
+                  placeholder={`Enter ${field.label.toLowerCase()}...`}
+                  required
+                  style={{ 
+                    flex: 1,
+                    minWidth: '300px'
+                  }}
                 />
-                </div> */}
+              </div>
+            ))}
 
             <button
               type="submit"
               className="button"
               disabled={isLoading}
-              style={{ width: '200px', marginTop: '1rem', marginLeft: '0' }}
+              style={{ 
+                width: '200px', 
+                marginTop: '1rem'
+              }}
             >
               {isLoading ? 'Generating...' : 'Generate Cover'}
             </button>
           </form>
-{/* 
-          {generatedPrompt && (
+
+{/*           {generatedPrompt && (
             <div className="track_ul2" style={{ 
               marginTop: '2em',
               textAlign: 'left',
@@ -203,7 +156,7 @@ export default function PlaylistCoverPage() {
 
           {generatedImage && (
             <div className="track_ul2" style={{ 
-              marginTop: '2em',
+              marginTop: '0',
               textAlign: 'center',
               display: 'flex',
               flexDirection: 'column',
