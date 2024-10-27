@@ -425,7 +425,13 @@ img.center-image {
 #album-name,
 #song-name,
 #lastFmUsername,
-#follow-up-search {
+#follow-up-search,
+#playlist-name,
+#genres-input,
+#vibe-input,
+#objects-input,
+#font-input,
+#colors-input {
   border: 2px solid #ccc;
   border-radius: 4px;
   padding: 8px;
@@ -437,21 +443,28 @@ img.center-image {
 #artist-name,
 #album-name,
 #song-name,
-#lastFmUsername {
+#lastFmUsername,
+#playlist-name,
+#genres-input,
+#vibe-input,
+#objects-input,
+#font-input,
+#colors-input {
   width: 90%;
   max-width: 300px;
-}
-
-#follow-up-search {
-  width: 80%;
-  max-width: 600px;
 }
 
 #artist-name:focus,
 #album-name:focus,
 #song-name:focus,
 #lastFmUsername:focus,
-#follow-up-search:focus {
+#follow-up-search:focus,
+#playlist-name:focus,
+#genres-input:focus,
+#vibe-input:focus,
+#objects-input:focus,
+#font-input:focus,
+#colors-input:focus {
   border-color: var(--c-accent);
   box-shadow: 0 0 5px var(--c-accent);
   transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
