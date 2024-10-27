@@ -69,6 +69,40 @@ export default function PlaylistCoverPage() {
     }
   };
 
+  // At the top of your component, add this configuration
+  const FORM_FIELDS = [
+    { 
+      id: 'playlist-name', 
+      label: 'Playlist Name', 
+      name: 'playlistName',
+      placeholder: 'e.g., "Summer Nights" or "Rainy Day Jazz"'
+    },
+    { 
+      id: 'genres-input', 
+      label: 'Genres/Styles', 
+      name: 'genres',
+      placeholder: 'e.g., Rock, Jazz, Classical, Hip-hop'
+    },
+    { 
+      id: 'vibe-input', 
+      label: 'Vibe/Mood', 
+      name: 'vibe',
+      placeholder: 'e.g., Energetic, Melancholic, Peaceful'
+    },
+    { 
+      id: 'objects-input', 
+      label: 'Objects to Include', 
+      name: 'objects',
+      placeholder: 'e.g., Mountains, Ocean, City lights'
+    },
+    { 
+      id: 'colors-input', 
+      label: 'Color Style', 
+      name: 'colors',
+      placeholder: 'e.g., Vibrant blues, Warm sunset colors'
+    }
+  ];
+
   return (
     <div>
       <header>
@@ -86,14 +120,7 @@ export default function PlaylistCoverPage() {
             gap: '1rem',
             alignItems: 'flex-start'
           }}>
-            {/* Input fields with inline labels */}
-            {[
-              { id: 'playlist-name', label: 'Playlist Name', name: 'playlistName' },
-              { id: 'genres-input', label: 'Genres/Styles', name: 'genres' },
-              { id: 'vibe-input', label: 'Vibe/Mood', name: 'vibe' },
-              { id: 'objects-input', label: 'Objects to Include', name: 'objects' },
-              { id: 'colors-input', label: 'Color Style', name: 'colors' }
-            ].map(field => (
+            {FORM_FIELDS.map(field => (
               <div key={field.id} style={{ 
                 display: 'flex', 
                 alignItems: 'center',
@@ -113,7 +140,7 @@ export default function PlaylistCoverPage() {
                   name={field.name}
                   value={formData[field.name]}
                   onChange={handleInputChange}
-                  placeholder={`Enter ${field.label.toLowerCase()}...`}
+                  placeholder={field.placeholder}
                   required
                   style={{ 
                     flex: 1,
@@ -122,7 +149,7 @@ export default function PlaylistCoverPage() {
                 />
               </div>
             ))}
-
+            
             <button
               type="submit"
               className="button"
