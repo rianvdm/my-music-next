@@ -73,21 +73,21 @@ export default function PlaylistCoverPage() {
   const FORM_FIELDS = [
     { 
       id: 'playlist-name', 
-      label: 'Playlist Name', 
+      label: 'Playlist Title', 
       name: 'playlistName',
       placeholder: 'e.g., "Summer Nights" or "Rainy Day Jazz"'
     },
     { 
       id: 'genres-input', 
-      label: 'Genres/Styles', 
+      label: 'Genres', 
       name: 'genres',
       placeholder: 'e.g., Rock, Jazz, Classical, Hip-hop'
     },
     { 
       id: 'vibe-input', 
-      label: 'Vibe/Mood', 
+      label: 'Mood/Style', 
       name: 'vibe',
-      placeholder: 'e.g., Energetic, Melancholic, Peaceful'
+      placeholder: 'e.g., Energetic, Melancholic, Photorealistic'
     },
     { 
       id: 'objects-input', 
