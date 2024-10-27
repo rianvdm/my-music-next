@@ -34,7 +34,7 @@ export default function PlaylistCoverPage() {
 
     try {
       const promptInput = `Create a playlist cover with these details:
-      Title: "${formData.playlistName}"
+      Playlist Title: "${formData.playlistName}"
       Genres: ${formData.genres}
       Mood/Vibe: ${formData.vibe}
       Objects to Include: ${formData.objects}
