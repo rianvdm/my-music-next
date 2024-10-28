@@ -14,7 +14,7 @@ const useRecentTracks = () => {
   useEffect(() => {
     const fetchRecentTracks = async () => {
       try {
-        const response = await fetch('https://kv-fetch-last-track.rian-db8.workers.dev/');
+        const response = await fetch('https://api-lastfm-recenttracks.rian-db8.workers.dev/');
         const data = await response.json();
         setRecentTracks(data);
       } catch (error) {
