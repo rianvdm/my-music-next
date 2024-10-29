@@ -373,7 +373,7 @@ const CollectionListPage = () => {
             </a>
             {randomReleases.length > 0 && (
               <a href="#" onClick={handleClearRandomReleases}>
-                Clear random selection
+                Clear
               </a>
             )}
           </div>
