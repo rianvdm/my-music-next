@@ -1,6 +1,33 @@
 export async function generateMetadata({ params }) {
     const { artistAndAlbum } = params;
-    const [prettyArtist, prettyAlbum] = artistAndAlbum.split('_');
+
+    const parseArtistAndAlbum = (urlSegment) => {
+        let parts = urlSegment.split('_');
+        
+        if (parts.length === 1) {
+            const byIndex = urlSegment.toLowerCase().lastIndexOf('-by-');
+            if (byIndex !== -1) {
+                parts = [
+                    urlSegment.slice(byIndex + 4),
+                    urlSegment.slice(0, byIndex)
+                ];
+            } else {
+                const hyphens = urlSegment.split('-');
+                const middleIndex = Math.floor(hyphens.length / 2);
+                parts = [
+                    hyphens.slice(0, middleIndex).join('-'),
+                    hyphens.slice(middleIndex).join('-')
+                ];
+            }
+        }
+        
+        return {
+            prettyArtist: parts[0] || '',
+            prettyAlbum: parts[1] || parts[0]
+        };
+    };
+
+    const { prettyArtist, prettyAlbum } = parseArtistAndAlbum(artistAndAlbum);
     const artist = decodeURIComponent(prettyArtist.replace(/-/g, ' '));
     const album = decodeURIComponent(prettyAlbum.replace(/-/g, ' '));
 

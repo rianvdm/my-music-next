@@ -43,7 +43,38 @@ export default function AlbumPage({ params }) {
   const decodePrettyUrl = (prettyUrl) =>
     decodeURIComponent(prettyUrl.replace(/-/g, ' '));
 
-  const [prettyArtist, prettyAlbum] = artistAndAlbum.split('_');
+  // Updated URL parsing logic
+  const parseArtistAndAlbum = (urlSegment) => {
+    // First try to split by underscore
+    let parts = urlSegment.split('_');
+    
+    // If there's no underscore, try to intelligently split the hyphenated string
+    if (parts.length === 1) {
+      // Find the last occurrence of '-by-' or split in the middle if not found
+      const byIndex = urlSegment.toLowerCase().lastIndexOf('-by-');
+      if (byIndex !== -1) {
+        parts = [
+          urlSegment.slice(byIndex + 4), // artist (after '-by-')
+          urlSegment.slice(0, byIndex)    // album (before '-by-')
+        ];
+      } else {
+        // If no '-by-', split at the middle hyphen
+        const hyphens = urlSegment.split('-');
+        const middleIndex = Math.floor(hyphens.length / 2);
+        parts = [
+          hyphens.slice(0, middleIndex).join('-'),
+          hyphens.slice(middleIndex).join('-')
+        ];
+      }
+    }
+    
+    return {
+      prettyArtist: parts[0] || '',
+      prettyAlbum: parts[1] || parts[0] // fallback to full string if no album part
+    };
+  };
+
+  const { prettyArtist, prettyAlbum } = parseArtistAndAlbum(artistAndAlbum);
   const artist = decodePrettyUrl(prettyArtist);
   const album = decodePrettyUrl(prettyAlbum);
 
