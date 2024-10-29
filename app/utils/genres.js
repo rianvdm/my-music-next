@@ -11,7 +11,7 @@ export const genres = [
     "idm", "indie", "indie-pop", "industrial", "j-pop", "jazz", 
     "jungle", "k-pop", "krautrock", "latin", "mandopop", "math-rock", 
     "metal", "metalcore", "metropopolis", "neoclassical", "new-age", 
-    "new-wave", "nu-metal", "opera", "pagode", "pop", "post-dubstep", 
+    "new-wave", "norwegian-black-metal", "nu-metal", "opera", "pop", "post-dubstep", 
     "post-rock", "power-pop", "progressive-house", "psych-rock", "punk", 
     "punk-rock", "r-n-b", "reggae", "riot-grrrl", "rock", 
     "rockabilly", "shoegaze", "singer-songwriter", "ska", "ska-punk", 
