@@ -75,7 +75,7 @@ export default function PlaylistCoverPage() {
       id: 'playlist-name', 
       label: 'Playlist Title', 
       name: 'playlistName',
-      placeholder: 'e.g., "Summer Nights" or "Rainy Day Jazz"'
+      placeholder: 'e.g., Summer Nights, Big Guitars'
     },
     { 
       id: 'genres-input', 
@@ -111,7 +111,7 @@ export default function PlaylistCoverPage() {
       <main>
         <section className="track_ul2" style={{ textAlign: 'left' }}>
           <p>
-            <strong>Generate a custom cover image for your playlist using AI</strong>
+            <strong>For best results, use a playlist name that is 1-2 words.</strong> You also might need to give it a more than one try to get the perfect image.
           </p>
           
           <form onSubmit={handleSubmit} id="search-form" style={{ 
