@@ -9,7 +9,7 @@ export const genres = [
     "grindcore", "grunge", "hard-bop", "hard-rock", "hard-trance", 
     "hardcore", "heavy-metal", "hip-hop", "house",
     "idm", "indie", "indie-pop", "industrial", "j-pop", "jazz", 
-    "jungle", "k-pop", "krautrock", "latin", "mandopop", "math-rock", 
+    "jungle", "k-pop", "krautrock", "kwaito", "latin", "mandopop", "math-rock", 
     "metal", "metalcore", "metropopolis", "neoclassical", "new-age", 
     "new-wave", "norwegian-black-metal", "nu-metal", "opera", "pop", "post-dubstep", 
     "post-rock", "power-pop", "progressive-house", "psych-rock", "punk", 
