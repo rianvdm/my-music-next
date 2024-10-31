@@ -89,14 +89,14 @@ export default function PlaylistCoverPage() {
       id: 'vibe-input', 
       label: 'Mood/Style', 
       name: 'vibe',
-      placeholder: 'e.g., Energetic, Melancholic, Photorealistic',
+      placeholder: 'e.g., Energetic, Melancholic, Illustration',
       required: true
     },
     { 
       id: 'objects-input', 
-      label: 'Objects to Include', 
+      label: 'Objects (optional)', 
       name: 'objects',
-      placeholder: 'e.g., Mountains, Ocean (optional)',
+      placeholder: 'e.g., Mountains, Ocean, Guitars',
       required: false
     },
     { 
@@ -170,12 +170,12 @@ export default function PlaylistCoverPage() {
 
           {generatedPrompt && (
             <div className="track_ul2" style={{ 
-              marginTop: '0',
+              marginTop: '1rem',
               textAlign: 'left',
               maxWidth: '600px',
-              margin: '2em auto'
+              margin: '1rem auto'
             }}>
-              <h2>Generated Prompt</h2>
+              <h2 style={{ margin: '0 0 0.5em' }}>Generated Prompt</h2>
               <p style={{ 
                 padding: '1rem',
                 backgroundColor: 'rgba(var(--c-base-rgb), 0.1)',
@@ -190,13 +190,13 @@ export default function PlaylistCoverPage() {
 
           {generatedImage && (
             <div className="track_ul2" style={{ 
-              marginTop: '0',
+              marginTop: '1rem',
               textAlign: 'center',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center'
             }}>
-              <h2>Generated Cover</h2>
+              <h2 style={{ margin: '0 0 0.5em' }}>Generated Cover</h2>
               <div>
                 <img
                   src={generatedImage}
