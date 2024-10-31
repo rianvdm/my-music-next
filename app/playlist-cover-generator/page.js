@@ -75,31 +75,36 @@ export default function PlaylistCoverPage() {
       id: 'playlist-name', 
       label: 'Playlist Title', 
       name: 'playlistName',
-      placeholder: 'e.g., Summer Nights, Big Guitars'
+      placeholder: 'e.g., Summer Nights, Big Guitars',
+      required: true
     },
     { 
       id: 'genres-input', 
       label: 'Genres', 
       name: 'genres',
-      placeholder: 'e.g., Rock, Jazz, Classical, Hip-hop'
+      placeholder: 'e.g., Rock, Jazz, Classical, Hip-hop',
+      required: true
     },
     { 
       id: 'vibe-input', 
       label: 'Mood/Style', 
       name: 'vibe',
-      placeholder: 'e.g., Energetic, Melancholic, Photorealistic'
+      placeholder: 'e.g., Energetic, Melancholic, Photorealistic',
+      required: true
     },
     { 
       id: 'objects-input', 
       label: 'Objects to Include', 
       name: 'objects',
-      placeholder: 'e.g., Mountains, Ocean, City lights'
+      placeholder: 'e.g., Mountains, Ocean (optional)',
+      required: false
     },
     { 
       id: 'colors-input', 
       label: 'Color Style', 
       name: 'colors',
-      placeholder: 'e.g., Vibrant blues, Warm sunset colors'
+      placeholder: 'e.g., Vibrant blues, Warm sunset colors',
+      required: true
     }
   ];
 
@@ -141,7 +146,7 @@ export default function PlaylistCoverPage() {
                   value={formData[field.name]}
                   onChange={handleInputChange}
                   placeholder={field.placeholder}
-                  required
+                  required={field.required}
                   style={{ 
                     flex: 1,
                     minWidth: '300px'
@@ -163,23 +168,25 @@ export default function PlaylistCoverPage() {
             </button>
           </form>
 
-{/*           {generatedPrompt && (
+          {generatedPrompt && (
             <div className="track_ul2" style={{ 
-              marginTop: '2em',
+              marginTop: '0',
               textAlign: 'left',
               maxWidth: '600px',
               margin: '2em auto'
             }}>
               <h2>Generated Prompt</h2>
               <p style={{ 
-                padding: '0',
+                padding: '1rem',
+                backgroundColor: 'rgba(var(--c-base-rgb), 0.1)',
+                color: 'var(--c-base)',
                 borderRadius: '8px',
                 whiteSpace: 'pre-wrap'
               }}>
                 {generatedPrompt}
               </p>
             </div>
-          )} */}
+          )}
 
           {generatedImage && (
             <div className="track_ul2" style={{ 
