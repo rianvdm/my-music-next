@@ -498,7 +498,22 @@ const DiscogsStatsPage = () => {
                 />
                 <Tooltip
                   formatter={(value, name, props) => [value]}
-                  wrapperStyle={{ width: 200, backgroundColor: '#ccc' }}
+                  wrapperStyle={{
+                    width: 200,
+                    backgroundColor: 'var(--c-bg)',
+                    border: `1px solid var(--c-base)`,
+                    color: 'var(--c-base)'
+                  }}
+                  contentStyle={{
+                    backgroundColor: 'var(--c-bg)',
+                    color: 'var(--c-base)'
+                  }}
+                  labelStyle={{
+                    color: 'var(--c-base)'
+                  }}
+                  itemStyle={{
+                    color: 'var(--c-base)'
+                  }}
                 />
                 <Legend />
                 <Bar dataKey="value" fill="#FF6C00" />
@@ -518,7 +533,23 @@ const DiscogsStatsPage = () => {
                   ticks={generateYearTicks(minYear, maxYear)}
                 />
                 <YAxis />
-                <Tooltip />
+                <Tooltip
+                  wrapperStyle={{
+                    backgroundColor: 'var(--c-bg)',
+                    border: `1px solid var(--c-base)`,
+                    color: 'var(--c-base)'
+                  }}
+                  contentStyle={{
+                    backgroundColor: 'var(--c-bg)',
+                    color: 'var(--c-base)'
+                  }}
+                  labelStyle={{
+                    color: 'var(--c-base)'
+                  }}
+                  itemStyle={{
+                    color: 'var(--c-base)'
+                  }}
+                />
                 <Legend />
                 <Bar dataKey="count" fill="#FF6C00" />
               </BarChart>

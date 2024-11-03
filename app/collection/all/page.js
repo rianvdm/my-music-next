@@ -55,15 +55,27 @@ const CollectionListPage = () => {
         const data = await response.json();
         setCollectionData(data);
 
+        // Set genres from stats
         const genres = ['All', ...data.stats.uniqueGenres.sort()];
-        const formats = [
-          'All',
-          ...new Set(
-            data.data.releases
-              .map((release) => release.basic_information.formats[0]?.name)
-              .filter(Boolean)
-          ),
-        ].sort();
+        setUniqueGenres(genres);
+
+        // Calculate top formats
+        const formatCounts = data.data.releases.reduce((acc, release) => {
+          const format = release.basic_information.formats[0]?.name;
+          if (format) {
+            acc[format] = (acc[format] || 0) + 1;
+          }
+          return acc;
+        }, {});
+
+        const sortedFormats = Object.entries(formatCounts)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 4)
+          .map(([format]) => format);
+
+        setUniqueFormats(['All', ...sortedFormats, 'Other']);
+
+        // Calculate decades
         const decades = [
           'All',
           ...Array.from(
@@ -79,12 +91,8 @@ const CollectionListPage = () => {
           ).sort((a, b) => a - b),
         ];
 
-        setUniqueGenres(genres);
-        setUniqueFormats(formats);
         setUniqueDecades(decades);
-
         setLoading(false);
-        setImagesLoaded(true); // Set image loading to true once the data is loaded
       } catch (error) {
         console.error('Error fetching Discogs collection:', error);
         setLoading(false);
@@ -113,21 +121,32 @@ const CollectionListPage = () => {
             ? release.master_styles
             : release.basic_information.styles;
 
+        const genreMatch =
+          selectedGenre === 'All' ||
+          (selectedGenre === 'Other'
+            ? !uniqueGenres.slice(1, -1).some((genre) => genres?.includes(genre))
+            : genres?.includes(selectedGenre));
+
+        const formatMatch = 
+          selectedFormat === 'All' || 
+          (selectedFormat === 'Other' 
+            ? !uniqueFormats.slice(1, -1).includes(releaseFormat)
+            : releaseFormat === selectedFormat);
+
         return (
-          (selectedGenre === 'All' || genres?.includes(selectedGenre)) &&
-          (selectedFormat === 'All' || releaseFormat === selectedFormat) &&
+          genreMatch &&
+          formatMatch &&
           (selectedDecade === 'All' ||
             releaseDecade === parseInt(selectedDecade, 10)) &&
           (selectedStyle === 'All' || styles?.includes(selectedStyle))
         );
       })
       .sort((a, b) => {
-        // Sort by date_added in descending order (newest first)
         const dateA = new Date(a.date_added || 0);
         const dateB = new Date(b.date_added || 0);
         return dateB - dateA;
       });
-  }, [collectionData, selectedGenre, selectedFormat, selectedDecade, selectedStyle]);
+  }, [collectionData, selectedGenre, selectedFormat, selectedDecade, selectedStyle, uniqueGenres, uniqueFormats]);
 
   const availableStyles = useMemo(() => {
     if (!collectionData) return ['All'];
