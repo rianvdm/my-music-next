@@ -13,6 +13,7 @@ export default function PlaylistCoverPage() {
     vibe: '',
     objects: '',
     colors: '',
+    model: 'STABILITY',
   });
   const [generatedPrompt, setGeneratedPrompt] = useState(null);
   const [generatedImage, setGeneratedImage] = useState(null);
@@ -50,7 +51,7 @@ export default function PlaylistCoverPage() {
       setGeneratedPrompt(promptData.data);
       console.log('Generated prompt:', promptData.data);
 
-      const imageResponse = await fetch(`https://api-openai-images.rian-db8.workers.dev/?prompt=${encodeURIComponent(promptData.data)}`);
+      const imageResponse = await fetch(`https://api-openai-images.rian-db8.workers.dev/?prompt=${encodeURIComponent(promptData.data)}&model=${formData.model}`);
       if (!imageResponse.ok) {
         throw new Error(`Image API responded with status: ${imageResponse.status}`);
       }
@@ -108,6 +109,11 @@ export default function PlaylistCoverPage() {
     }
   ];
 
+  const MODEL_OPTIONS = [
+    { value: 'STABILITY', label: 'Stability AI' },
+    { value: 'OPENAI', label: 'DALLE 3' },
+  ];
+
   return (
     <div>
       <header>
@@ -154,6 +160,38 @@ export default function PlaylistCoverPage() {
                 />
               </div>
             ))}
+            
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center',
+              width: '100%',
+              maxWidth: '600px',
+              gap: '1rem'
+            }}>
+              <label htmlFor="model-select" style={{ 
+                width: '150px',
+                flexShrink: 0
+              }}>
+                AI Model
+              </label>
+              <select
+                id="model-select"
+                name="model"
+                value={formData.model}
+                onChange={handleInputChange}
+                className="genre-select"
+                style={{ 
+                  flex: 1,
+                  minWidth: '300px'
+                }}
+              >
+                {MODEL_OPTIONS.map(option => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
             
             <button
               type="submit"
