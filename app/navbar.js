@@ -8,22 +8,17 @@ export default function NavBar() {
   const [showMoreMenu, setShowMoreMenu] = useState(false);
 
   useEffect(() => {
-    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    setTheme(systemTheme);
-    document.documentElement.setAttribute('data-theme', systemTheme);
-
-    const themeChangeListener = (e) => {
-      const newSystemTheme = e.matches ? 'dark' : 'light';
-      setTheme(newSystemTheme);
-      document.documentElement.setAttribute('data-theme', newSystemTheme);
-    };
-
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', themeChangeListener);
-
-    return () => {
-      window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', themeChangeListener);
-    };
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+    document.documentElement.setAttribute('data-theme', savedTheme);
   }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+  };
 
   return (
     <nav style={{ ...navStyle, background: theme === 'light' ? '#ffffff' : '#000000', color: theme === 'light' ? '#FF6C00' : '#FFA500' }}>
@@ -73,6 +68,21 @@ export default function NavBar() {
         </li>
         <li style={liStyle}>
           <Link href="/about">About</Link>
+        </li>
+        <li style={liStyle}>
+          <button 
+            onClick={toggleTheme}
+            style={{ 
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '1.2rem',
+              padding: '16px 16px 0 16px',
+              color: theme === 'light' ? '#000000' : '#ffffff'  // Black in light mode, white in dark mode
+            }}
+          >
+            ☀️/🌙
+          </button>
         </li>
       </ul>
 
