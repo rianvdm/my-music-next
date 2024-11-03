@@ -46,6 +46,9 @@ const CollectionListPage = () => {
   // New state for search results
   const [searchResults, setSearchResults] = useState(null);
 
+  // Add sort control near other state declarations
+  const [sortOption, setSortOption] = useState('dateAdded');
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -142,11 +145,23 @@ const CollectionListPage = () => {
         );
       })
       .sort((a, b) => {
-        const dateA = new Date(a.date_added || 0);
-        const dateB = new Date(b.date_added || 0);
-        return dateB - dateA;
+        if (sortOption === 'dateAdded') {
+          const dateA = new Date(a.date_added || 0);
+          const dateB = new Date(b.date_added || 0);
+          return dateB - dateA;
+        } else {
+          // Sort by artist name, then by release year
+          const artistCompare = a.basic_information.artists[0].name.localeCompare(
+            b.basic_information.artists[0].name
+          );
+          if (artistCompare !== 0) return artistCompare;
+          
+          const yearA = a.original_year || a.basic_information.year || 0;
+          const yearB = b.original_year || b.basic_information.year || 0;
+          return yearA - yearB;
+        }
       });
-  }, [collectionData, selectedGenre, selectedFormat, selectedDecade, selectedStyle, uniqueGenres, uniqueFormats]);
+  }, [collectionData, selectedGenre, selectedFormat, selectedDecade, selectedStyle, uniqueGenres, uniqueFormats, sortOption]);
 
   const availableStyles = useMemo(() => {
     if (!collectionData) return ['All'];
@@ -358,6 +373,20 @@ const CollectionListPage = () => {
               uniqueDecades={uniqueDecades}
               onChange={handleDecadeChange}
             />
+            
+            {/* Add the sort dropdown here */}
+            <div className="filter-container">
+              <label htmlFor="sort">Sort by:</label>
+              <select
+                id="sort"
+                value={sortOption}
+                onChange={(e) => setSortOption(e.target.value)}
+                className="genre-select"
+              >
+                <option value="dateAdded">Date Added</option>
+                <option value="artistName">Artist Name</option>
+              </select>
+            </div>
           </div>
 
           {/* Add SearchBox component */}
