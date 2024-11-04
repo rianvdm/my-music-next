@@ -1,7 +1,7 @@
 /* Root Variables and Theme Settings */
 :root {
-  --c-bg: #ffffff;
-  --c-bg-rgb: 255, 255, 255;
+  --c-bg: #fafafa;
+  --c-bg-rgb: 250, 250, 250;
   --c-accent: #FF6C00;
   --c-accent-rgb: 255, 108, 0;
   --c-base: #000000;
@@ -9,8 +9,8 @@
 }
 
 [data-theme="dark"] {
-  --c-bg: #000000;
-  --c-bg-rgb: 0, 0, 0;
+  --c-bg: #121212;
+  --c-bg-rgb: 18, 18, 18;
   --c-accent: #FFA500;
   --c-accent-rgb: 255, 165, 0;
   --c-base: #ffffff;

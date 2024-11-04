@@ -21,7 +21,7 @@ export default function NavBar() {
   };
 
   return (
-    <nav style={{ ...navStyle, background: theme === 'light' ? '#ffffff' : '#000000', color: theme === 'light' ? '#FF6C00' : '#FFA500' }}>
+    <nav style={{ ...navStyle, background: theme === 'light' ? '#fafafa' : '#121212', color: theme === 'light' ? '#FF6C00' : '#FFA500' }}>
       <ul style={ulStyle}>
         <li style={liStyle}>
           <Link href="/">Home</Link>
