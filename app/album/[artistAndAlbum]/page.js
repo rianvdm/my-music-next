@@ -24,7 +24,7 @@ export default function AlbumPage({ params }) {
   const [releaseYear, setReleaseYear] = useState('Loading...');
   const [trackCount, setTrackCount] = useState('Loading...');
   const [genres, setGenres] = useState('Loading...');
-  const [openAISummary, setOpenAISummary] = useState('Generating summary...');
+  const [openAISummary, setOpenAISummary] = useState({ content: 'Generating summary...', citations: [] });
   const [showExtendedMessage, setShowExtendedMessage] = useState(false);
   const [artistId, setArtistId] = useState(null);
   const [error, setError] = useState(null);
@@ -80,7 +80,7 @@ export default function AlbumPage({ params }) {
 
   // Timer effect for showing extended message after 3 seconds
   useEffect(() => {
-    if (openAISummary === 'Generating summary...') {
+    if (openAISummary.content === 'Generating summary...') {
       timerRef.current = setTimeout(() => {
         setShowExtendedMessage(true);
       }, 3000); // Show extended message after 3 seconds
@@ -161,11 +161,14 @@ export default function AlbumPage({ params }) {
           )}&artist=${encodeURIComponent(artistName)}`
         );
         const summaryData = await summaryResponse.json();
-        setOpenAISummary(summaryData.data);
-        setKvKey(summaryData.kvKey); // <-- Store kvKey returned from the API
+        setOpenAISummary({
+          content: summaryData.data.content,
+          citations: summaryData.data.citations
+        });
+        setKvKey(summaryData.kvKey);
       } catch (error) {
         console.error('Error fetching OpenAI summary:', error);
-        setOpenAISummary('Failed to load summary.');
+        setOpenAISummary({ content: 'Failed to load summary.', citations: [] });
       }
     }
   };
@@ -216,21 +219,51 @@ export default function AlbumPage({ params }) {
   }, [album, artist]);
 
   const renderOpenAISummary = (summary) => {
-    if (summary === 'Generating summary...') {
+    if (summary.content === 'Generating summary...') {
       return (
         <div>
-          {summary}
+          {summary.content}
           {showExtendedMessage && (
             <span>
-              {
-                " It's taking a little while to make sure the robots don't say dumb things, but hang in there, it really is coming..."
-              }
+              {" It's taking a little while to make sure the robots don't say dumb things, but hang in there, it really is coming..."}
             </span>
           )}
         </div>
       );
     }
-    return <div dangerouslySetInnerHTML={{ __html: marked(summary) }} />;
+
+    // Replace [n] with clickable links
+    const contentWithClickableCitations = summary.content.replace(
+      /\[(\d+)\]/g,
+      (match, num) => {
+        const index = parseInt(num) - 1;
+        if (summary.citations && summary.citations[index]) {
+          return `[<a href="${summary.citations[index]}" target="_blank" rel="noopener noreferrer">${num}</a>]`;
+        }
+        return match;
+      }
+    );
+
+    return (
+      <div>
+        <div dangerouslySetInnerHTML={{ __html: marked(contentWithClickableCitations) }} />
+        {summary.citations && summary.citations.length > 0 && (
+          <div className="citations">
+            <h4>Sources</h4>
+            <ul>
+              {summary.citations.map((citation, index) => (
+                <li key={index}>
+                  <span className="citation-number">[{index + 1}]</span>{' '}
+                  <a href={citation} target="_blank" rel="noopener noreferrer">
+                    {new URL(citation).hostname.replace('www.', '')}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    );
   };
 
   const renderFollowUpResponse = (response) => {
