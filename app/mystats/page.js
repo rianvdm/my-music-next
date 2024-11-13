@@ -9,50 +9,37 @@ import { generateArtistSlug, generateAlbumSlug, generateLastfmArtistSlug } from 
 const useRecentTracks = () => {
   const [recentTracks, setRecentTracks] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  /* const [listeningStats, setListeningStats] = useState(null); */
 
   useEffect(() => {
     const fetchRecentTracks = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch('https://api-lastfm-recenttracks.rian-db8.workers.dev/');
         const data = await response.json();
         setRecentTracks(data);
-        setIsLoading(false);
       } catch (error) {
         console.error('Error fetching recent tracks:', error);
+      } finally {
         setIsLoading(false);
       }
     };
 
-    /* const fetchListeningStats = async () => {
-      try {
-        const response = await fetch('https://kv-fetch-lastfm-stats.rian-db8.workers.dev/');
-        const statsData = await response.json();
-        setListeningStats(statsData);
-      } catch (error) {
-        console.error('Error fetching listening stats:', error);
-      }
-    }; */
-
     fetchRecentTracks();
-    /* fetchListeningStats(); */
   }, []);
 
-  return { recentTracks, isLoading /* , listeningStats */ };
+  return { recentTracks, isLoading };
 };
 
 const RecentTrackDisplay = ({ recentTracks, isLoading }) => {
   const [artistSummary, setArtistSummary] = useState({ data: null, isLoading: false });
 
   useEffect(() => {
-    // Reset summary when artist changes
-    setArtistSummary({ data: null, isLoading: true });
-    
-    let isMounted = true;  // For cleanup
-    
+    if (!recentTracks?.last_artist) return;
+
+    setArtistSummary(prev => ({ ...prev, isLoading: true }));
+    let isMounted = true;
+
     const fetchArtistSummary = async () => {
-      if (!recentTracks?.last_artist) return;
-      
       try {
         const encodedArtistName = encodeURIComponent(recentTracks.last_artist);
         const summaryResponse = await fetch(`https://api-perplexity-artistsentence.rian-db8.workers.dev?name=${encodedArtistName}`);
@@ -69,14 +56,12 @@ const RecentTrackDisplay = ({ recentTracks, isLoading }) => {
       }
     };
 
-    if (recentTracks?.last_artist) {
-      fetchArtistSummary();
-    }
+    fetchArtistSummary();
 
     return () => {
-      isMounted = false;  // Cleanup to prevent setting state after unmount
+      isMounted = false;
     };
-  }, [recentTracks?.last_artist]); // Only run when the artist changes
+  }, [recentTracks?.last_artist]);
 
   if (isLoading) return <div className="track_ul2">Loading recent tracks...</div>;
   if (!recentTracks) return null;
