@@ -8,8 +8,8 @@ import { generateArtistSlug, generateAlbumSlug, generateLastfmArtistSlug } from 
 
 const useRecentTracks = () => {
   const [recentTracks, setRecentTracks] = useState(null);
-  const [listeningStats, setListeningStats] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  /* const [listeningStats, setListeningStats] = useState(null); */
 
   useEffect(() => {
     const fetchRecentTracks = async () => {
@@ -17,51 +17,69 @@ const useRecentTracks = () => {
         const response = await fetch('https://api-lastfm-recenttracks.rian-db8.workers.dev/');
         const data = await response.json();
         setRecentTracks(data);
+        setIsLoading(false);
       } catch (error) {
         console.error('Error fetching recent tracks:', error);
+        setIsLoading(false);
       }
     };
 
-    const fetchListeningStats = async () => {
+    /* const fetchListeningStats = async () => {
       try {
         const response = await fetch('https://kv-fetch-lastfm-stats.rian-db8.workers.dev/');
         const statsData = await response.json();
         setListeningStats(statsData);
       } catch (error) {
         console.error('Error fetching listening stats:', error);
-      } finally {
-        setIsLoading(false);
+      }
+    }; */
+
+    fetchRecentTracks();
+    /* fetchListeningStats(); */
+  }, []);
+
+  return { recentTracks, isLoading /* , listeningStats */ };
+};
+
+const RecentTrackDisplay = ({ recentTracks, isLoading }) => {
+  const [artistSummary, setArtistSummary] = useState({ data: null, isLoading: false });
+
+  useEffect(() => {
+    // Reset summary when artist changes
+    setArtistSummary({ data: null, isLoading: true });
+    
+    let isMounted = true;  // For cleanup
+    
+    const fetchArtistSummary = async () => {
+      if (!recentTracks?.last_artist) return;
+      
+      try {
+        const encodedArtistName = encodeURIComponent(recentTracks.last_artist);
+        const summaryResponse = await fetch(`https://api-perplexity-artistsentence.rian-db8.workers.dev?name=${encodedArtistName}`);
+        const summaryData = await summaryResponse.json();
+        
+        if (isMounted) {
+          setArtistSummary({ data: summaryData.data, isLoading: false });
+        }
+      } catch (error) {
+        console.error('Error fetching artist summary:', error);
+        if (isMounted) {
+          setArtistSummary({ data: null, isLoading: false });
+        }
       }
     };
 
-    fetchRecentTracks();
-    fetchListeningStats();
-  }, []);
-
-  return { recentTracks, listeningStats, isLoading };
-};
-
-const RecentTrackDisplay = ({ recentTracks, listeningStats, isLoading }) => {
-  const [artistSummary, setArtistSummary] = useState(null);
-
-  useEffect(() => {
     if (recentTracks?.last_artist) {
-      const fetchArtistSummary = async () => {
-        try {
-          const encodedArtistName = encodeURIComponent(recentTracks.last_artist);
-          const summaryResponse = await fetch(`https://api-perplexity-artistsentence.rian-db8.workers.dev?name=${encodedArtistName}`);
-          const summaryData = await summaryResponse.json();
-          setArtistSummary(summaryData.data);
-        } catch (error) {
-          console.error('Error fetching artist summary:', error);
-        }
-      };
       fetchArtistSummary();
     }
-  }, [recentTracks]);
+
+    return () => {
+      isMounted = false;  // Cleanup to prevent setting state after unmount
+    };
+  }, [recentTracks?.last_artist]); // Only run when the artist changes
 
   if (isLoading) return <div className="track_ul2">Loading recent tracks...</div>;
-  if (!recentTracks || !listeningStats) return null;
+  if (!recentTracks) return null;
 
   const { last_artist, last_album } = recentTracks;
   const artistSlug = generateLastfmArtistSlug(last_artist);
@@ -69,10 +87,7 @@ const RecentTrackDisplay = ({ recentTracks, listeningStats, isLoading }) => {
 
   return (
     <p>
-      Over the last week I listened to{' '}
-      <strong className="highlight">{listeningStats.totalTracks} tracks</strong> across{' '}
-      <strong className="highlight">{listeningStats.uniqueArtists} artists</strong> and{' '}
-      <strong className="highlight">{listeningStats.uniqueAlbums} albums</strong>. Most recently I listened to{' '}
+      Most recently I listened to{' '}
       <Link href={`/album/${generateArtistSlug(last_artist)}_${albumSlug}`}>
         <strong>{last_album}</strong>
       </Link>{' '}
@@ -80,7 +95,7 @@ const RecentTrackDisplay = ({ recentTracks, listeningStats, isLoading }) => {
       <Link href={`/artist/${artistSlug}`}>
         <strong>{last_artist}</strong>
       </Link>
-      . {artistSummary}
+      {artistSummary.isLoading ? '...' : artistSummary.data ? `. ${artistSummary.data}` : '.'}
     </p>
   );
 };
@@ -89,7 +104,7 @@ export default function MyStats() {
   const [topArtistsData, setTopArtistsData] = useState(null);
   const [topAlbumsData, setTopAlbumsData] = useState(null);
   const [discogsData, setDiscogsData] = useState(null);
-  const { recentTracks, listeningStats, isLoading: isLoadingTracks } = useRecentTracks();
+  const { recentTracks, isLoading: isLoadingTracks } = useRecentTracks();
 
   useEffect(() => {
     const fetchTopArtists = async () => {
@@ -272,7 +287,7 @@ const renderDiscogsCollection = () => {
       <main>
         <section id="lastfm-stats">
           <h2>🎧 Recent Listening</h2>
-          <RecentTrackDisplay recentTracks={recentTracks} listeningStats={listeningStats} isLoading={isLoadingTracks} />
+          <RecentTrackDisplay recentTracks={recentTracks} isLoading={isLoadingTracks} />
 
           <h2>👩‍🎤 Top Artists</h2>
           <p style={{ textAlign: 'center' }}>
