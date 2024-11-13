@@ -124,7 +124,7 @@ export default function ArtistPage({ params }) {
                             style={{ maxWidth: '100%', width: '220px', height: 'auto' }} 
                         />
                         <div className="no-wrap-text">
-                            <p>
+                            <p >
                                 <strong>Genre:</strong>{' '}
                                 {genre !== 'No genres found' ? (
                                     <Link href={`/genre/${genreSlug}`}>
@@ -134,7 +134,7 @@ export default function ArtistPage({ params }) {
                                     genre
                                 )}
                             </p>
-
+                            <p><strong>My playcount:</strong> {formattedPlaycount} plays</p>
                             <p style={{ marginBottom: '0.2em' }}><strong>Popular Albums:</strong></p>
                             <ul style={{ listStyleType: 'none', paddingLeft: '0', marginTop: '0', marginBottom: '0' }}>
                                 {topAlbums.length > 0 ? (
