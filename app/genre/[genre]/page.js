@@ -7,7 +7,7 @@ import { marked } from 'marked';
 
 export default function GenrePage({ params }) {
     const { genre: prettyGenre } = params;
-    const [genreSummary, setGenreSummary] = useState('Generating summary...');
+    const [genreSummary, setGenreSummary] = useState({ content: 'Generating summary...', citations: [] });
     const [showExtendedMessage, setShowExtendedMessage] = useState(false);
     const [error, setError] = useState(null);
     const fetchedGenreSummary = useRef(false);
@@ -22,7 +22,7 @@ export default function GenrePage({ params }) {
 
     // Separate effect for the timer
     useEffect(() => {
-        if (genreSummary === 'Generating summary...') {
+        if (genreSummary.content === 'Generating summary...') {
             timerRef.current = setTimeout(() => {
                 setShowExtendedMessage(true);
             }, 2000);
@@ -47,10 +47,16 @@ export default function GenrePage({ params }) {
                         `https://api-perplexity-genresummary.rian-db8.workers.dev?genre=${encodedGenre}`
                     );
                     const summaryData = await summaryResponse.json();
-                    setGenreSummary(summaryData.data);
+                    setGenreSummary({
+                        content: summaryData.data.content,
+                        citations: summaryData.data.citations
+                    });
                 } catch (error) {
                     console.error('Error fetching genre summary:', error);
-                    setGenreSummary('Failed to load genre summary.');
+                    setGenreSummary({ 
+                        content: 'Failed to load genre summary.',
+                        citations: []
+                    });
                 }
             }
             
@@ -59,10 +65,10 @@ export default function GenrePage({ params }) {
     }, [genre]);
 
     const renderGenreSummary = (summary) => {
-        if (summary === 'Generating summary...') {
+        if (summary.content === 'Generating summary...') {
             return (
                 <div>
-                    {summary}
+                    {summary.content}
                     {showExtendedMessage && (
                         <span>
                             {" It's taking a little while to make sure the robots don't say dumb things, but hang in there, it really is coming..."}
@@ -71,7 +77,39 @@ export default function GenrePage({ params }) {
                 </div>
             );
         }
-        return <div dangerouslySetInnerHTML={{ __html: marked(summary) }} />;
+
+        // Replace [n] with clickable links
+        const contentWithClickableCitations = summary.content.replace(
+            /\[(\d+)\]/g,
+            (match, num) => {
+                const index = parseInt(num) - 1;
+                if (summary.citations && summary.citations[index]) {
+                    return `[<a href="${summary.citations[index]}" target="_blank" rel="noopener noreferrer">${num}</a>]`;
+                }
+                return match;
+            }
+        );
+
+        return (
+            <div>
+                <div dangerouslySetInnerHTML={{ __html: marked(contentWithClickableCitations) }} />
+                {summary.citations && summary.citations.length > 0 && (
+                    <div className="citations">
+                        <h4>Sources</h4>
+                        <ul>
+                            {summary.citations.map((citation, index) => (
+                                <li key={index}>
+                                    <span className="citation-number">[{index + 1}]</span>{' '}
+                                    <a href={citation} target="_blank" rel="noopener noreferrer">
+                                        {new URL(citation).hostname.replace('www.', '')}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+            </div>
+        );
     };
 
     return (
