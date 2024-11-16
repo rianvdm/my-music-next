@@ -282,7 +282,7 @@ const renderDiscogsCollection = () => {
 
           <h2 style={{ marginTop: '4em' }}>🏆 Top Albums</h2>
           <p style={{ textAlign: 'center' }}>
-            <strong>The top albums I listened to in the past 7 days.</strong>
+            <strong>The top albums I listened to in the past 30 days.</strong>
           </p>
           {renderTopAlbums()}
 
