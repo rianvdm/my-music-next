@@ -178,7 +178,7 @@ export default function Home() {
             <strong>
               <Link href="/recommendations">get rec'd</Link>
             </strong>
-            . Or maybe explore a random genre like{' '}
+            . Or maybe explore the history and seminal albums of a random genre like{' '}
             <strong>
               <Link href={`/genre/${urlGenre}`}>{displayGenre}</Link>
             </strong>
