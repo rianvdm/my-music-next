@@ -53,6 +53,11 @@ export default function NavBar() {
                 <Link href="/playlist-cover-generator" onClick={() => setShowMoreMenu(false)}>
                   Playlist Cover Generator
                 </Link>
+                </li>
+                <li style={dropdownItemStyle}>
+                <Link href="/library" onClick={() => setShowMoreMenu(false)}>
+                  Digital Library
+                </Link>
               </li>
               <li style={dropdownItemStyle}>
                 <Link href="/collection/all" onClick={() => setShowMoreMenu(false)}>

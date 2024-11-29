@@ -28,6 +28,11 @@ const nextConfig = {
         hostname: 'i.scdn.co',
         pathname: '/**', // Allows all paths on this hostname
       },
+      {
+        protocol: 'https',
+        hostname: 'lastfm.freetls.fastly.net',
+        pathname: '/**', // Allows all paths on this hostname
+      },
     ],
     // Optional: Additional image configuration settings
     // deviceSizes: [320, 420, 768, 1024, 1200],
