@@ -328,6 +328,7 @@ const LibraryPage = () => {
                     >
                       {release.Title}
                     </a>
+                    {release.Version && release.Version !== 'dl' && ` (${release.Version})`}
                   </p>
                   <p>
                     <strong>Format:</strong> {release['File Format']}<br />
