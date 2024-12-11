@@ -56,7 +56,7 @@ const LibraryPage = () => {
         const sortedGenres = ['All', ...Array.from(genreCounts.entries())
           .filter(([genre]) => genre !== 'All') // Remove 'All' since we'll add it back at the start
           .sort((a, b) => b[1] - a[1]) // Sort by count in descending order
-          .slice(0, 30) // Take top 30
+          .slice(0, 25) // Take top 20
           .map(([genre]) => genre) // Extract just the genre names
           .sort()]; // Sort alphabetically
 
