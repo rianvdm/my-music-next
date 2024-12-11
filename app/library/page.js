@@ -52,10 +52,13 @@ const LibraryPage = () => {
           }
         });
 
-        // Convert to array, sort by count, and extract just the genre names
-        const sortedGenres = Array.from(genreCounts.entries())
+        // Convert to array, get top 20 by count, then sort alphabetically
+        const sortedGenres = ['All', ...Array.from(genreCounts.entries())
+          .filter(([genre]) => genre !== 'All') // Remove 'All' since we'll add it back at the start
           .sort((a, b) => b[1] - a[1]) // Sort by count in descending order
-          .map(([genre]) => genre);      // Extract just the genre names
+          .slice(0, 25) // Take top 20
+          .map(([genre]) => genre) // Extract just the genre names
+          .sort()]; // Sort alphabetically
 
         setUniqueGenres(sortedGenres);
 
