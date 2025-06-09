@@ -1,46 +1,50 @@
 export const runtime = 'edge';
 
-import { Inter } from "next/font/google";
-import "./globals.css";
+import { Inter } from 'next/font/google';
+import './globals.css';
 import NavBar from './navbar';
 import { headers } from 'next/headers';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 export async function generateMetadata() {
   const headersList = headers();
   const pathname = headersList.get('x-invoke-path') || '';
 
   // Check if the current path is for an album or artist
-  if (pathname.startsWith('/album/') || pathname.startsWith('/artist/') || pathname.startsWith('/recommendations')) {
+  if (
+    pathname.startsWith('/album/') ||
+    pathname.startsWith('/artist/') ||
+    pathname.startsWith('/recommendations')
+  ) {
     // Return an empty object to use the specific metadata defined in those pages
     return {};
   }
 
   // Default metadata for other pages
   return {
-    title: "Listen To More",
-    description: "Learn some trivia, dig deep into an artist or album, find your next listen.",
+    title: 'Listen To More',
+    description: 'Learn some trivia, dig deep into an artist or album, find your next listen.',
     openGraph: {
-      title: "Listen To More",
-      description: "Learn some trivia, dig deep into an artist or album, find your next listen.",
-      url: "https://listentomore.com/",
-      siteName: "Listen To More",
+      title: 'Listen To More',
+      description: 'Learn some trivia, dig deep into an artist or album, find your next listen.',
+      url: 'https://listentomore.com/',
+      siteName: 'Listen To More',
       images: [
         {
-          url: "https://file.elezea.com/listen_to_more_card2.png",
+          url: 'https://file.elezea.com/listen_to_more_card2.png',
           width: 1200,
           height: 630,
         },
       ],
-      locale: "en_US",
-      type: "website",
+      locale: 'en_US',
+      type: 'website',
     },
     twitter: {
-      card: "summary_large_image",
-      title: "Listen To More",
-      description: "Learn some trivia, dig deep into an artist or album, find your next listen.",
-      images: ["https://file.elezea.com/listen_to_more_card2.png"],
+      card: 'summary_large_image',
+      title: 'Listen To More',
+      description: 'Learn some trivia, dig deep into an artist or album, find your next listen.',
+      images: ['https://file.elezea.com/listen_to_more_card2.png'],
     },
   };
 }
@@ -67,8 +71,12 @@ export default function RootLayout({ children }) {
           <p>
             <a href="https://youtu.be/cNtprycno14?t=9036" target="_blank">
               There's a fire that's been burning right outside my door
-            </a><br />
-            <a href="https://github.com/rianvdm/my-music-next/issues" target="_blank">Submit a bug </a> | <a href="/privacy">Privacy</a> | <a href="/terms">Terms</a>
+            </a>
+            <br />
+            <a href="https://github.com/rianvdm/my-music-next/issues" target="_blank">
+              Submit a bug{' '}
+            </a>{' '}
+            | <a href="/privacy">Privacy</a> | <a href="/terms">Terms</a>
           </p>
         </div>
       </body>

@@ -42,9 +42,7 @@ const DiscogsStatsPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          'https://kv-fetch-discogs-all.rian-db8.workers.dev'
-        );
+        const response = await fetch('https://kv-fetch-discogs-all.rian-db8.workers.dev');
         const data = await response.json();
         setCollectionData(data);
 
@@ -56,7 +54,7 @@ const DiscogsStatsPage = () => {
               : release.basic_information.genres;
 
           if (genres && Array.isArray(genres)) {
-            genres.forEach((genre) => {
+            genres.forEach(genre => {
               acc[genre] = (acc[genre] || 0) + 1;
             });
           }
@@ -89,19 +87,17 @@ const DiscogsStatsPage = () => {
 
         // Calculate decades
         const years = data.data.releases
-          .map(
-            (release) => release.original_year || release.basic_information.year
-          )
-          .filter((year) => year);
+          .map(release => release.original_year || release.basic_information.year)
+          .filter(year => year);
         const decadesSet = new Set();
-        years.forEach((year) => {
+        years.forEach(year => {
           const decade = Math.floor(year / 10) * 10;
           decadesSet.add(decade);
         });
 
         const decadesArray = Array.from(decadesSet)
           .sort((a, b) => a - b)
-          .map((decade) => decade.toString());
+          .map(decade => decade.toString());
         setDecades(['All', ...decadesArray]);
 
         setLoading(false);
@@ -127,8 +123,7 @@ const DiscogsStatsPage = () => {
       queryParams.set('decade', selectedDecade);
     }
     const queryString = queryParams.toString();
-    const newUrl =
-      window.location.pathname + (queryString ? `?${queryString}` : '');
+    const newUrl = window.location.pathname + (queryString ? `?${queryString}` : '');
 
     const currentUrl = window.location.pathname + window.location.search;
 
@@ -149,7 +144,7 @@ const DiscogsStatsPage = () => {
   const { stats, data } = collectionData;
 
   // Filter releases based on selected genre, format, and decade
-  const filteredReleases = data.releases.filter((release) => {
+  const filteredReleases = data.releases.filter(release => {
     const genres =
       release.master_genres && Array.isArray(release.master_genres)
         ? release.master_genres
@@ -158,7 +153,7 @@ const DiscogsStatsPage = () => {
     const genreMatch =
       selectedGenre === 'All' ||
       (selectedGenre === 'Other'
-        ? !topGenres.slice(1, -1).some((genre) => genres?.includes(genre))
+        ? !topGenres.slice(1, -1).some(genre => genres?.includes(genre))
         : genres?.includes(selectedGenre));
 
     const format = release.basic_information.formats[0]?.name;
@@ -171,8 +166,7 @@ const DiscogsStatsPage = () => {
     const releaseYear = release.original_year || release.basic_information.year;
     const releaseDecade = releaseYear ? Math.floor(releaseYear / 10) * 10 : null;
     const decadeMatch =
-      selectedDecade === 'All' ||
-      (releaseDecade && releaseDecade.toString() === selectedDecade);
+      selectedDecade === 'All' || (releaseDecade && releaseDecade.toString() === selectedDecade);
 
     return genreMatch && formatMatch && decadeMatch;
   });
@@ -185,12 +179,11 @@ const DiscogsStatsPage = () => {
         : release.basic_information.genres;
 
     if (genres && Array.isArray(genres)) {
-      genres.forEach((genre) => {
+      genres.forEach(genre => {
         if (
           selectedGenre === 'All' ||
           genre === selectedGenre ||
-          (selectedGenre === 'Other' &&
-            !topGenres.slice(1, -1).includes(genre))
+          (selectedGenre === 'Other' && !topGenres.slice(1, -1).includes(genre))
         ) {
           acc[genre] = (acc[genre] || 0) + 1;
         }
@@ -208,9 +201,7 @@ const DiscogsStatsPage = () => {
     Object.values(genreCounts).reduce((sum, count) => sum + count, 0) -
     sortedGenres.reduce((sum, [, count]) => sum + count, 0);
 
-  const totalGenreCount =
-    sortedGenres.reduce((sum, [, count]) => sum + count, 0) +
-    otherGenreCount;
+  const totalGenreCount = sortedGenres.reduce((sum, [, count]) => sum + count, 0) + otherGenreCount;
 
   const genreData = [
     ...sortedGenres.map(([name, value]) => ({
@@ -243,8 +234,7 @@ const DiscogsStatsPage = () => {
     sortedFormats.reduce((sum, [, count]) => sum + count, 0);
 
   const totalFormatCount =
-    sortedFormats.reduce((sum, [, count]) => sum + count, 0) +
-    otherFormatCount;
+    sortedFormats.reduce((sum, [, count]) => sum + count, 0) + otherFormatCount;
 
   const formatData = [
     ...sortedFormats.map(([name, value]) => ({
@@ -261,7 +251,7 @@ const DiscogsStatsPage = () => {
 
   // Prepare data for top 10 artists chart
   const artistCounts = filteredReleases.reduce((acc, release) => {
-    release.basic_information.artists.forEach((artist) => {
+    release.basic_information.artists.forEach(artist => {
       const artistName = artist.name;
       acc[artistName] = (acc[artistName] || 0) + 1;
     });
@@ -380,25 +370,21 @@ const DiscogsStatsPage = () => {
               <GenreFilter
                 selectedGenre={selectedGenre}
                 uniqueGenres={topGenres}
-                onChange={(e) => setSelectedGenre(e.target.value)}
+                onChange={e => setSelectedGenre(e.target.value)}
               />
               <FormatFilter
                 selectedFormat={selectedFormat}
                 uniqueFormats={topFormats}
-                onChange={(e) => setSelectedFormat(e.target.value)}
+                onChange={e => setSelectedFormat(e.target.value)}
               />
               <DecadeFilter
                 selectedDecade={selectedDecade}
                 uniqueDecades={decades}
-                onChange={(e) => setSelectedDecade(e.target.value)}
+                onChange={e => setSelectedDecade(e.target.value)}
               />
             </div>
             <div style={{ marginTop: '1rem' }}>
-              <button
-                onClick={handleShowReleases}
-                className="button"
-                style={{ marginLeft: '0' }}
-              >
+              <button onClick={handleShowReleases} className="button" style={{ marginLeft: '0' }}>
                 Show releases &gt;&gt;
               </button>
             </div>
@@ -421,10 +407,7 @@ const DiscogsStatsPage = () => {
                       label={({ name, percentage }) => `${name}: ${percentage}%`}
                     >
                       {genreData.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
-                        />
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
                     <Tooltip
@@ -454,15 +437,10 @@ const DiscogsStatsPage = () => {
                       cy="50%"
                       outerRadius={150}
                       fill="#8884d8"
-                      label={({ name, percentage }) =>
-                        `${name}: ${percentage}%`
-                      }
+                      label={({ name, percentage }) => `${name}: ${percentage}%`}
                     >
                       {formatData.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
-                        />
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
                     <Tooltip
@@ -492,9 +470,7 @@ const DiscogsStatsPage = () => {
                   dataKey="name"
                   type="category"
                   width={150}
-                  tickFormatter={(value) =>
-                    value.length > 15 ? value.substr(0, 13) + '...' : value
-                  }
+                  tickFormatter={value => (value.length > 15 ? value.substr(0, 13) + '...' : value)}
                 />
                 <Tooltip
                   formatter={(value, name, props) => [value]}
@@ -502,17 +478,17 @@ const DiscogsStatsPage = () => {
                     width: 200,
                     backgroundColor: 'var(--c-bg)',
                     border: `1px solid var(--c-base)`,
-                    color: 'var(--c-base)'
+                    color: 'var(--c-base)',
                   }}
                   contentStyle={{
                     backgroundColor: 'var(--c-bg)',
-                    color: 'var(--c-base)'
+                    color: 'var(--c-base)',
                   }}
                   labelStyle={{
-                    color: 'var(--c-base)'
+                    color: 'var(--c-base)',
                   }}
                   itemStyle={{
-                    color: 'var(--c-base)'
+                    color: 'var(--c-base)',
                   }}
                 />
                 <Legend />
@@ -537,17 +513,17 @@ const DiscogsStatsPage = () => {
                   wrapperStyle={{
                     backgroundColor: 'var(--c-bg)',
                     border: `1px solid var(--c-base)`,
-                    color: 'var(--c-base)'
+                    color: 'var(--c-base)',
                   }}
                   contentStyle={{
                     backgroundColor: 'var(--c-bg)',
-                    color: 'var(--c-base)'
+                    color: 'var(--c-base)',
                   }}
                   labelStyle={{
-                    color: 'var(--c-base)'
+                    color: 'var(--c-base)',
                   }}
                   itemStyle={{
-                    color: 'var(--c-base)'
+                    color: 'var(--c-base)',
                   }}
                 />
                 <Legend />

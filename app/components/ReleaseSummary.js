@@ -22,8 +22,7 @@ const ReleaseSummary = ({
       >
         physical music collection
       </a>{' '}
-      contains{' '}
-      <strong className="highlight">{releaseCount} releases</strong>
+      contains <strong className="highlight">{releaseCount} releases</strong>
       {selectedGenre !== 'All' && (
         <>
           {' '}

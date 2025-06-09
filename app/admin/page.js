@@ -72,15 +72,14 @@ const SimpleModal = ({ show, onClose, title, children }) => {
   );
 };
 
-
 // Personality Form Component
 const PersonalityForm = ({ onAdd }) => {
   const [formData, setFormData] = useState({ name: '', content: '' });
   const [error, setError] = useState('');
 
-  const handleChange = useCallback((e) => {
+  const handleChange = useCallback(e => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   }, []);
 
   const handleSubmit = useCallback(() => {
@@ -109,7 +108,10 @@ const PersonalityForm = ({ onAdd }) => {
             style={{ width: '80%', maxWidth: '600px' }}
           />
         </div>
-        <div className="search-form" style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+        <div
+          className="search-form"
+          style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}
+        >
           <textarea
             id="follow-up-search"
             name="content"
@@ -120,8 +122,16 @@ const PersonalityForm = ({ onAdd }) => {
             style={{ width: '80%', maxWidth: '600px' }}
           />
         </div>
-        <div className="search-form" style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
-          <button type="button" onClick={handleSubmit} className="button" style={{ width: '80%', maxWidth: '600px' }}>
+        <div
+          className="search-form"
+          style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}
+        >
+          <button
+            type="button"
+            onClick={handleSubmit}
+            className="button"
+            style={{ width: '80%', maxWidth: '600px' }}
+          >
             Add Personality
           </button>
         </div>
@@ -136,12 +146,12 @@ const GameDataForm = () => {
   const [gameData, setGameData] = useState({ gameVersion: '', gameDate: '' });
   const [message, setMessage] = useState('');
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value } = e.target;
     setGameData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     try {
       const response = await fetch(`${API_URL}/game-data`, {
@@ -177,23 +187,31 @@ const GameDataForm = () => {
           style={{ width: 'calc(67% - 7.5px)', padding: '8px' }}
           required
         />
-        <button type="submit" className="button" style={{ padding: '8px 15px', whiteSpace: 'nowrap' }}>
+        <button
+          type="submit"
+          className="button"
+          style={{ padding: '8px 15px', whiteSpace: 'nowrap' }}
+        >
           Save
         </button>
       </form>
-      {message && <p style={{ color: message.includes('Error') ? 'red' : 'green', textAlign: 'center', marginTop: '10px' }}>{message}</p>}
+      {message && (
+        <p
+          style={{
+            color: message.includes('Error') ? 'red' : 'green',
+            textAlign: 'center',
+            marginTop: '10px',
+          }}
+        >
+          {message}
+        </p>
+      )}
     </div>
   );
 };
 
 // Personality List Component
-const PersonalityList = ({
-  personalities,
-  activePersonality,
-  onUpdate,
-  onDelete,
-  onSetActive,
-}) => {
+const PersonalityList = ({ personalities, activePersonality, onUpdate, onDelete, onSetActive }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedPersonality, setSelectedPersonality] = useState(null);
 
@@ -207,8 +225,7 @@ const PersonalityList = ({
     setSelectedPersonality(null);
   };
 
-  if (!Object.keys(personalities).length)
-    return <div>No personalities found.</div>;
+  if (!Object.keys(personalities).length) return <div>No personalities found.</div>;
 
   return (
     <>
@@ -240,7 +257,7 @@ const PersonalityList = ({
               {data.content.substring(0, 100)}...
               <a
                 href="#"
-                onClick={(e) => {
+                onClick={e => {
                   e.preventDefault();
                   handleShowModal(name, data.content);
                 }}
@@ -259,9 +276,7 @@ const PersonalityList = ({
                 onClick={() => onSetActive(name)}
                 className="button"
                 style={
-                  activePersonality === name
-                    ? { backgroundColor: 'green', color: 'white' }
-                    : {}
+                  activePersonality === name ? { backgroundColor: 'green', color: 'white' } : {}
                 }
               >
                 {activePersonality === name ? 'Active' : 'Set Active'}
@@ -271,11 +286,7 @@ const PersonalityList = ({
         ))}
       </div>
 
-      <SimpleModal
-        show={showModal}
-        onClose={handleCloseModal}
-        title={selectedPersonality?.name}
-      >
+      <SimpleModal show={showModal} onClose={handleCloseModal} title={selectedPersonality?.name}>
         <p>{selectedPersonality?.content}</p>
       </SimpleModal>
     </>
@@ -284,16 +295,11 @@ const PersonalityList = ({
 
 // Main PersonalityManagerClient component
 export default function PersonalityManagerClient() {
-  const {
-    personalities,
-    activePersonality,
-    isLoading,
-    error,
-    fetchPersonalities,
-  } = usePersonalities();
+  const { personalities, activePersonality, isLoading, error, fetchPersonalities } =
+    usePersonalities();
 
   const handleAddPersonality = useCallback(
-    async (personalityData) => {
+    async personalityData => {
       try {
         const response = await fetch(`${API_URL}/personalities`, {
           method: 'POST',
@@ -310,11 +316,8 @@ export default function PersonalityManagerClient() {
   );
 
   const handleUpdatePersonality = useCallback(
-    async (name) => {
-      const updatedContent = prompt(
-        'Enter new content:',
-        personalities[name].content
-      );
+    async name => {
+      const updatedContent = prompt('Enter new content:', personalities[name].content);
       if (updatedContent) {
         try {
           const response = await fetch(`${API_URL}/personalities/${name}`, {
@@ -333,7 +336,7 @@ export default function PersonalityManagerClient() {
   );
 
   const handleDeletePersonality = useCallback(
-    async (name) => {
+    async name => {
       if (confirm(`Are you sure you want to delete ${name}?`)) {
         try {
           const response = await fetch(`${API_URL}/personalities/${name}`, {
@@ -350,7 +353,7 @@ export default function PersonalityManagerClient() {
   );
 
   const handleSetActive = useCallback(
-    async (name) => {
+    async name => {
       try {
         const response = await fetch(`${API_URL}/active-personality`, {
           method: 'PUT',
@@ -374,7 +377,9 @@ export default function PersonalityManagerClient() {
       <PersonalityForm onAdd={handleAddPersonality} />
       <GameDataForm />
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
-        <h2 style={{ textAlign: 'center', marginTop: '0', marginBottom: '0' }}>Existing Personalities</h2>
+        <h2 style={{ textAlign: 'center', marginTop: '0', marginBottom: '0' }}>
+          Existing Personalities
+        </h2>
         <PersonalityList
           personalities={personalities}
           activePersonality={activePersonality}

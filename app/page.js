@@ -71,7 +71,6 @@ const useRecentSearches = () => {
   return { searches, isLoading };
 };
 
-
 // Subcomponents
 const DayGreeting = () => {
   const options = { weekday: 'long' };
@@ -84,7 +83,7 @@ const AlbumSearch = () => {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  const handleChange = useCallback((e) => {
+  const handleChange = useCallback(e => {
     const { id, value } = e.target;
     setFormData(prev => ({ ...prev, [id.split('-')[0]]: value }));
   }, []);
@@ -108,7 +107,7 @@ const AlbumSearch = () => {
         type="text"
         value={formData.album}
         onChange={handleChange}
-        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+        onKeyDown={e => e.key === 'Enter' && handleSearch()}
         placeholder="Enter album name..."
       />
       <input
@@ -116,7 +115,7 @@ const AlbumSearch = () => {
         type="text"
         value={formData.artist}
         onChange={handleChange}
-        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+        onKeyDown={e => e.key === 'Enter' && handleSearch()}
         placeholder="Enter artist name..."
       />
       <button className="button" onClick={handleSearch} style={{ width: '100px' }}>
@@ -126,7 +125,6 @@ const AlbumSearch = () => {
     </div>
   );
 };
-
 
 const RecentSearches = ({ searches, isLoading }) => {
   if (isLoading) return <div className="track_ul2">Loading recent searches...</div>;
@@ -192,7 +190,8 @@ export default function Home() {
           <h2>👀 From the community</h2>
           <p style={{ textAlign: 'center' }}>
             <strong>
-              Here are some albums that <Link href="/about">Discord Bot</Link> users recently shared with their friends.
+              Here are some albums that <Link href="/about">Discord Bot</Link> users recently shared
+              with their friends.
             </strong>
           </p>
           <br />

@@ -13,7 +13,7 @@ import StyleFilter from '../../components/StyleFilter';
 import FormatFilter from '../../components/FormatFilter';
 import DecadeFilter from '../../components/DecadeFilter';
 import ReleaseSummary from '../../components/ReleaseSummary';
-import SearchBox from '../../components/SearchBox';  // Import SearchBox component
+import SearchBox from '../../components/SearchBox'; // Import SearchBox component
 import LazyImage from '../../components/LazyImage'; // Import LazyImage component
 
 const ITEMS_PER_PAGE = 25;
@@ -52,9 +52,7 @@ const CollectionListPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          'https://kv-fetch-discogs-all.rian-db8.workers.dev'
-        );
+        const response = await fetch('https://kv-fetch-discogs-all.rian-db8.workers.dev');
         const data = await response.json();
         setCollectionData(data);
 
@@ -84,12 +82,11 @@ const CollectionListPage = () => {
           ...Array.from(
             new Set(
               data.data.releases
-                .map((release) =>
-                  Math.floor(
-                    (release.original_year || release.basic_information.year) / 10
-                  ) * 10
+                .map(
+                  release =>
+                    Math.floor((release.original_year || release.basic_information.year) / 10) * 10
                 )
-                .filter((decade) => decade)
+                .filter(decade => decade)
             )
           ).sort((a, b) => a - b),
         ];
@@ -109,7 +106,7 @@ const CollectionListPage = () => {
     if (!collectionData) return [];
 
     return collectionData.data.releases
-      .filter((release) => {
+      .filter(release => {
         const releaseYear = release.original_year || release.basic_information.year;
         const releaseDecade = Math.floor(releaseYear / 10) * 10;
         const releaseFormat = release.basic_information.formats[0]?.name;
@@ -127,20 +124,19 @@ const CollectionListPage = () => {
         const genreMatch =
           selectedGenre === 'All' ||
           (selectedGenre === 'Other'
-            ? !uniqueGenres.slice(1, -1).some((genre) => genres?.includes(genre))
+            ? !uniqueGenres.slice(1, -1).some(genre => genres?.includes(genre))
             : genres?.includes(selectedGenre));
 
-        const formatMatch = 
-          selectedFormat === 'All' || 
-          (selectedFormat === 'Other' 
+        const formatMatch =
+          selectedFormat === 'All' ||
+          (selectedFormat === 'Other'
             ? !uniqueFormats.slice(1, -1).includes(releaseFormat)
             : releaseFormat === selectedFormat);
 
         return (
           genreMatch &&
           formatMatch &&
-          (selectedDecade === 'All' ||
-            releaseDecade === parseInt(selectedDecade, 10)) &&
+          (selectedDecade === 'All' || releaseDecade === parseInt(selectedDecade, 10)) &&
           (selectedStyle === 'All' || styles?.includes(selectedStyle))
         );
       })
@@ -155,20 +151,29 @@ const CollectionListPage = () => {
             b.basic_information.artists[0].name
           );
           if (artistCompare !== 0) return artistCompare;
-          
+
           const yearA = a.original_year || a.basic_information.year || 0;
           const yearB = b.original_year || b.basic_information.year || 0;
           return yearA - yearB;
         }
       });
-  }, [collectionData, selectedGenre, selectedFormat, selectedDecade, selectedStyle, uniqueGenres, uniqueFormats, sortOption]);
+  }, [
+    collectionData,
+    selectedGenre,
+    selectedFormat,
+    selectedDecade,
+    selectedStyle,
+    uniqueGenres,
+    uniqueFormats,
+    sortOption,
+  ]);
 
   const availableStyles = useMemo(() => {
     if (!collectionData) return ['All'];
 
     const stylesCount = new Map();
 
-    collectionData.data.releases.forEach((release) => {
+    collectionData.data.releases.forEach(release => {
       const releaseYear = release.original_year || release.basic_information.year;
       const releaseDecade = Math.floor(releaseYear / 10) * 10;
       const releaseFormat = release.basic_information.formats[0]?.name;
@@ -189,7 +194,7 @@ const CollectionListPage = () => {
         selectedDecade === 'All' || releaseDecade === parseInt(selectedDecade, 10);
 
       if (matchesGenre && matchesFormat && matchesDecade) {
-        styles?.forEach((style) => {
+        styles?.forEach(style => {
           stylesCount.set(style, (stylesCount.get(style) || 0) + 1);
         });
       }
@@ -207,7 +212,7 @@ const CollectionListPage = () => {
   const totalPages = Math.ceil(filteredAndSortedReleases.length / ITEMS_PER_PAGE);
 
   // Modify the handleSearchResults function
-  const handleSearchResults = useCallback((results) => {
+  const handleSearchResults = useCallback(results => {
     setSearchResults(results);
     setCurrentPage(1); // Reset to first page when search results change
   }, []);
@@ -239,7 +244,7 @@ const CollectionListPage = () => {
   }, [selectedGenre, selectedFormat, selectedDecade, selectedStyle, currentPage, router]);
 
   // Handler for Genre filter change
-  const handleGenreChange = (e) => {
+  const handleGenreChange = e => {
     setSelectedGenre(e.target.value);
     setSelectedStyle('All'); // Reset Style filter when Genre changes
     setCurrentPage(1);
@@ -248,7 +253,7 @@ const CollectionListPage = () => {
   };
 
   // Handler for Format filter change
-  const handleFormatChange = (e) => {
+  const handleFormatChange = e => {
     setSelectedFormat(e.target.value);
     setCurrentPage(1);
     setRandomReleases([]); // Clear random releases when filters change
@@ -256,7 +261,7 @@ const CollectionListPage = () => {
   };
 
   // Handler for Decade filter change
-  const handleDecadeChange = (e) => {
+  const handleDecadeChange = e => {
     setSelectedDecade(e.target.value);
     setCurrentPage(1);
     setRandomReleases([]); // Clear random releases when filters change
@@ -264,7 +269,7 @@ const CollectionListPage = () => {
   };
 
   // Handler for Style filter change
-  const handleStyleChange = (e) => {
+  const handleStyleChange = e => {
     setSelectedStyle(e.target.value);
     setCurrentPage(1);
     setRandomReleases([]); // Clear random releases when filters change
@@ -272,7 +277,7 @@ const CollectionListPage = () => {
   };
 
   // Handler for page change
-  const handlePageChange = (newPage) => {
+  const handlePageChange = newPage => {
     setCurrentPage(newPage);
     setRandomReleases([]); // Clear random releases when page changes
   };
@@ -289,7 +294,7 @@ const CollectionListPage = () => {
   };
 
   // Handler for Random Release click
-  const handleRandomReleaseClick = (e) => {
+  const handleRandomReleaseClick = e => {
     e.preventDefault();
     if (filteredAndSortedReleases.length === 0) return;
     const randomCount = Math.min(3, filteredAndSortedReleases.length);
@@ -301,7 +306,7 @@ const CollectionListPage = () => {
   };
 
   // Handler to clear Random Releases
-  const handleClearRandomReleases = (e) => {
+  const handleClearRandomReleases = e => {
     e.preventDefault();
     setRandomReleases([]);
   };
@@ -326,8 +331,8 @@ const CollectionListPage = () => {
             randomReleases.length > 0
               ? randomReleases.length
               : searchResults
-              ? searchResults.length
-              : filteredAndSortedReleases.length
+                ? searchResults.length
+                : filteredAndSortedReleases.length
           }
           selectedGenre={selectedGenre}
           selectedFormat={selectedFormat}
@@ -373,14 +378,14 @@ const CollectionListPage = () => {
               uniqueDecades={uniqueDecades}
               onChange={handleDecadeChange}
             />
-            
+
             {/* Add the sort dropdown here */}
             <div className="filter-container">
               <label htmlFor="sort">Sort by:</label>
               <select
                 id="sort"
                 value={sortOption}
-                onChange={(e) => setSortOption(e.target.value)}
+                onChange={e => setSortOption(e.target.value)}
                 className="genre-select"
               >
                 <option value="dateAdded">Date Added</option>
@@ -390,10 +395,7 @@ const CollectionListPage = () => {
           </div>
 
           {/* Add SearchBox component */}
-          <SearchBox
-            data={filteredAndSortedReleases}
-            onSearchResults={handleSearchResults}
-          />
+          <SearchBox data={filteredAndSortedReleases} onSearchResults={handleSearchResults} />
 
           {/* Container for Links */}
           <div
@@ -404,7 +406,7 @@ const CollectionListPage = () => {
           >
             <a
               href="#"
-              onClick={(e) => {
+              onClick={e => {
                 e.preventDefault();
                 resetFilters();
               }}
@@ -412,11 +414,7 @@ const CollectionListPage = () => {
             >
               Reset filters
             </a>
-            <a
-              href="#"
-              onClick={handleRandomReleaseClick}
-              style={{ marginRight: '2rem' }}
-            >
+            <a href="#" onClick={handleRandomReleaseClick} style={{ marginRight: '2rem' }}>
               Random selection
             </a>
             {randomReleases.length > 0 && (
@@ -428,18 +426,18 @@ const CollectionListPage = () => {
         </div>
       </div>
       <div className="track_ul">
-        {currentReleases.map((release) => {
-          const artistSlug = generateArtistSlug(
-            release.basic_information.artists[0].name
-          );
+        {currentReleases.map(release => {
+          const artistSlug = generateArtistSlug(release.basic_information.artists[0].name);
           const albumSlug = generateAlbumSlug(release.basic_information.title);
-          
+
           // Format the date
-          const addedDate = release.date_added ? new Date(release.date_added).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          }) : 'Unknown date';
+          const addedDate = release.date_added
+            ? new Date(release.date_added).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })
+            : 'Unknown date';
 
           return (
             <div key={release.id} className="track_item track_item_responsive">
@@ -463,37 +461,31 @@ const CollectionListPage = () => {
                 <p>
                   <a
                     href={`/artist/${artistSlug}`}
-                    onClick={(e) => handleLinkClick(e, `/artist/${artistSlug}`)}
+                    onClick={e => handleLinkClick(e, `/artist/${artistSlug}`)}
                   >
                     <strong>{release.basic_information.artists[0].name}</strong>
                   </a>
                   {' - '}
                   <a
                     href={`/album/${artistSlug}_${albumSlug}`}
-                    onClick={(e) => handleLinkClick(e, `/album/${artistSlug}_${albumSlug}`)}
+                    onClick={e => handleLinkClick(e, `/album/${artistSlug}_${albumSlug}`)}
                   >
                     {release.basic_information.title}
                   </a>
                 </p>
                 <p>
-                  <strong>Format:</strong>{' '}
-                  {release.basic_information.formats[0]?.name || 'Unknown'}
+                  <strong>Format:</strong> {release.basic_information.formats[0]?.name || 'Unknown'}
                   <br />
                   <strong>Released:</strong>{' '}
                   {release.original_year || release.basic_information.year}
                   <br />
                   <strong>Genres:</strong>{' '}
-                  {(release.master_genres || release.basic_information.genres).join(
-                    ', '
-                  )}
+                  {(release.master_genres || release.basic_information.genres).join(', ')}
                   <br />
                   <strong>Styles:</strong>{' '}
-                  {(release.master_styles || release.basic_information.styles).join(
-                    ', '
-                  )}
+                  {(release.master_styles || release.basic_information.styles).join(', ')}
                   <br />
-                  <strong>Added:</strong>{' '}
-                  {addedDate}
+                  <strong>Added:</strong> {addedDate}
                 </p>
               </div>
             </div>

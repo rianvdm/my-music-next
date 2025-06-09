@@ -55,7 +55,7 @@ const LibraryPage = () => {
         // Convert to array, sort by count, and extract just the genre names
         const sortedGenres = Array.from(genreCounts.entries())
           .sort((a, b) => b[1] - a[1]) // Sort by count in descending order
-          .map(([genre]) => genre);      // Extract just the genre names
+          .map(([genre]) => genre); // Extract just the genre names
 
         setUniqueGenres(sortedGenres);
 
@@ -96,7 +96,7 @@ const LibraryPage = () => {
     if (!libraryData) return [];
 
     return libraryData
-      .filter((release) => {
+      .filter(release => {
         const genres = release.Genres ? release.Genres.split(', ') : [];
         const year = release.Date ? release.Date.substring(0, 4) : '';
         const decade = Math.floor(parseInt(year) / 10) * 10;
@@ -122,7 +122,7 @@ const LibraryPage = () => {
   }, [libraryData, selectedGenre, selectedFormat, selectedYear, sortOption]);
 
   // Handle search results
-  const handleSearchResults = useCallback((results) => {
+  const handleSearchResults = useCallback(results => {
     setSearchResults(results);
     setCurrentPage(1);
   }, []);
@@ -159,7 +159,7 @@ const LibraryPage = () => {
     setSearchResults(null);
   };
 
-  const handleRandomReleaseClick = (e) => {
+  const handleRandomReleaseClick = e => {
     e.preventDefault();
     if (!filteredAndSortedReleases.length) return;
     const randomCount = Math.min(3, filteredAndSortedReleases.length);
@@ -170,7 +170,7 @@ const LibraryPage = () => {
     setSearchResults(null);
   };
 
-  const handleClearRandomReleases = (e) => {
+  const handleClearRandomReleases = e => {
     e.preventDefault();
     setRandomReleases([]);
   };
@@ -189,30 +189,38 @@ const LibraryPage = () => {
       <h1>Digital Library</h1>
       <div className="track_ul2">
         <LibrarySummary
-          releaseCount={
-            searchResults
-              ? searchResults.length
-              : filteredAndSortedReleases.length
-          }
+          releaseCount={searchResults ? searchResults.length : filteredAndSortedReleases.length}
           selectedGenre={selectedGenre}
           selectedFormat={selectedFormat}
           selectedYear={selectedYear}
         />
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1rem' }}>
+        <div
+          style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1rem' }}
+        >
           {/* Filters */}
-          <div style={{ display: 'flex', columnGap: '1.5rem', rowGap: '0', flexWrap: 'wrap', alignItems: 'center' }}>
+          <div
+            style={{
+              display: 'flex',
+              columnGap: '1.5rem',
+              rowGap: '0',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+            }}
+          >
             {/* Genre Filter */}
             <div className="filter-container">
               <label htmlFor="genre">Genre:</label>
               <select
                 id="genre"
                 value={selectedGenre}
-                onChange={(e) => setSelectedGenre(e.target.value)}
+                onChange={e => setSelectedGenre(e.target.value)}
                 className="genre-select"
               >
                 {uniqueGenres.map(genre => (
-                  <option key={genre} value={genre}>{genre}</option>
+                  <option key={genre} value={genre}>
+                    {genre}
+                  </option>
                 ))}
               </select>
             </div>
@@ -223,11 +231,13 @@ const LibraryPage = () => {
               <select
                 id="format"
                 value={selectedFormat}
-                onChange={(e) => setSelectedFormat(e.target.value)}
+                onChange={e => setSelectedFormat(e.target.value)}
                 className="genre-select"
               >
                 {uniqueFormats.map(format => (
-                  <option key={format} value={format}>{format}</option>
+                  <option key={format} value={format}>
+                    {format}
+                  </option>
                 ))}
               </select>
             </div>
@@ -238,7 +248,7 @@ const LibraryPage = () => {
               <select
                 id="year"
                 value={selectedYear}
-                onChange={(e) => setSelectedYear(e.target.value)}
+                onChange={e => setSelectedYear(e.target.value)}
                 className="genre-select"
               >
                 {uniqueYears.map(decade => (
@@ -255,7 +265,7 @@ const LibraryPage = () => {
               <select
                 id="sort"
                 value={sortOption}
-                onChange={(e) => setSortOption(e.target.value)}
+                onChange={e => setSortOption(e.target.value)}
                 className="genre-select"
               >
                 <option value="dateAdded">Release Date</option>
@@ -272,18 +282,17 @@ const LibraryPage = () => {
 
           {/* Reset Filters Link */}
           <div style={{ marginTop: '0', marginBottom: '1rem' }}>
-            <a 
-              href="#" 
-              onClick={(e) => { e.preventDefault(); resetFilters(); }}
+            <a
+              href="#"
+              onClick={e => {
+                e.preventDefault();
+                resetFilters();
+              }}
               style={{ marginRight: '2rem' }}
             >
               Reset filters
             </a>
-            <a
-              href="#"
-              onClick={handleRandomReleaseClick}
-              style={{ marginRight: '2rem' }}
-            >
+            <a href="#" onClick={handleRandomReleaseClick} style={{ marginRight: '2rem' }}>
               Random selection
             </a>
             {randomReleases.length > 0 && (
@@ -297,49 +306,52 @@ const LibraryPage = () => {
 
       {/* Display Releases */}
       <div className="track_ul">
-        {currentReleases.map((release) => {
+        {currentReleases.map(release => {
           const artistSlug = generateArtistSlug(release['Album Artist']);
           const albumSlug = generateAlbumSlug(release.Title);
-          
+
           return (
             <div key={release.id} className="track_item track_item_responsive">
               <div className="artwork-container">
                 <LazyImage
-                  src={release['Cover Image URL'] || "https://file.elezea.com/noun-no-image.png"}
+                  src={release['Cover Image URL'] || 'https://file.elezea.com/noun-no-image.png'}
                   alt={release.Title}
                   width={200}
                   height={200}
                 />
               </div>
-              
+
               <div className="release-info">
                 <div className="no-wrap-text">
                   <p>
                     <a
                       href={`/artist/${artistSlug}`}
-                      onClick={(e) => handleLinkClick(e, `/artist/${artistSlug}`)}
+                      onClick={e => handleLinkClick(e, `/artist/${artistSlug}`)}
                     >
                       <strong>{release['Album Artist']}</strong>
                     </a>
                     {' - '}
                     <a
                       href={`/album/${artistSlug}_${albumSlug}`}
-                      onClick={(e) => handleLinkClick(e, `/album/${artistSlug}_${albumSlug}`)}
+                      onClick={e => handleLinkClick(e, `/album/${artistSlug}_${albumSlug}`)}
                     >
                       {release.Title}
                     </a>
                     {release.Version && release.Version !== 'dl' && ` (${release.Version})`}
                   </p>
                   <p>
-                    <strong>Format:</strong> {release['File Format']}<br />
+                    <strong>Format:</strong> {release['File Format']}
+                    <br />
                     {release.Date && (
                       <>
-                        <strong>Released:</strong> {release.Date.substring(0, 4)}<br />
+                        <strong>Released:</strong> {release.Date.substring(0, 4)}
+                        <br />
                       </>
                     )}
                     {release.Genres && (
                       <>
-                        <strong>Genres:</strong> {release.Genres}<br />
+                        <strong>Genres:</strong> {release.Genres}
+                        <br />
                       </>
                     )}
                   </p>
@@ -355,7 +367,10 @@ const LibraryPage = () => {
       </div>
 
       {/* Pagination */}
-      <div className="track_ul2" style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '1rem' }}>
+      <div
+        className="track_ul2"
+        style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '1rem' }}
+      >
         <button
           onClick={() => setCurrentPage(currentPage - 1)}
           disabled={currentPage === 1}
@@ -378,4 +393,4 @@ const LibraryPage = () => {
   );
 };
 
-export default LibraryPage; 
+export default LibraryPage;

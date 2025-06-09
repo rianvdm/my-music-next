@@ -10,14 +10,12 @@ const SearchBox = ({ data, onSearchResults }) => {
       const lowercasedQuery = query.toLowerCase();
       const queryWords = lowercasedQuery.split(' ').filter(Boolean); // Split query into words and remove empty strings
 
-      const filteredData = data.filter((release) => {
+      const filteredData = data.filter(release => {
         const artistName = release.basic_information.artists[0].name.toLowerCase();
         const albumTitle = release.basic_information.title.toLowerCase();
 
         // Check if every word in queryWords is included in either artistName or albumTitle
-        return queryWords.every((word) =>
-          artistName.includes(word) || albumTitle.includes(word)
-        );
+        return queryWords.every(word => artistName.includes(word) || albumTitle.includes(word));
       });
 
       onSearchResults(filteredData);
@@ -44,7 +42,7 @@ const SearchBox = ({ data, onSearchResults }) => {
       <input
         type="text"
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={e => setQuery(e.target.value)}
         placeholder="Filter by artist or album title"
         className="search-input" // Apply your existing styles here
       />
@@ -52,7 +50,7 @@ const SearchBox = ({ data, onSearchResults }) => {
       {query && (
         <a
           href="#"
-          onClick={(e) => {
+          onClick={e => {
             e.preventDefault();
             handleClearSearch();
           }}

@@ -42,9 +42,11 @@ const RecentTrackDisplay = ({ recentTracks, isLoading }) => {
     const fetchArtistSummary = async () => {
       try {
         const encodedArtistName = encodeURIComponent(recentTracks.last_artist);
-        const summaryResponse = await fetch(`https://api-perplexity-artistsentence.rian-db8.workers.dev?name=${encodedArtistName}`);
+        const summaryResponse = await fetch(
+          `https://api-perplexity-artistsentence.rian-db8.workers.dev?name=${encodedArtistName}`
+        );
         const summaryData = await summaryResponse.json();
-        
+
         if (isMounted) {
           setArtistSummary({ data: summaryData.data, isLoading: false });
         }
@@ -94,7 +96,9 @@ export default function MyStats() {
   useEffect(() => {
     const fetchTopArtists = async () => {
       try {
-        const topArtistsResponse = await fetch('https://kv-fetch-top-artists.rian-db8.workers.dev/');
+        const topArtistsResponse = await fetch(
+          'https://kv-fetch-top-artists.rian-db8.workers.dev/'
+        );
         const topArtistsData = await topArtistsResponse.json();
         setTopArtistsData(topArtistsData);
       } catch (error) {
@@ -114,7 +118,9 @@ export default function MyStats() {
 
     const fetchDiscogsCollection = async () => {
       try {
-        const discogsResponse = await fetch('https://kv-fetch-discogs-collection.rian-db8.workers.dev/');
+        const discogsResponse = await fetch(
+          'https://kv-fetch-discogs-collection.rian-db8.workers.dev/'
+        );
         const discogsData = await discogsResponse.json();
         setDiscogsData(discogsData);
       } catch (error) {
@@ -140,7 +146,11 @@ export default function MyStats() {
           return (
             <div className="track" key={artist.name}>
               <Link href={`artist/${artistSlug}`} rel="noopener noreferrer">
-                <img src={artist.image || '/path/to/default/image.png'} className="track_image" alt={artist.name} />
+                <img
+                  src={artist.image || '/path/to/default/image.png'}
+                  className="track_image"
+                  alt={artist.name}
+                />
               </Link>
               <div className="track_content">
                 <p className="track_artist">
@@ -150,7 +160,9 @@ export default function MyStats() {
                     </Link>
                   </strong>
                   <br />
-                  <Link href={`genre/${genre}`} rel="noopener noreferrer">{genre}</Link>
+                  <Link href={`genre/${genre}`} rel="noopener noreferrer">
+                    {genre}
+                  </Link>
                   <br />
                   <span className="track_playcount"> {artist.playcount} plays</span>
                 </p>
@@ -197,72 +209,73 @@ export default function MyStats() {
     );
   };
 
-const renderDiscogsCollection = () => {
-  if (!discogsData) {
-    return <p>Loading collection...</p>;
-  }
+  const renderDiscogsCollection = () => {
+    if (!discogsData) {
+      return <p>Loading collection...</p>;
+    }
 
-  return (
-    <div className="track-grid">
-      {discogsData.slice(0, 6).map(item => {
-        // Remove the version number in parentheses from the artist name
-        const artistName = item.artist.replace(/\s*\(.*?\)\s*/g, '').trim();
-        const artistSlug = generateArtistSlug(artistName);
-        const albumSlug = generateAlbumSlug(item.title);
-        const addedDate = new Date(item.addedDate).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
+    return (
+      <div className="track-grid">
+        {discogsData.slice(0, 6).map(item => {
+          // Remove the version number in parentheses from the artist name
+          const artistName = item.artist.replace(/\s*\(.*?\)\s*/g, '').trim();
+          const artistSlug = generateArtistSlug(artistName);
+          const albumSlug = generateAlbumSlug(item.title);
+          const addedDate = new Date(item.addedDate).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          });
 
-        // Split the format string by comma and use the first format
-        const format = item.format.split(',')[0].trim();
+          // Split the format string by comma and use the first format
+          const format = item.format.split(',')[0].trim();
 
-        return (
-          <div className="track" key={item.discogsUrl}>
-            <a href={item.discogsUrl} target="_blank" rel="noopener noreferrer">
-              <div style={{
-                position: 'relative',
-                width: '100%',
-                paddingBottom: '100%', // This creates a square aspect ratio
-                overflow: 'hidden'
-              }}>
-                <img 
-                  src={item.imageUrl} 
-                  className="track_image" 
-                  alt={item.title}
+          return (
+            <div className="track" key={item.discogsUrl}>
+              <a href={item.discogsUrl} target="_blank" rel="noopener noreferrer">
+                <div
                   style={{
-                    position: 'absolute',
+                    position: 'relative',
                     width: '100%',
-                    height: '100%',
-                    objectFit: 'cover', // This ensures the image covers the square container
-                    top: 0,
-                    left: 0
+                    paddingBottom: '100%', // This creates a square aspect ratio
+                    overflow: 'hidden',
                   }}
-                />
+                >
+                  <img
+                    src={item.imageUrl}
+                    className="track_image"
+                    alt={item.title}
+                    style={{
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover', // This ensures the image covers the square container
+                      top: 0,
+                      left: 0,
+                    }}
+                  />
+                </div>
+              </a>
+              <div className="track_content">
+                <p className="track_name">
+                  <Link href={`/album/${artistSlug}_${albumSlug}`}>
+                    <strong>{item.title}</strong>
+                  </Link>
+                </p>
+                <p className="track_artist">
+                  <Link href={`artist/${artistSlug}`}>{artistName}</Link>
+                </p>
+                <p className="track_album">
+                  {format} added on {addedDate}. {item.genre} album
+                  {item.year ? ` released in ${item.year}.` : ' unknown release date.'}
+                </p>
               </div>
-            </a>
-            <div className="track_content">
-              <p className="track_name">
-                <Link href={`/album/${artistSlug}_${albumSlug}`}>
-                  <strong>{item.title}</strong>
-                </Link>
-              </p>
-              <p className="track_artist">
-                <Link href={`artist/${artistSlug}`}>{artistName}</Link>
-              </p>
-              <p className="track_album">
-                {format} added on {addedDate}.{' '}
-                {item.genre} album
-                {item.year ? ` released in ${item.year}.` : ' unknown release date.'}
-              </p>
             </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-};
+          );
+        })}
+      </div>
+    );
+  };
 
   return (
     <div>
@@ -288,7 +301,8 @@ const renderDiscogsCollection = () => {
 
           <h2 style={{ marginTop: '4em' }}>💿 Recent Collection Additions</h2>
           <p style={{ textAlign: 'center' }}>
-            <strong>The most recent additions to my physical music collection.</strong><br />
+            <strong>The most recent additions to my physical music collection.</strong>
+            <br />
             You can view my entire collection <a href="/collection/all">here</a>.
           </p>
           {renderDiscogsCollection()}

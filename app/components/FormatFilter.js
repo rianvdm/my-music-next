@@ -13,7 +13,7 @@ const FormatFilter = ({ selectedFormat, uniqueFormats, onChange }) => {
         onChange={onChange}
         className="genre-select"
       >
-        {uniqueFormats.map((format) => (
+        {uniqueFormats.map(format => (
           <option key={format} value={format}>
             {format}
           </option>
