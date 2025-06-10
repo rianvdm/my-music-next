@@ -1,64 +1,59 @@
-# GitHub Workflows
+# Listen To More
 
-This directory contains GitHub Actions workflows for CI/CD, security, and automation.
+An ever-expanding album and artist database that helps you discover wonderful music. What started as a personal side project about music listening habits has evolved into a comprehensive discovery platform.
 
-## Workflows
+## What It Does
 
-### 🔄 CI (`ci.yml`)
+**Listen To More** is a music discovery website that:
 
-**Triggers:** Pull requests and pushes to main
+- Provides detailed information about albums and artists
+- Offers personalized recommendations based on listening history
+- Features advanced search and filtering capabilities
+- Includes genre exploration with curated selections
+- Generates shareable playlist covers
+- Tracks personal listening statistics
 
-- **Testing:** Runs tests with coverage on Node.js 18.x and 20.x
-- **Linting:** Checks code quality with ESLint
-- **Formatting:** Validates Prettier formatting
-- **Building:** Tests both standard and Cloudflare Pages builds
-- **Coverage:** Uploads test coverage to Codecov
+## Discord Bot
 
-### 🔒 Security (`security.yml`)
+The companion Discord Bot makes it easy to share music in Discord servers:
 
-**Triggers:** PRs, pushes to main, weekly schedule
+- **`/listento`** - Get streaming links for any album and artist
+- **`/listenurl`** - Convert streaming URLs between platforms
+- **`/listenlast`** - Share your most recently played album from Last.fm
+- **`/whois`** - Get artist summaries
+- **`/whatis`** - Learn about musical genres
+- **`/ask`** - Music-related Q&A with Rick Rubin personality
 
-- **Dependency Check:** npm audit for vulnerabilities
-- **CodeQL Analysis:** Static code analysis for security issues
-- **Secret Scanning:** TruffleHog for exposed secrets
+## Technologies
 
-### 🚀 Deploy (`deploy.yml`)
+### Frontend
+- **Next.js** - React framework with App Router
+- **CSS Modules** - Component-scoped styling
+- **Jest** - Testing framework with comprehensive coverage
 
-**Triggers:** Pushes to main, manual dispatch
+### Backend & Infrastructure
+- **Cloudflare Pages** - Static site hosting and deployment
+- **Cloudflare Workers** - Serverless functions and API endpoints  
+- **Cloudflare Workers AI** - AI-powered features and recommendations
+- **Cloudflare Workers KV** - Key-value storage for caching
 
-- **Quality Gates:** Runs tests and linting before deploy
-- **Cloudflare Pages:** Automated deployment
-- **Health Checks:** Post-deployment verification
+### Data Sources
+- **Last.fm API** - Music metadata and listening history
+- **Spotify API** - Streaming links and artist information
+- **OpenAI API** - Content generation and recommendations
+- **Perplexity API** - Enhanced music facts and insights
 
-## Required Secrets
+### Development
+- **ESLint & Prettier** - Code quality and formatting
+- **GitHub Actions** - CI/CD pipeline with automated testing and deployment
 
-For the workflows to function properly, add these secrets in your GitHub repository settings:
+## Features
 
-### Deployment
+- **Collection Management** - Track and organize your music library
+- **Smart Recommendations** - AI-powered suggestions based on listening patterns
+- **Genre Exploration** - Discover music by style, decade, and format
+- **Statistics Dashboard** - Personal listening insights and trends
+- **Playlist Cover Generator** - Create custom artwork for your playlists
+- **Guess The Album** - Interactive music trivia game
 
-- `CLOUDFLARE_API_TOKEN`: Your Cloudflare API token
-- `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare account ID
-
-### Optional
-
-- `CODECOV_TOKEN`: For test coverage reporting (optional but recommended)
-
-## Setup Instructions
-
-1. **Enable GitHub Actions:** Ensure Actions are enabled in your repository settings
-2. **Add Secrets:** Configure the required secrets mentioned above
-3. **Cloudflare Configuration:** Already configured for:
-   - Project: "Listen To More"
-   - URL: https://listentomore.com
-
-## Workflow Status
-
-You can monitor workflow status in the "Actions" tab of your GitHub repository. Each workflow provides detailed logs and can be re-run if needed.
-
-## Contributing
-
-When creating pull requests:
-
-- All CI checks must pass
-- Follow the PR template
-- Ensure code quality standards are met
+Visit [listentomore.com](https://listentomore.com) to explore the platform.
