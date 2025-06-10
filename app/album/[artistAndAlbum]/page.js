@@ -24,7 +24,10 @@ export default function AlbumPage({ params }) {
   const [releaseYear, setReleaseYear] = useState('Loading...');
   const [trackCount, setTrackCount] = useState('Loading...');
   const [genres, setGenres] = useState('Loading...');
-  const [openAISummary, setOpenAISummary] = useState({ content: 'Generating summary...', citations: [] });
+  const [openAISummary, setOpenAISummary] = useState({
+    content: 'Generating summary...',
+    citations: [],
+  });
   const [showExtendedMessage, setShowExtendedMessage] = useState(false);
   const [artistId, setArtistId] = useState(null);
   const [error, setError] = useState(null);
@@ -40,14 +43,13 @@ export default function AlbumPage({ params }) {
   const [loadingFollowUp, setLoadingFollowUp] = useState(false);
   const [followUpCount, setFollowUpCount] = useState(0);
 
-  const decodePrettyUrl = (prettyUrl) =>
-    decodeURIComponent(prettyUrl.replace(/-/g, ' '));
+  const decodePrettyUrl = prettyUrl => decodeURIComponent(prettyUrl.replace(/-/g, ' '));
 
   // Updated URL parsing logic
-  const parseArtistAndAlbum = (urlSegment) => {
+  const parseArtistAndAlbum = urlSegment => {
     // First try to split by underscore
     let parts = urlSegment.split('_');
-    
+
     // If there's no underscore, try to intelligently split the hyphenated string
     if (parts.length === 1) {
       // Find the last occurrence of '-by-' or split in the middle if not found
@@ -55,22 +57,19 @@ export default function AlbumPage({ params }) {
       if (byIndex !== -1) {
         parts = [
           urlSegment.slice(byIndex + 4), // artist (after '-by-')
-          urlSegment.slice(0, byIndex)    // album (before '-by-')
+          urlSegment.slice(0, byIndex), // album (before '-by-')
         ];
       } else {
         // If no '-by-', split at the middle hyphen
         const hyphens = urlSegment.split('-');
         const middleIndex = Math.floor(hyphens.length / 2);
-        parts = [
-          hyphens.slice(0, middleIndex).join('-'),
-          hyphens.slice(middleIndex).join('-')
-        ];
+        parts = [hyphens.slice(0, middleIndex).join('-'), hyphens.slice(middleIndex).join('-')];
       }
     }
-    
+
     return {
       prettyArtist: parts[0] || '',
-      prettyAlbum: parts[1] || parts[0] // fallback to full string if no album part
+      prettyAlbum: parts[1] || parts[0], // fallback to full string if no album part
     };
   };
 
@@ -110,7 +109,7 @@ export default function AlbumPage({ params }) {
             const spotifyAlbum = spotifyData.data[0];
             setAlbumDetails(spotifyAlbum);
 
-            setStreamingUrls((prevUrls) => ({
+            setStreamingUrls(prevUrls => ({
               ...prevUrls,
               spotify: spotifyAlbum.url,
             }));
@@ -129,7 +128,7 @@ export default function AlbumPage({ params }) {
               )}`
             );
             const songLinkData = await songLinkResponse.json();
-            setStreamingUrls((prevUrls) => ({
+            setStreamingUrls(prevUrls => ({
               ...prevUrls,
               songLink: songLinkData.pageUrl,
               appleMusic: songLinkData.appleUrl,
@@ -163,7 +162,7 @@ export default function AlbumPage({ params }) {
         const summaryData = await summaryResponse.json();
         setOpenAISummary({
           content: summaryData.data.content,
-          citations: summaryData.data.citations
+          citations: summaryData.data.citations,
         });
         setKvKey(summaryData.kvKey);
       } catch (error) {
@@ -218,14 +217,16 @@ export default function AlbumPage({ params }) {
     }
   }, [album, artist]);
 
-  const renderOpenAISummary = (summary) => {
+  const renderOpenAISummary = summary => {
     if (summary.content === 'Generating summary...') {
       return (
         <div>
           {summary.content}
           {showExtendedMessage && (
             <span>
-              {" It's taking a little while to make sure the robots don't say dumb things, but hang in there, it really is coming..."}
+              {
+                " It's taking a little while to make sure the robots don't say dumb things, but hang in there, it really is coming..."
+              }
             </span>
           )}
         </div>
@@ -233,16 +234,13 @@ export default function AlbumPage({ params }) {
     }
 
     // Replace [n] with clickable links
-    const contentWithClickableCitations = summary.content.replace(
-      /\[(\d+)\]/g,
-      (match, num) => {
-        const index = parseInt(num) - 1;
-        if (summary.citations && summary.citations[index]) {
-          return `[<a href="${summary.citations[index]}" target="_blank" rel="noopener noreferrer">${num}</a>]`;
-        }
-        return match;
+    const contentWithClickableCitations = summary.content.replace(/\[(\d+)\]/g, (match, num) => {
+      const index = parseInt(num) - 1;
+      if (summary.citations && summary.citations[index]) {
+        return `[<a href="${summary.citations[index]}" target="_blank" rel="noopener noreferrer">${num}</a>]`;
       }
-    );
+      return match;
+    });
 
     return (
       <div>
@@ -266,22 +264,19 @@ export default function AlbumPage({ params }) {
     );
   };
 
-  const renderFollowUpResponse = (response) => {
+  const renderFollowUpResponse = response => {
     return <div dangerouslySetInnerHTML={{ __html: marked(response) }} />;
   };
 
   if (error) {
     return (
       <p>
-        {error} This either means it's not available to stream, or I am doing
-        something wrong with the search. Please{' '}
-        <Link href="https://github.com/rianvdm/my-music-next/issues">
-          submit a bug report
-        </Link>{' '}
-        and let me know what you searched for! <br />
+        {error} This either means it's not available to stream, or I am doing something wrong with
+        the search. Please{' '}
+        <Link href="https://github.com/rianvdm/my-music-next/issues">submit a bug report</Link> and
+        let me know what you searched for! <br />
         <br />
-        You can also <a href="/album">try the search manually</a> and see if
-        that works.
+        You can also <a href="/album">try the search manually</a> and see if that works.
       </p>
     );
   }
@@ -291,17 +286,14 @@ export default function AlbumPage({ params }) {
   }
 
   const prettySpotifyArtist = generateLastfmArtistSlug(albumDetails.artist);
-  const albumImage =
-    albumDetails.image || 'https://file.elezea.com/noun-no-image.png';
+  const albumImage = albumDetails.image || 'https://file.elezea.com/noun-no-image.png';
 
   return (
     <div>
       <header>
         <h1>
           {albumDetails.name} by{' '}
-          <Link href={`/artist/${prettySpotifyArtist}`}>
-            {albumDetails.artist}
-          </Link>
+          <Link href={`/artist/${prettySpotifyArtist}`}>{albumDetails.artist}</Link>
         </h1>
       </header>
       <main>
@@ -318,29 +310,23 @@ export default function AlbumPage({ params }) {
               </p>
               <p>
                 <strong>Genres:</strong>{' '}
-                {genres !== 'Unknown' ? (
-                  genres.split(', ').map((genre, index) => {
-                    const genreSlug = generateGenreSlug(genre);
-                    return (
-                      <span key={index}>
-                        <Link href={`/genre/${genreSlug}`}>{genre}</Link>
-                        {index < genres.split(', ').length - 1 ? ' | ' : ''}
-                      </span>
-                    );
-                  })
-                ) : (
-                  genres
-                )}
+                {genres !== 'Unknown'
+                  ? genres.split(', ').map((genre, index) => {
+                      const genreSlug = generateGenreSlug(genre);
+                      return (
+                        <span key={index}>
+                          <Link href={`/genre/${genreSlug}`}>{genre}</Link>
+                          {index < genres.split(', ').length - 1 ? ' | ' : ''}
+                        </span>
+                      );
+                    })
+                  : genres}
               </p>
               <p>
                 <strong>Streaming:</strong>
                 <br />
                 {streamingUrls.spotify ? (
-                  <a
-                    href={streamingUrls.spotify}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a href={streamingUrls.spotify} target="_blank" rel="noopener noreferrer">
                     Spotify ↗
                   </a>
                 ) : (
@@ -350,11 +336,7 @@ export default function AlbumPage({ params }) {
                 {streamingUrls.appleMusic === '' ? (
                   'Loading...'
                 ) : streamingUrls.appleMusic ? (
-                  <a
-                    href={streamingUrls.appleMusic}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a href={streamingUrls.appleMusic} target="_blank" rel="noopener noreferrer">
                     Apple Music ↗
                   </a>
                 ) : (
@@ -364,11 +346,7 @@ export default function AlbumPage({ params }) {
                 {streamingUrls.youtube === '' ? (
                   'Loading...'
                 ) : streamingUrls.youtube ? (
-                  <a
-                    href={streamingUrls.youtube}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a href={streamingUrls.youtube} target="_blank" rel="noopener noreferrer">
                     YouTube ↗
                   </a>
                 ) : (
@@ -378,11 +356,7 @@ export default function AlbumPage({ params }) {
                 {streamingUrls.songLink === '' ? (
                   'Loading...'
                 ) : streamingUrls.songLink ? (
-                  <a
-                    href={streamingUrls.songLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a href={streamingUrls.songLink} target="_blank" rel="noopener noreferrer">
                     Songlink ↗
                   </a>
                 ) : (

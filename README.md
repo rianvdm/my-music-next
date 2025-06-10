@@ -8,15 +8,14 @@ If you are part of a Discord server where you share music with each other, the c
 
 ### List of commands:
 
-| Command        | Description                                                                                                          |
-|----------------|----------------------------------------------------------------------------------------------------------------------|
-| `/listento`    | Enter an album and artist, get streaming links for all platforms as well as a link to more details about the album. |
-| `/listenurl`   | The same as `/listento`, but enter a streaming URL from any platform (Spotify, Apple Music, etc.).                 |
-| `/listenlast`  | Enter your Last.fm username, get the same details for the last album you listened to.       |
-| `/whois`       | One-sentence summary of an artist.                                                                      |
-| `/whatis`      | Two-sentence summary of a musical genre, with a link to history, artists, and albums to check out. |
-| `/ask`		 | An excuse to play with prompting and open-source AI models, this is gives you short answers to your most pressing questions, using Rick Ruben as the personality. |
-
+| Command       | Description                                                                                                                                                       |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/listento`   | Enter an album and artist, get streaming links for all platforms as well as a link to more details about the album.                                               |
+| `/listenurl`  | The same as `/listento`, but enter a streaming URL from any platform (Spotify, Apple Music, etc.).                                                                |
+| `/listenlast` | Enter your Last.fm username, get the same details for the last album you listened to.                                                                             |
+| `/whois`      | One-sentence summary of an artist.                                                                                                                                |
+| `/whatis`     | Two-sentence summary of a musical genre, with a link to history, artists, and albums to check out.                                                                |
+| `/ask`        | An excuse to play with prompting and open-source AI models, this is gives you short answers to your most pressing questions, using Rick Ruben as the personality. |
 
 As an example, the `/listento`, `listenurl`, and `/listenlast` commands show details like this:
 

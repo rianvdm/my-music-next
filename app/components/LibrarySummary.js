@@ -3,34 +3,40 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const LibrarySummary = ({ 
-  releaseCount, 
-  selectedGenre, 
-  selectedFormat, 
+const LibrarySummary = ({
+  releaseCount,
+  selectedGenre,
+  selectedFormat,
   selectedYear,
   className = '',
 }) => {
   return (
     <p className={className}>
       My digital library contains{' '}
-      <strong className="highlight">{releaseCount} release{releaseCount !== 1 ? 's' : ''}</strong>
+      <strong className="highlight">
+        {releaseCount} release{releaseCount !== 1 ? 's' : ''}
+      </strong>
       {selectedGenre !== 'All' && (
         <>
-          {' '}in the <strong className="highlight">{selectedGenre}</strong>{' '}
+          {' '}
+          in the <strong className="highlight">{selectedGenre}</strong>{' '}
           {selectedGenre === 'Other' ? 'genres' : 'genre'}
         </>
       )}
       {selectedFormat !== 'All' && (
         <>
-          {' '}on <strong className="highlight">{selectedFormat}</strong>{' '}
+          {' '}
+          on <strong className="highlight">{selectedFormat}</strong>{' '}
           {selectedFormat === 'Other' ? 'formats' : 'format'}
         </>
       )}
       {selectedYear !== 'All' && (
         <>
-          {' '}from the <strong className="highlight">{selectedYear}s</strong>
+          {' '}
+          from the <strong className="highlight">{selectedYear}s</strong>
         </>
-      )}.
+      )}
+      .
     </p>
   );
 };
@@ -43,4 +49,4 @@ LibrarySummary.propTypes = {
   className: PropTypes.string,
 };
 
-export default LibrarySummary; 
+export default LibrarySummary;

@@ -19,15 +19,15 @@ export default function PlaylistCoverPage() {
   const [generatedImage, setGeneratedImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = e => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setIsLoading(true);
     setGeneratedPrompt(null);
@@ -41,26 +41,30 @@ export default function PlaylistCoverPage() {
       Objects to Include: ${formData.objects}
       Color Style: ${formData.colors}`;
 
-      const promptResponse = await fetch(`https://api-openai-playlist-prompt.rian-db8.workers.dev/?prompt=${encodeURIComponent(promptInput)}`);
+      const promptResponse = await fetch(
+        `https://api-openai-playlist-prompt.rian-db8.workers.dev/?prompt=${encodeURIComponent(promptInput)}`
+      );
       const promptData = await promptResponse.json();
-      
+
       if (!promptData.data) {
         throw new Error('No prompt received from prompt generation API');
       }
-      
+
       setGeneratedPrompt(promptData.data);
       console.log('Generated prompt:', promptData.data);
 
-      const imageResponse = await fetch(`https://api-openai-images.rian-db8.workers.dev/?prompt=${encodeURIComponent(promptData.data)}&model=${formData.model}`);
+      const imageResponse = await fetch(
+        `https://api-openai-images.rian-db8.workers.dev/?prompt=${encodeURIComponent(promptData.data)}&model=${formData.model}`
+      );
       if (!imageResponse.ok) {
         throw new Error(`Image API responded with status: ${imageResponse.status}`);
       }
-      
+
       const imageData = await imageResponse.json();
       if (!imageData.data) {
         throw new Error('No image data received from image generation API');
       }
-      
+
       setGeneratedImage(imageData.data);
     } catch (error) {
       console.error('Error:', error);
@@ -72,41 +76,41 @@ export default function PlaylistCoverPage() {
 
   // At the top of your component, add this configuration
   const FORM_FIELDS = [
-    { 
-      id: 'playlist-name', 
-      label: 'Playlist Title', 
+    {
+      id: 'playlist-name',
+      label: 'Playlist Title',
       name: 'playlistName',
       placeholder: 'e.g., Summer Nights, Big Guitars',
-      required: true
+      required: true,
     },
-    { 
-      id: 'genres-input', 
-      label: 'Genres', 
+    {
+      id: 'genres-input',
+      label: 'Genres',
       name: 'genres',
       placeholder: 'e.g., Rock, Jazz, Classical, Hip-hop',
-      required: true
+      required: true,
     },
-    { 
-      id: 'vibe-input', 
-      label: 'Mood/Style', 
+    {
+      id: 'vibe-input',
+      label: 'Mood/Style',
       name: 'vibe',
       placeholder: 'e.g., Energetic, Melancholic, Illustration',
-      required: true
+      required: true,
     },
-    { 
-      id: 'objects-input', 
-      label: 'Objects (optional)', 
+    {
+      id: 'objects-input',
+      label: 'Objects (optional)',
       name: 'objects',
       placeholder: 'e.g., Mountains, Ocean, Guitars',
-      required: false
+      required: false,
     },
-    { 
-      id: 'colors-input', 
-      label: 'Color Style', 
+    {
+      id: 'colors-input',
+      label: 'Color Style',
       name: 'colors',
       placeholder: 'e.g., Vibrant blues, Warm sunset colors',
-      required: true
-    }
+      required: true,
+    },
   ];
 
   const MODEL_OPTIONS = [
@@ -122,27 +126,38 @@ export default function PlaylistCoverPage() {
       <main>
         <section className="track_ul2" style={{ textAlign: 'left' }}>
           <p>
-            <strong>For best results, use a playlist name that is 1-2 words.</strong> You also might need to give it a more than one try to get the perfect image.
+            <strong>For best results, use a playlist name that is 1-2 words.</strong> You also might
+            need to give it a more than one try to get the perfect image.
           </p>
-          
-          <form onSubmit={handleSubmit} id="search-form" style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: '1rem',
-            alignItems: 'flex-start'
-          }}>
+
+          <form
+            onSubmit={handleSubmit}
+            id="search-form"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem',
+              alignItems: 'flex-start',
+            }}
+          >
             {FORM_FIELDS.map(field => (
-              <div key={field.id} style={{ 
-                display: 'flex', 
-                alignItems: 'center',
-                width: '100%',
-                maxWidth: '600px',
-                gap: '1rem'
-              }}>
-                <label htmlFor={field.id} style={{ 
-                  width: '150px',
-                  flexShrink: 0
-                }}>
+              <div
+                key={field.id}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  width: '100%',
+                  maxWidth: '600px',
+                  gap: '1rem',
+                }}
+              >
+                <label
+                  htmlFor={field.id}
+                  style={{
+                    width: '150px',
+                    flexShrink: 0,
+                  }}
+                >
                   {field.label}
                 </label>
                 <input
@@ -153,25 +168,30 @@ export default function PlaylistCoverPage() {
                   onChange={handleInputChange}
                   placeholder={field.placeholder}
                   required={field.required}
-                  style={{ 
+                  style={{
                     flex: 1,
-                    minWidth: '300px'
+                    minWidth: '300px',
                   }}
                 />
               </div>
             ))}
-            
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center',
-              width: '100%',
-              maxWidth: '600px',
-              gap: '1rem'
-            }}>
-              <label htmlFor="model-select" style={{ 
-                width: '150px',
-                flexShrink: 0
-              }}>
+
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+                maxWidth: '600px',
+                gap: '1rem',
+              }}
+            >
+              <label
+                htmlFor="model-select"
+                style={{
+                  width: '150px',
+                  flexShrink: 0,
+                }}
+              >
                 AI Model
               </label>
               <select
@@ -180,9 +200,9 @@ export default function PlaylistCoverPage() {
                 value={formData.model}
                 onChange={handleInputChange}
                 className="genre-select"
-                style={{ 
+                style={{
                   flex: 1,
-                  minWidth: '300px'
+                  minWidth: '300px',
                 }}
               >
                 {MODEL_OPTIONS.map(option => (
@@ -192,14 +212,14 @@ export default function PlaylistCoverPage() {
                 ))}
               </select>
             </div>
-            
+
             <button
               type="submit"
               className="button"
               disabled={isLoading}
-              style={{ 
-                width: '200px', 
-                marginTop: '1rem'
+              style={{
+                width: '200px',
+                marginTop: '1rem',
               }}
             >
               {isLoading ? 'Generating...' : 'Generate Cover'}
@@ -207,44 +227,52 @@ export default function PlaylistCoverPage() {
           </form>
 
           {generatedPrompt && (
-            <div className="track_ul2" style={{ 
-              marginTop: '1rem',
-              textAlign: 'left',
-              maxWidth: '600px',
-              margin: '1rem auto'
-            }}>
+            <div
+              className="track_ul2"
+              style={{
+                marginTop: '1rem',
+                textAlign: 'left',
+                maxWidth: '600px',
+                margin: '1rem auto',
+              }}
+            >
               <h2 style={{ margin: '0 0 0.5em' }}>Generated Prompt</h2>
-              <p style={{ 
-                padding: '1rem',
-                backgroundColor: 'rgba(var(--c-base-rgb), 0.1)',
-                color: 'var(--c-base)',
-                borderRadius: '8px',
-                whiteSpace: 'pre-wrap'
-              }}>
+              <p
+                style={{
+                  padding: '1rem',
+                  backgroundColor: 'rgba(var(--c-base-rgb), 0.1)',
+                  color: 'var(--c-base)',
+                  borderRadius: '8px',
+                  whiteSpace: 'pre-wrap',
+                }}
+              >
                 {generatedPrompt}
               </p>
             </div>
           )}
 
           {generatedImage && (
-            <div className="track_ul2" style={{ 
-              marginTop: '1rem',
-              textAlign: 'center',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center'
-            }}>
+            <div
+              className="track_ul2"
+              style={{
+                marginTop: '1rem',
+                textAlign: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
               <h2 style={{ margin: '0 0 0.5em' }}>Generated Cover</h2>
               <div>
                 <img
                   src={generatedImage}
                   alt="Generated playlist cover"
-                  style={{ 
+                  style={{
                     maxWidth: '100%',
                     width: '600px',
                     height: 'auto',
                     borderRadius: '8px',
-                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
                   }}
                 />
               </div>

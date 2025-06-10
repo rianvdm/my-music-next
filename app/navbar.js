@@ -21,7 +21,13 @@ export default function NavBar() {
   };
 
   return (
-    <nav style={{ ...navStyle, background: theme === 'light' ? '#fafafa' : '#121212', color: theme === 'light' ? '#FF6C00' : '#FFA500' }}>
+    <nav
+      style={{
+        ...navStyle,
+        background: theme === 'light' ? '#fafafa' : '#121212',
+        color: theme === 'light' ? '#FF6C00' : '#FFA500',
+      }}
+    >
       <ul style={ulStyle}>
         <li style={liStyle}>
           <Link href="/">Home</Link>
@@ -36,13 +42,13 @@ export default function NavBar() {
           <Link href="/mystats">Stats</Link>
         </li>
         <li style={{ ...liStyle, position: 'relative' }}>
-          <span 
+          <span
             onClick={() => setShowMoreMenu(!showMoreMenu)}
-            style={{ 
-              cursor: 'pointer', 
+            style={{
+              cursor: 'pointer',
               color: 'var(--c-accent)',
               display: 'block',
-              padding: '16px 16px 0 16px'  // Match the padding of nav links
+              padding: '16px 16px 0 16px', // Match the padding of nav links
             }}
           >
             More
@@ -53,8 +59,8 @@ export default function NavBar() {
                 <Link href="/playlist-cover-generator" onClick={() => setShowMoreMenu(false)}>
                   Playlist Cover Generator
                 </Link>
-                </li>
-                <li style={dropdownItemStyle}>
+              </li>
+              <li style={dropdownItemStyle}>
                 <Link href="/library" onClick={() => setShowMoreMenu(false)}>
                   Digital Library
                 </Link>
@@ -63,7 +69,8 @@ export default function NavBar() {
                 <Link href="/collection/all" onClick={() => setShowMoreMenu(false)}>
                   Discogs Collection
                 </Link>
-              </li>              <li style={dropdownItemStyle}>
+              </li>{' '}
+              <li style={dropdownItemStyle}>
                 <Link href="/collection" onClick={() => setShowMoreMenu(false)}>
                   Collection Stats
                 </Link>
@@ -75,15 +82,15 @@ export default function NavBar() {
           <Link href="/about">About</Link>
         </li>
         <li style={liStyle}>
-          <button 
+          <button
             onClick={toggleTheme}
-            style={{ 
+            style={{
               background: 'none',
               border: 'none',
               cursor: 'pointer',
               fontSize: '1.2rem',
               padding: '16px 16px 0 16px',
-              color: theme === 'light' ? '#000000' : '#ffffff'  // Black in light mode, white in dark mode
+              color: theme === 'light' ? '#000000' : '#ffffff', // Black in light mode, white in dark mode
             }}
           >
             ☀️/🌙
@@ -140,7 +147,7 @@ export default function NavBar() {
           padding: 0.5em 0;
           min-width: 200px;
           z-index: 1000;
-          box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         ul ul li {

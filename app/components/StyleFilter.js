@@ -14,7 +14,7 @@ const StyleFilter = ({ selectedStyle, availableStyles, onChange }) => {
         className="genre-select"
         style={{ minWidth: '200px' }}
       >
-        {availableStyles.map((style) => (
+        {availableStyles.map(style => (
           <option key={style} value={style}>
             {style}
           </option>

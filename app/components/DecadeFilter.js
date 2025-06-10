@@ -13,7 +13,7 @@ const DecadeFilter = ({ selectedDecade, uniqueDecades, onChange }) => {
         onChange={onChange}
         className="genre-select"
       >
-        {uniqueDecades.map((decade) => (
+        {uniqueDecades.map(decade => (
           <option key={decade} value={decade}>
             {decade === 'All' ? 'All' : `${decade}s`}
           </option>
