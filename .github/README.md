@@ -27,23 +27,27 @@ The companion Discord Bot makes it easy to share music in Discord servers:
 ## Technologies
 
 ### Frontend
+
 - **Next.js** - React framework with App Router
 - **CSS Modules** - Component-scoped styling
 - **Jest** - Testing framework with comprehensive coverage
 
 ### Backend & Infrastructure
+
 - **Cloudflare Pages** - Static site hosting and deployment
-- **Cloudflare Workers** - Serverless functions and API endpoints  
+- **Cloudflare Workers** - Serverless functions and API endpoints
 - **Cloudflare Workers AI** - AI-powered features and recommendations
 - **Cloudflare Workers KV** - Key-value storage for caching
 
 ### Data Sources
+
 - **Last.fm API** - Music metadata and listening history
 - **Spotify API** - Streaming links and artist information
 - **OpenAI API** - Content generation and recommendations
 - **Perplexity API** - Enhanced music facts and insights
 
 ### Development
+
 - **ESLint & Prettier** - Code quality and formatting
 - **GitHub Actions** - CI/CD pipeline with automated testing and deployment
 
