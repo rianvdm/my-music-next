@@ -1,17 +1,16 @@
-name: Deploy to Cloudflare Pages
+name: Post-Deploy Validation
 
+# This workflow runs AFTER Cloudflare Pages auto-deployment
+# It validates the deployment without conflicting with Cloudflare's auto-deploy
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
 jobs:
-  deploy:
-    name: Deploy to Cloudflare Pages
+  validate-deployment:
+    name: Validate Cloudflare Pages Deployment
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      deployments: write
 
     steps:
       - name: Checkout code
@@ -26,42 +25,51 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run tests
-        run: npm run test
-
-      - name: Run linting
-        run: npm run lint
-
-      - name: Build for production
-        run: npm run pages:build
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: Listen To More
-          directory: .vercel/output/static
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-
-  post-deploy:
-    name: Post-deployment checks
-    runs-on: ubuntu-latest
-    needs: deploy
-    if: success()
-
-    steps:
-      - name: Health check
+      - name: Run pre-deployment validation
         run: |
-          # Wait a moment for deployment to propagate
-          sleep 30
-          
+          # Ensure code quality before validating live site
+          npm run lint
+          npm run test
+
+      - name: Wait for Cloudflare Pages deployment
+        run: |
+          echo "⏳ Waiting for Cloudflare Pages auto-deployment to complete..."
+          # Wait for Cloudflare's auto-deployment to finish
+          sleep 60
+
+      - name: Validate live deployment
+        run: |
+          echo "🔍 Validating live deployment..."
+
           # Basic health check
           curl -f https://listentomore.com || exit 1
-          
-          echo "Deployment health check passed!"
 
-      - name: Notify deployment success
+          # Check that key pages are accessible
+          curl -f https://listentomore.com/about || exit 1
+          curl -f https://listentomore.com/album || exit 1
+          curl -f https://listentomore.com/artist || exit 1
+
+          echo "✅ All health checks passed!"
+
+      - name: Performance check
         run: |
-          echo "🚀 Deployment completed successfully!"
-          echo "Site is live and responding to requests."
+          echo "⚡ Running basic performance check..."
+
+          # Check response time (should be under 3 seconds)
+          response_time=$(curl -o /dev/null -s -w '%{time_total}' https://listentomore.com)
+          echo "Response time: ${response_time}s"
+
+          # Convert to milliseconds for comparison
+          response_ms=$(echo "$response_time * 1000" | bc)
+          if (( $(echo "$response_ms > 3000" | bc -l) )); then
+            echo "⚠️  Warning: Response time (${response_time}s) is slower than expected"
+          else
+            echo "✅ Response time is good (${response_time}s)"
+          fi
+
+      - name: Notify validation results
+        run: |
+          echo "🚀 Deployment validation completed successfully!"
+          echo "✅ Site is live at https://listentomore.com"
+          echo "✅ All health checks passed"
+          echo "✅ Performance check completed"
