@@ -2,18 +2,20 @@
 
 export const runtime = 'edge';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, memo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { generateArtistSlug, generateAlbumSlug, generateLastfmArtistSlug } from './utils/slugify';
+import { generateArtistSlug, generateAlbumSlug } from './utils/slugify';
 import { useRandomFact, useRandomGenre, useRecentSearches } from './hooks';
 
 // Subcomponents
-const DayGreeting = () => {
+const DayGreeting = memo(() => {
   const options = { weekday: 'long' };
   const dayName = new Intl.DateTimeFormat('en-US', options).format(new Date());
   return <h1>Happy {dayName}, friend!</h1>;
-};
+});
+
+DayGreeting.displayName = 'DayGreeting';
 
 const AlbumSearch = () => {
   const [formData, setFormData] = useState({ album: '', artist: '' });
@@ -63,7 +65,7 @@ const AlbumSearch = () => {
   );
 };
 
-const RecentSearches = ({ searches, isLoading }) => {
+const RecentSearches = memo(({ searches, isLoading }) => {
   if (isLoading) {
     return <div className="track_ul2">Loading recent searches...</div>;
   }
@@ -97,7 +99,9 @@ const RecentSearches = ({ searches, isLoading }) => {
       })}
     </div>
   );
-};
+});
+
+RecentSearches.displayName = 'RecentSearches';
 
 // Main component
 export default function Home() {

@@ -1,9 +1,9 @@
 // ../components/GenreFilter.js
 'use client';
 
-import React from 'react';
+import React, { memo } from 'react';
 
-const GenreFilter = ({ selectedGenre, uniqueGenres, onChange }) => {
+const GenreFilter = memo(({ selectedGenre, uniqueGenres, onChange }) => {
   return (
     <div className="filter-container">
       <label htmlFor="genre-select">Genre:</label>
@@ -16,6 +16,8 @@ const GenreFilter = ({ selectedGenre, uniqueGenres, onChange }) => {
       </select>
     </div>
   );
-};
+});
+
+GenreFilter.displayName = 'GenreFilter';
 
 export default GenreFilter;

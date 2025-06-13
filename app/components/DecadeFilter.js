@@ -1,9 +1,9 @@
 // ../components/DecadeFilter.js
 'use client';
 
-import React from 'react';
+import React, { memo } from 'react';
 
-const DecadeFilter = ({ selectedDecade, uniqueDecades, onChange }) => {
+const DecadeFilter = memo(({ selectedDecade, uniqueDecades, onChange }) => {
   return (
     <div className="filter-container">
       <label htmlFor="decade-select">Decade:</label>
@@ -21,6 +21,8 @@ const DecadeFilter = ({ selectedDecade, uniqueDecades, onChange }) => {
       </select>
     </div>
   );
-};
+});
+
+DecadeFilter.displayName = 'DecadeFilter';
 
 export default DecadeFilter;

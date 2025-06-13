@@ -1,29 +1,29 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 
 const LibrarySearchBox = ({ data, onSearchResults }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const handleSearch = useCallback(
-    term => {
-      setSearchTerm(term);
+  const filteredData = useMemo(() => {
+    if (!searchTerm.trim()) {
+      return null;
+    }
 
-      if (!term.trim()) {
-        onSearchResults(null);
-        return;
-      }
+    const searchLower = searchTerm.toLowerCase();
+    return data.filter(release => {
+      const artistName = (release['Album Artist'] || '').toLowerCase();
+      const albumTitle = (release['Title'] || '').toLowerCase();
 
-      const searchLower = term.toLowerCase();
-      const filteredData = data.filter(release => {
-        const artistName = (release['Album Artist'] || '').toLowerCase();
-        const albumTitle = (release['Title'] || '').toLowerCase();
+      return artistName.includes(searchLower) || albumTitle.includes(searchLower);
+    });
+  }, [searchTerm, data]);
 
-        return artistName.includes(searchLower) || albumTitle.includes(searchLower);
-      });
+  useEffect(() => {
+    onSearchResults(filteredData);
+  }, [filteredData, onSearchResults]);
 
-      onSearchResults(filteredData);
-    },
-    [data, onSearchResults]
-  );
+  const handleSearch = useCallback(term => {
+    setSearchTerm(term);
+  }, []);
 
   return (
     <div className="search-container">

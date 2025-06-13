@@ -1,9 +1,9 @@
 // ../components/FormatFilter.js
 'use client';
 
-import React from 'react';
+import React, { memo } from 'react';
 
-const FormatFilter = ({ selectedFormat, uniqueFormats, onChange }) => {
+const FormatFilter = memo(({ selectedFormat, uniqueFormats, onChange }) => {
   return (
     <div className="filter-container">
       <label htmlFor="format-select">Format:</label>
@@ -21,6 +21,8 @@ const FormatFilter = ({ selectedFormat, uniqueFormats, onChange }) => {
       </select>
     </div>
   );
-};
+});
+
+FormatFilter.displayName = 'FormatFilter';
 
 export default FormatFilter;

@@ -1,9 +1,9 @@
 // ../components/StyleFilter.js
 'use client';
 
-import React from 'react';
+import React, { memo } from 'react';
 
-const StyleFilter = ({ selectedStyle, availableStyles, onChange }) => {
+const StyleFilter = memo(({ selectedStyle, availableStyles, onChange }) => {
   return (
     <div className="filter-container">
       <label htmlFor="style-select">Style:</label>
@@ -22,6 +22,8 @@ const StyleFilter = ({ selectedStyle, availableStyles, onChange }) => {
       </select>
     </div>
   );
-};
+});
+
+StyleFilter.displayName = 'StyleFilter';
 
 export default StyleFilter;

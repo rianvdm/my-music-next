@@ -1,34 +1,35 @@
 // ../../components/SearchBox.js
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo, useCallback, useMemo } from 'react';
 
-const SearchBox = ({ data, onSearchResults }) => {
+const SearchBox = memo(({ data, onSearchResults }) => {
   const [query, setQuery] = useState('');
 
-  // This function filters the data as soon as the user types 2 or more characters
-  useEffect(() => {
+  // Memoize the filtered data calculation
+  const filteredData = useMemo(() => {
     if (query.length >= 2) {
       const lowercasedQuery = query.toLowerCase();
-      const queryWords = lowercasedQuery.split(' ').filter(Boolean); // Split query into words and remove empty strings
+      const queryWords = lowercasedQuery.split(' ').filter(Boolean);
 
-      const filteredData = data.filter(release => {
+      return data.filter(release => {
         const artistName = release.basic_information.artists[0].name.toLowerCase();
         const albumTitle = release.basic_information.title.toLowerCase();
 
-        // Check if every word in queryWords is included in either artistName or albumTitle
         return queryWords.every(word => artistName.includes(word) || albumTitle.includes(word));
       });
-
-      onSearchResults(filteredData);
-    } else {
-      onSearchResults(data); // Reset to all data if query is less than 2 characters
     }
-  }, [query, data, onSearchResults]);
+    return data;
+  }, [query, data]);
+
+  // Effect to call onSearchResults when filtered data changes
+  useEffect(() => {
+    onSearchResults(filteredData);
+  }, [filteredData, onSearchResults]);
 
   // Function to clear the search input
-  const handleClearSearch = () => {
+  const handleClearSearch = useCallback(() => {
     setQuery('');
     onSearchResults(data); // Reset the data when the search is cleared
-  };
+  }, [data, onSearchResults]);
 
   return (
     <div
@@ -61,6 +62,8 @@ const SearchBox = ({ data, onSearchResults }) => {
       )}
     </div>
   );
-};
+});
+
+SearchBox.displayName = 'SearchBox';
 
 export default SearchBox;

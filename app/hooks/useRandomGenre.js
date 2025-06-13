@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { genres } from '../utils/genres';
 
 /**
@@ -10,17 +10,20 @@ import { genres } from '../utils/genres';
 export function useRandomGenre() {
   const [genreData, setGenreData] = useState({ urlGenre: null, displayGenre: null });
 
-  useEffect(() => {
-    const randomGenre = genres[Math.floor(Math.random() * genres.length)];
+  const randomGenre = useMemo(() => {
+    return genres[Math.floor(Math.random() * genres.length)];
+  }, []);
 
-    // Capitalize the first letter of each word and replace hyphens with spaces
-    const displayGenre = randomGenre
+  const displayGenre = useMemo(() => {
+    return randomGenre
       .split('-')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
+  }, [randomGenre]);
 
+  useEffect(() => {
     setGenreData({ urlGenre: randomGenre, displayGenre });
-  }, []);
+  }, [randomGenre, displayGenre]);
 
   return genreData;
 }

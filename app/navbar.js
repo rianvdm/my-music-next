@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import Link from 'next/link';
 
-export default function NavBar() {
+function NavBar() {
   const [theme, setTheme] = useState('light');
   const [showMoreMenu, setShowMoreMenu] = useState(false);
 
@@ -201,3 +201,7 @@ const dropdownItemStyle = {
   margin: 0,
   padding: '0.5em 1em',
 };
+
+NavBar.displayName = 'NavBar';
+
+export default memo(NavBar);
