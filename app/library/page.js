@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import LazyImage from '../../components/ui/LazyImage';
+import Button from '../../components/ui/Button';
 import LibrarySearchBox from '../../components/features/library/LibrarySearchBox';
 import LibrarySummary from '../../components/features/library/LibrarySummary';
 import { generateArtistSlug, generateAlbumSlug } from '../utils/slugify';
@@ -383,23 +384,18 @@ const LibraryPage = () => {
         className="track_ul2"
         style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '1rem' }}
       >
-        <button
-          onClick={() => setCurrentPage(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="button"
-        >
+        <Button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
           Previous
-        </button>
+        </Button>
         <span>
           Page {currentPage} of {Math.ceil(filteredAndSortedReleases.length / ITEMS_PER_PAGE)}
         </span>
-        <button
+        <Button
           onClick={() => setCurrentPage(currentPage + 1)}
           disabled={currentPage === Math.ceil(filteredAndSortedReleases.length / ITEMS_PER_PAGE)}
-          className="button"
         >
           Next
-        </button>
+        </Button>
       </div>
     </div>
   );

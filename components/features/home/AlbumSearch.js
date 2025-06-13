@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { generateArtistSlug, generateAlbumSlug } from '../../../app/utils/slugify';
+import Button from '../../ui/Button';
 
 const AlbumSearch = () => {
   const [formData, setFormData] = useState({ album: '', artist: '' });
@@ -44,9 +45,9 @@ const AlbumSearch = () => {
         onKeyDown={e => e.key === 'Enter' && handleSearch()}
         placeholder="Enter artist name..."
       />
-      <button className="button" onClick={handleSearch} style={{ width: '100px' }}>
+      <Button onClick={handleSearch} style={{ width: '100px' }}>
         Search
-      </button>
+      </Button>
       {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );

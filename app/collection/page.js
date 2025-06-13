@@ -20,6 +20,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import GenreFilter from '../../components/ui/GenreFilter';
 import FormatFilter from '../../components/ui/FormatFilter';
 import DecadeFilter from '../../components/ui/DecadeFilter';
+import Button from '../../components/ui/Button';
 import ReleaseSummary from '../../components/features/collection/ReleaseSummary';
 
 const DiscogsStatsPage = () => {
@@ -384,9 +385,9 @@ const DiscogsStatsPage = () => {
               />
             </div>
             <div style={{ marginTop: '1rem' }}>
-              <button onClick={handleShowReleases} className="button" style={{ marginLeft: '0' }}>
+              <Button onClick={handleShowReleases} style={{ marginLeft: '0' }}>
                 Show releases &gt;&gt;
-              </button>
+              </Button>
             </div>
           </div>
 

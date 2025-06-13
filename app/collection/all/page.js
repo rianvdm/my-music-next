@@ -12,6 +12,7 @@ import GenreFilter from '../../../components/ui/GenreFilter';
 import StyleFilter from '../../../components/ui/StyleFilter';
 import FormatFilter from '../../../components/ui/FormatFilter';
 import DecadeFilter from '../../../components/ui/DecadeFilter';
+import Button from '../../../components/ui/Button';
 import ReleaseSummary from '../../../components/features/collection/ReleaseSummary';
 import SearchBox from '../../../components/features/search/SearchBox'; // Import SearchBox component
 import LazyImage from '../../../components/ui/LazyImage'; // Import LazyImage component
@@ -525,23 +526,18 @@ const CollectionListPage = () => {
             marginTop: '1rem',
           }}
         >
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="button"
-          >
+          <Button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
             Previous
-          </button>
+          </Button>
           <span>
             Page {currentPage} of {totalPages}
           </span>
-          <button
+          <Button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="button"
           >
             Next
-          </button>
+          </Button>
         </div>
       )}
     </div>
