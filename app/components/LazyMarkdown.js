@@ -5,7 +5,11 @@ import { useState, useEffect } from 'react';
 // Lazy load marked for better performance
 const lazyMarked = () => import('marked').then(module => module.marked);
 
-export default function LazyMarkdown({ content, className = '' }) {
+export default function LazyMarkdown({
+  content,
+  className = '',
+  loadingText = 'Loading content...',
+}) {
   const [html, setHtml] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -30,7 +34,7 @@ export default function LazyMarkdown({ content, className = '' }) {
   }, [content]);
 
   if (loading) {
-    return <div className={className}>Loading content...</div>;
+    return <div className={className}>{loadingText}</div>;
   }
 
   return <div className={className} dangerouslySetInnerHTML={{ __html: html }} />;

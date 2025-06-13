@@ -103,7 +103,7 @@ export default function ArtistPage({ params }) {
   }
 
   const renderOpenAISummary = summary => {
-    return <LazyMarkdown content={summary} />;
+    return <LazyMarkdown content={summary} loadingText="Loading summary..." />;
   };
 
   const formattedPlaycount = new Intl.NumberFormat().format(artistDetails.userplaycount);
