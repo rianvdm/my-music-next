@@ -2,6 +2,37 @@
 
 This checklist tracks the production readiness improvements for Listen To More.
 
+## 🚨 CRITICAL: Testing Coverage for Safe Refactoring (4.87% coverage is too low!)
+
+### MUST DO BEFORE ANY MAJOR REFACTORING:
+
+1. **Critical Page Tests** (0% → 70% coverage needed)
+
+   - [x] ~~Test main page (`app/page.js`) - Contains core functionality~~
+   - [x] ~~Test collection page (`app/collection/page.js`) - Complex data visualization with 24 passing tests~~
+   - [ ] Test album/artist dynamic pages - Core navigation flows
+   - [ ] Test library page - Data management functionality
+
+2. **Custom Hooks Testing** (Currently 0% coverage)
+
+   - [ ] Extract and test `useRandomFact` hook
+   - [ ] Extract and test `useRandomGenre` hook
+   - [ ] Extract and test `useRecentSearches` hook
+   - [ ] Test error scenarios for all hooks
+
+3. **Integration Testing** (None exist)
+
+   - [ ] Add tests for page navigation flows
+   - [ ] Test data fetching and loading states
+   - [ ] Test error handling paths
+   - [ ] Mock all external API calls
+
+4. **E2E Testing Setup**
+   - [ ] Set up Playwright for E2E tests
+   - [ ] Test critical user journey: Search → Album → Artist
+   - [ ] Test collection filtering and sorting
+   - [ ] Test form submissions and validations
+
 ## ✅ Critical Missing Elements - COMPLETED
 
 ### 1. Testing Infrastructure (HIGH PRIORITY) ✅
@@ -10,7 +41,7 @@ This checklist tracks the production readiness improvements for Listen To More.
 - [x] ~~Add Jest + React Testing Library~~
 - [x] ~~Implement unit tests for components and utilities~~
 - [x] ~~Add integration tests for API routes~~
-- [ ] Set up E2E testing with Playwright or Cypress
+- [ ] ~~Set up E2E testing with Playwright or Cypress~~ (Moved to CRITICAL section above)
 
 ### 2. Code Quality Tools (HIGH PRIORITY) ✅
 
@@ -114,7 +145,7 @@ This checklist tracks the production readiness improvements for Listen To More.
 
 **✅ MAJOR WINS:**
 
-- Testing infrastructure with 20 passing tests
+- Testing infrastructure with 40 passing tests
 - ESLint + Prettier code quality tools
 - Complete CI/CD pipeline with GitHub Actions
 - Security scanning and dependency checks (fixed and working)
@@ -126,10 +157,11 @@ This checklist tracks the production readiness improvements for Listen To More.
 
 **🔄 NEXT PRIORITIES:**
 
-1. Component refactoring and code organization
-2. Enhanced error handling and loading states
-3. Performance optimizations
-4. TypeScript migration planning
+1. **CRITICAL**: Complete testing coverage for safe refactoring (see section above)
+2. Component refactoring and code organization (AFTER testing)
+3. Enhanced error handling and loading states
+4. Performance optimizations
+5. TypeScript migration planning
 
 **📊 Security Status: ✅ SECURE**
 
@@ -141,4 +173,4 @@ This checklist tracks the production readiness improvements for Listen To More.
 ---
 
 _Last updated: 2025-06-13_
-_Status: Production-ready foundation complete with security hardening + pre-commit hooks_
+_Status: ⚠️ TESTING CRITICAL - 4.87% coverage insufficient for safe refactoring_
