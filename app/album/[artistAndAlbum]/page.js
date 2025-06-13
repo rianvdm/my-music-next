@@ -3,7 +3,7 @@
 export const runtime = 'edge';
 
 import { useEffect, useState, useRef } from 'react';
-import { marked } from 'marked';
+import LazyMarkdown from '../../components/LazyMarkdown';
 import Link from 'next/link';
 import {
   generateArtistSlug,
@@ -115,7 +115,9 @@ export default function AlbumPage({ params }) {
             }));
 
             const releaseDate = spotifyAlbum.releaseDate;
-            if (releaseDate) setReleaseYear(releaseDate.split('-')[0]);
+            if (releaseDate) {
+              setReleaseYear(releaseDate.split('-')[0]);
+            }
             setTrackCount(spotifyAlbum.tracks || 'Unknown');
 
             if (spotifyAlbum.artistIds && spotifyAlbum.artistIds.length > 0) {
@@ -204,7 +206,7 @@ export default function AlbumPage({ params }) {
             )}&artist=${encodeURIComponent(artist)}`
           );
           const data = await response.json();
-          setRecommendation(marked(data.data));
+          setRecommendation(data.data);
         } catch (error) {
           console.error('Error fetching recommendations:', error);
           setRecommendation('Failed to load recommendations.');
@@ -244,7 +246,7 @@ export default function AlbumPage({ params }) {
 
     return (
       <div>
-        <div dangerouslySetInnerHTML={{ __html: marked(contentWithClickableCitations) }} />
+        <LazyMarkdown content={contentWithClickableCitations} />
         {summary.citations && summary.citations.length > 0 && (
           <div className="citations">
             <h4>Sources</h4>
@@ -265,7 +267,7 @@ export default function AlbumPage({ params }) {
   };
 
   const renderFollowUpResponse = response => {
-    return <div dangerouslySetInnerHTML={{ __html: marked(response) }} />;
+    return <LazyMarkdown content={response} />;
   };
 
   if (error) {
@@ -372,7 +374,7 @@ export default function AlbumPage({ params }) {
             {loadingRecommendation ? (
               <p>{recommendation}</p>
             ) : (
-              <div dangerouslySetInnerHTML={{ __html: recommendation }} />
+              <LazyMarkdown content={recommendation} />
             )}
           </div>
         </section>

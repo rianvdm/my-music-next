@@ -2,8 +2,8 @@
 
 export const runtime = 'edge';
 
-import { useEffect, useState, useRef } from 'react';
-import { marked } from 'marked';
+import { useEffect, useState, useRef, lazy, Suspense } from 'react';
+import LazyMarkdown from '../../components/LazyMarkdown';
 import Link from 'next/link';
 import {
   generateArtistSlug,
@@ -38,7 +38,7 @@ export default function ArtistPage({ params }) {
           if (!artistResponse.ok) {
             throw new Error('Artist not found');
           }
-          let artistData = await artistResponse.json();
+          const artistData = await artistResponse.json();
 
           if (!artistData || artistData.error) {
             throw new Error('Artist not found');
@@ -103,7 +103,7 @@ export default function ArtistPage({ params }) {
   }
 
   const renderOpenAISummary = summary => {
-    return <div dangerouslySetInnerHTML={{ __html: marked(summary) }} />;
+    return <LazyMarkdown content={summary} />;
   };
 
   const formattedPlaycount = new Intl.NumberFormat().format(artistDetails.userplaycount);

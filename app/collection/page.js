@@ -2,20 +2,18 @@
 'use client';
 
 export const runtime = 'edge';
-import { useEffect, useState, useMemo } from 'react';
-import {
-  PieChart,
-  Pie,
-  Cell,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from 'recharts';
+import { useEffect, useState, useMemo, lazy, Suspense } from 'react';
+
+// Lazy load chart components for better performance
+const LazyPieChart = lazy(() =>
+  import('../components/LazyCharts').then(module => ({ default: module.LazyPieChart }))
+);
+const LazyBarChart = lazy(() =>
+  import('../components/LazyCharts').then(module => ({ default: module.LazyBarChart }))
+);
+const LazyYearBarChart = lazy(() =>
+  import('../components/LazyCharts').then(module => ({ default: module.LazyYearBarChart }))
+);
 import { useRouter, useSearchParams } from 'next/navigation';
 import GenreFilter from '../components/GenreFilter';
 import FormatFilter from '../components/FormatFilter';
@@ -394,31 +392,9 @@ const DiscogsStatsPage = () => {
             <>
               <h2>Genre Distribution</h2>
               <div className="track_ul2" style={{ height: '400px' }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={genreData}
-                      dataKey="value"
-                      nameKey="name"
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={150}
-                      fill="#8884d8"
-                      label={({ name, percentage }) => `${name}: ${percentage}%`}
-                    >
-                      {genreData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      formatter={(value, name, props) => [
-                        `${props.payload.percentage}% (${value})`,
-                        name,
-                      ]}
-                    />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
+                <Suspense fallback={<div className="track_ul2">Loading chart...</div>}>
+                  <LazyPieChart data={genreData} colors={COLORS} />
+                </Suspense>
               </div>
             </>
           )}
@@ -427,109 +403,30 @@ const DiscogsStatsPage = () => {
             <>
               <h2>Format Distribution</h2>
               <div className="track_ul2" style={{ height: '400px' }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={formatData}
-                      dataKey="value"
-                      nameKey="name"
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={150}
-                      fill="#8884d8"
-                      label={({ name, percentage }) => `${name}: ${percentage}%`}
-                    >
-                      {formatData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      formatter={(value, name, props) => [
-                        `${props.payload.percentage}% (${value})`,
-                        name,
-                      ]}
-                    />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
+                <Suspense fallback={<div className="track_ul2">Loading chart...</div>}>
+                  <LazyPieChart data={formatData} colors={COLORS} />
+                </Suspense>
               </div>
             </>
           )}
 
           <h2>Top 10 Artists</h2>
           <div className="track_ul2" style={{ height: '500px', width: '100%' }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                layout="vertical"
-                data={artistData}
-                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" />
-                <YAxis
-                  dataKey="name"
-                  type="category"
-                  width={150}
-                  tickFormatter={value => (value.length > 15 ? value.substr(0, 13) + '...' : value)}
-                />
-                <Tooltip
-                  formatter={(value, name, props) => [value]}
-                  wrapperStyle={{
-                    width: 200,
-                    backgroundColor: 'var(--c-bg)',
-                    border: `1px solid var(--c-base)`,
-                    color: 'var(--c-base)',
-                  }}
-                  contentStyle={{
-                    backgroundColor: 'var(--c-bg)',
-                    color: 'var(--c-base)',
-                  }}
-                  labelStyle={{
-                    color: 'var(--c-base)',
-                  }}
-                  itemStyle={{
-                    color: 'var(--c-base)',
-                  }}
-                />
-                <Legend />
-                <Bar dataKey="value" fill="#FF6C00" />
-              </BarChart>
-            </ResponsiveContainer>
+            <Suspense fallback={<div className="track_ul2">Loading chart...</div>}>
+              <LazyBarChart data={artistData} layout="vertical" />
+            </Suspense>
           </div>
 
           <h2>Releases by Original Release Year</h2>
           <div className="track_ul2" style={{ height: '400px' }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={yearData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="year"
-                  type="number"
-                  domain={[minYear, maxYear]}
-                  ticks={generateYearTicks(minYear, maxYear)}
-                />
-                <YAxis />
-                <Tooltip
-                  wrapperStyle={{
-                    backgroundColor: 'var(--c-bg)',
-                    border: `1px solid var(--c-base)`,
-                    color: 'var(--c-base)',
-                  }}
-                  contentStyle={{
-                    backgroundColor: 'var(--c-bg)',
-                    color: 'var(--c-base)',
-                  }}
-                  labelStyle={{
-                    color: 'var(--c-base)',
-                  }}
-                  itemStyle={{
-                    color: 'var(--c-base)',
-                  }}
-                />
-                <Legend />
-                <Bar dataKey="count" fill="#FF6C00" />
-              </BarChart>
-            </ResponsiveContainer>
+            <Suspense fallback={<div className="track_ul2">Loading chart...</div>}>
+              <LazyYearBarChart
+                data={yearData}
+                ticks={generateYearTicks(minYear, maxYear)}
+                minYear={minYear}
+                maxYear={maxYear}
+              />
+            </Suspense>
           </div>
           <p>
             <br />
