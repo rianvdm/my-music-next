@@ -2,7 +2,7 @@
 'use client';
 
 export const runtime = 'edge';
-import { useEffect, useState, useMemo, lazy, Suspense } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 
 // Lazy load chart components for better performance
 const LazyPieChart = lazy(() =>
@@ -17,9 +17,7 @@ const LazyYearBarChart = lazy(() =>
   }))
 );
 import { useRouter, useSearchParams } from 'next/navigation';
-import GenreFilter from '../../components/ui/GenreFilter';
-import FormatFilter from '../../components/ui/FormatFilter';
-import DecadeFilter from '../../components/ui/DecadeFilter';
+import FilterDropdown from '../../components/ui/FilterDropdown';
 import Button from '../../components/ui/Button';
 import ReleaseSummary from '../../components/features/collection/ReleaseSummary';
 
@@ -368,20 +366,27 @@ const DiscogsStatsPage = () => {
               }}
             >
               {/* Replacing Inline Filters with Reusable Components */}
-              <GenreFilter
-                selectedGenre={selectedGenre}
-                uniqueGenres={topGenres}
+              <FilterDropdown
+                label="Genre"
+                id="genre-select"
+                value={selectedGenre}
+                options={topGenres}
                 onChange={e => setSelectedGenre(e.target.value)}
               />
-              <FormatFilter
-                selectedFormat={selectedFormat}
-                uniqueFormats={topFormats}
+              <FilterDropdown
+                label="Format"
+                id="format-select"
+                value={selectedFormat}
+                options={topFormats}
                 onChange={e => setSelectedFormat(e.target.value)}
               />
-              <DecadeFilter
-                selectedDecade={selectedDecade}
-                uniqueDecades={decades}
+              <FilterDropdown
+                label="Decade"
+                id="decade-select"
+                value={selectedDecade}
+                options={decades}
                 onChange={e => setSelectedDecade(e.target.value)}
+                formatOption={decade => (decade === 'All' ? 'All' : `${decade}s`)}
               />
             </div>
             <div style={{ marginTop: '1rem' }}>

@@ -8,10 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { generateArtistSlug, generateAlbumSlug } from '../../utils/slugify';
 
 // Importing Filter Components
-import GenreFilter from '../../../components/ui/GenreFilter';
-import StyleFilter from '../../../components/ui/StyleFilter';
-import FormatFilter from '../../../components/ui/FormatFilter';
-import DecadeFilter from '../../../components/ui/DecadeFilter';
+import FilterDropdown from '../../../components/ui/FilterDropdown';
 import Button from '../../../components/ui/Button';
 import ReleaseSummary from '../../../components/features/collection/ReleaseSummary';
 import SearchBox from '../../../components/features/search/SearchBox'; // Import SearchBox component
@@ -42,7 +39,6 @@ const CollectionListPage = () => {
 
   // New state for random releases
   const [randomReleases, setRandomReleases] = useState([]);
-  const [imagesLoaded, setImagesLoaded] = useState(false); // New state to load images after data fetch
 
   // New state for search results
   const [searchResults, setSearchResults] = useState(null);
@@ -210,7 +206,7 @@ const CollectionListPage = () => {
     return [
       'All',
       ...Array.from(stylesCount.entries())
-        .filter(([style, count]) => count > 0)
+        .filter(([, count]) => count > 0)
         .map(([style]) => style)
         .sort((a, b) => a.localeCompare(b)),
     ];
@@ -377,40 +373,45 @@ const CollectionListPage = () => {
               alignItems: 'center',
             }}
           >
-            <GenreFilter
-              selectedGenre={selectedGenre}
-              uniqueGenres={uniqueGenres}
+            <FilterDropdown
+              label="Genre"
+              id="genre-select"
+              value={selectedGenre}
+              options={uniqueGenres}
               onChange={handleGenreChange}
             />
-            <StyleFilter
-              selectedStyle={selectedStyle}
-              availableStyles={availableStyles}
+            <FilterDropdown
+              label="Style"
+              id="style-select"
+              value={selectedStyle}
+              options={availableStyles}
               onChange={handleStyleChange}
+              style={{ minWidth: '200px' }}
             />
-            <FormatFilter
-              selectedFormat={selectedFormat}
-              uniqueFormats={uniqueFormats}
+            <FilterDropdown
+              label="Format"
+              id="format-select"
+              value={selectedFormat}
+              options={uniqueFormats}
               onChange={handleFormatChange}
             />
-            <DecadeFilter
-              selectedDecade={selectedDecade}
-              uniqueDecades={uniqueDecades}
+            <FilterDropdown
+              label="Decade"
+              id="decade-select"
+              value={selectedDecade}
+              options={uniqueDecades}
               onChange={handleDecadeChange}
+              formatOption={decade => (decade === 'All' ? 'All' : `${decade}s`)}
             />
 
-            {/* Add the sort dropdown here */}
-            <div className="filter-container">
-              <label htmlFor="sort">Sort by:</label>
-              <select
-                id="sort"
-                value={sortOption}
-                onChange={e => setSortOption(e.target.value)}
-                className="genre-select"
-              >
-                <option value="dateAdded">Date Added</option>
-                <option value="artistName">Artist Name</option>
-              </select>
-            </div>
+            <FilterDropdown
+              label="Sort by"
+              id="sort"
+              value={sortOption}
+              options={['dateAdded', 'artistName']}
+              onChange={e => setSortOption(e.target.value)}
+              formatOption={option => (option === 'dateAdded' ? 'Date Added' : 'Artist Name')}
+            />
           </div>
 
           {/* Add SearchBox component */}

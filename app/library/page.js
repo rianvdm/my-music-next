@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import LazyImage from '../../components/ui/LazyImage';
 import Button from '../../components/ui/Button';
+import FilterDropdown from '../../components/ui/FilterDropdown';
 import LibrarySearchBox from '../../components/features/library/LibrarySearchBox';
 import LibrarySummary from '../../components/features/library/LibrarySummary';
 import { generateArtistSlug, generateAlbumSlug } from '../utils/slugify';
@@ -221,70 +222,39 @@ const LibraryPage = () => {
               alignItems: 'center',
             }}
           >
-            {/* Genre Filter */}
-            <div className="filter-container">
-              <label htmlFor="genre">Genre:</label>
-              <select
-                id="genre"
-                value={selectedGenre}
-                onChange={e => setSelectedGenre(e.target.value)}
-                className="genre-select"
-              >
-                {uniqueGenres.map(genre => (
-                  <option key={genre} value={genre}>
-                    {genre}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <FilterDropdown
+              label="Genre"
+              id="genre"
+              value={selectedGenre}
+              options={uniqueGenres}
+              onChange={e => setSelectedGenre(e.target.value)}
+            />
 
-            {/* Format Filter */}
-            <div className="filter-container">
-              <label htmlFor="format">Format:</label>
-              <select
-                id="format"
-                value={selectedFormat}
-                onChange={e => setSelectedFormat(e.target.value)}
-                className="genre-select"
-              >
-                {uniqueFormats.map(format => (
-                  <option key={format} value={format}>
-                    {format}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <FilterDropdown
+              label="Format"
+              id="format"
+              value={selectedFormat}
+              options={uniqueFormats}
+              onChange={e => setSelectedFormat(e.target.value)}
+            />
 
-            {/* Year Filter */}
-            <div className="filter-container">
-              <label htmlFor="year">Decade:</label>
-              <select
-                id="year"
-                value={selectedYear}
-                onChange={e => setSelectedYear(e.target.value)}
-                className="genre-select"
-              >
-                {uniqueYears.map(decade => (
-                  <option key={decade} value={decade}>
-                    {decade === 'All' ? 'All' : `${decade}s`}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <FilterDropdown
+              label="Decade"
+              id="year"
+              value={selectedYear}
+              options={uniqueYears}
+              onChange={e => setSelectedYear(e.target.value)}
+              formatOption={decade => (decade === 'All' ? 'All' : `${decade}s`)}
+            />
 
-            {/* Sort Option */}
-            <div className="filter-container">
-              <label htmlFor="sort">Sort by:</label>
-              <select
-                id="sort"
-                value={sortOption}
-                onChange={e => setSortOption(e.target.value)}
-                className="genre-select"
-              >
-                <option value="dateAdded">Release Date</option>
-                <option value="artistName">Artist Name</option>
-              </select>
-            </div>
+            <FilterDropdown
+              label="Sort by"
+              id="sort"
+              value={sortOption}
+              options={['dateAdded', 'artistName']}
+              onChange={e => setSortOption(e.target.value)}
+              formatOption={option => (option === 'dateAdded' ? 'Release Date' : 'Artist Name')}
+            />
           </div>
 
           {/* Search Box */}
