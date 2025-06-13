@@ -2,6 +2,7 @@
 
 import { useEffect, useState, memo } from 'react';
 import Link from 'next/link';
+import Button from '../ui/Button';
 
 function NavBar() {
   const [theme, setTheme] = useState('light');
@@ -42,17 +43,16 @@ function NavBar() {
           <Link href="/mystats">Stats</Link>
         </li>
         <li style={{ ...liStyle, position: 'relative' }}>
-          <span
+          <Button
+            variant="link"
             onClick={() => setShowMoreMenu(!showMoreMenu)}
             style={{
-              cursor: 'pointer',
-              color: 'var(--c-accent)',
               display: 'block',
-              padding: '16px 16px 0 16px', // Match the padding of nav links
+              padding: '16px 16px 0 16px',
             }}
           >
             More
-          </span>
+          </Button>
           {showMoreMenu && (
             <ul style={dropdownStyle}>
               <li style={dropdownItemStyle}>
@@ -82,19 +82,15 @@ function NavBar() {
           <Link href="/about">About</Link>
         </li>
         <li style={liStyle}>
-          <button
+          <Button
+            variant="icon"
             onClick={toggleTheme}
             style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              fontSize: '1.2rem',
-              padding: '16px 16px 0 16px',
-              color: theme === 'light' ? '#000000' : '#ffffff', // Black in light mode, white in dark mode
+              color: theme === 'light' ? '#000000' : '#ffffff',
             }}
           >
             ☀️/🌙
-          </button>
+          </Button>
         </li>
       </ul>
 

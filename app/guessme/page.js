@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { marked } from 'marked';
+import Button from '../../components/ui/Button';
 
 export default function GuessMe() {
   const [userGuess, setUserGuess] = useState('');
@@ -43,7 +44,9 @@ export default function GuessMe() {
   });
 
   const handleGuess = async () => {
-    if (!userGuess.trim()) return;
+    if (!userGuess.trim()) {
+      return;
+    }
     setLoading(true);
     try {
       const promptWithContext = `${userGuess}`;
@@ -123,13 +126,13 @@ export default function GuessMe() {
             }
           }}
         />
-        <button
-          className="button"
+        <Button
           onClick={handleGuess}
-          disabled={loading || !userGuess.trim() || isCorrectGuess}
+          disabled={!userGuess.trim() || isCorrectGuess}
+          loading={loading}
         >
-          {loading ? 'Thinking...' : 'Ask or Guess'}
-        </button>
+          Ask or Guess
+        </Button>
       </div>
       <div className="conversation-container">{renderCurrentQA()}</div>
     </div>

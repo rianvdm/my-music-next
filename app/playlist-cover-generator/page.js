@@ -3,6 +3,7 @@
 export const runtime = 'edge';
 
 import { useState } from 'react';
+import Button from '../../components/ui/Button';
 
 export default function PlaylistCoverPage() {
   const inputWidth = '400px';
@@ -213,17 +214,16 @@ export default function PlaylistCoverPage() {
               </select>
             </div>
 
-            <button
+            <Button
               type="submit"
-              className="button"
-              disabled={isLoading}
+              loading={isLoading}
               style={{
                 width: '200px',
                 marginTop: '1rem',
               }}
             >
-              {isLoading ? 'Generating...' : 'Generate Cover'}
-            </button>
+              Generate Cover
+            </Button>
           </form>
 
           {generatedPrompt && (

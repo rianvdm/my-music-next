@@ -3,16 +3,38 @@
 import { memo } from 'react';
 
 const Button = memo(
-  ({ children, onClick, disabled = false, style = {}, className = '', ...props }) => {
+  ({
+    children,
+    onClick,
+    disabled = false,
+    loading = false,
+    variant = 'primary',
+    size = 'medium',
+    type = 'button',
+    style = {},
+    className = '',
+    ...props
+  }) => {
+    const buttonClasses = [
+      'button',
+      `button--${variant}`,
+      `button--${size}`,
+      loading && 'button--loading',
+      className,
+    ]
+      .filter(Boolean)
+      .join(' ');
+
     return (
       <button
-        className={`button ${className}`.trim()}
+        className={buttonClasses}
         onClick={onClick}
-        disabled={disabled}
+        disabled={disabled || loading}
+        type={type}
         style={style}
         {...props}
       >
-        {children}
+        {loading ? 'Loading...' : children}
       </button>
     );
   }

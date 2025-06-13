@@ -649,6 +649,85 @@ pre {
   min-width: 100px;
 }
 
+/* Button Variants */
+.button--primary {
+  /* Default styling already applied from .button above */
+}
+
+.button--secondary {
+  background-color: transparent;
+  border: 2px solid var(--c-accent);
+  color: var(--c-accent);
+}
+
+.button--secondary:hover {
+  background-color: var(--c-accent);
+  color: var(--c-bg);
+}
+
+.button--link {
+  background: none;
+  border: none;
+  color: var(--c-accent);
+  text-decoration: underline;
+  padding: 4px 0;
+  margin: 0;
+  min-width: auto;
+  font-weight: normal;
+}
+
+.button--link:hover {
+  background: none;
+  color: rgba(var(--c-accent-rgb), 0.8);
+  text-decoration: underline;
+}
+
+.button--icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 16px;
+  margin: 0;
+  min-width: auto;
+  font-size: 1.2rem;
+  color: var(--c-base);
+  transition: opacity 0.3s;
+}
+
+.button--icon:hover {
+  background: none;
+  opacity: 0.7;
+}
+
+/* Button Sizes */
+.button--small {
+  padding: 4px 8px;
+  font-size: 14px;
+  min-width: 80px;
+}
+
+.button--medium {
+  /* Default sizing already applied from .button above */
+}
+
+.button--large {
+  padding: 12px 20px;
+  font-size: 18px;
+  min-width: 120px;
+}
+
+/* Button States */
+.button--loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.button:disabled,
+.button--loading {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .genre-select {
   background-color: var(--c-bg);
   color: var(--c-base);

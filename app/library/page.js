@@ -263,25 +263,22 @@ const LibraryPage = () => {
             onSearchResults={handleSearchResults}
           />
 
-          {/* Reset Filters Link */}
+          {/* Action Buttons */}
           <div style={{ marginTop: '0', marginBottom: '1rem' }}>
-            <a
-              href="#"
-              onClick={e => {
-                e.preventDefault();
-                resetFilters();
-              }}
+            <Button variant="link" onClick={resetFilters} style={{ marginRight: '2rem' }}>
+              Reset filters
+            </Button>
+            <Button
+              variant="link"
+              onClick={handleRandomReleaseClick}
               style={{ marginRight: '2rem' }}
             >
-              Reset filters
-            </a>
-            <a href="#" onClick={handleRandomReleaseClick} style={{ marginRight: '2rem' }}>
               Random selection
-            </a>
+            </Button>
             {randomReleases.length > 0 && (
-              <a href="#" onClick={handleClearRandomReleases}>
+              <Button variant="link" onClick={handleClearRandomReleases}>
                 Clear
-              </a>
+              </Button>
             )}
           </div>
         </div>

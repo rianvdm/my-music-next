@@ -1,5 +1,6 @@
 // ../../components/SearchBox.js
 import { useState, useEffect, memo, useCallback, useMemo } from 'react';
+import Button from '../../ui/Button';
 
 const SearchBox = memo(({ data, onSearchResults }) => {
   const [query, setQuery] = useState('');
@@ -47,18 +48,11 @@ const SearchBox = memo(({ data, onSearchResults }) => {
         placeholder="Filter by artist or album title"
         className="search-input" // Apply your existing styles here
       />
-      {/* Clear search link */}
+      {/* Clear search button */}
       {query && (
-        <a
-          href="#"
-          onClick={e => {
-            e.preventDefault();
-            handleClearSearch();
-          }}
-          className="clear-search-link" // Apply custom link styles
-        >
+        <Button variant="link" onClick={handleClearSearch} size="small">
           Clear search
-        </a>
+        </Button>
       )}
     </div>
   );
