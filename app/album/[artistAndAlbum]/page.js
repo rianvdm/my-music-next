@@ -3,7 +3,7 @@
 export const runtime = 'edge';
 
 import { useEffect, useState, useRef } from 'react';
-import LazyMarkdown from '../../components/LazyMarkdown';
+import LazyMarkdown from '../../../components/ui/LazyMarkdown';
 import Link from 'next/link';
 import {
   generateArtistSlug,

@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '../utils/test-utils';
-import GenreFilter from '../../app/components/GenreFilter';
+import GenreFilter from '../../components/ui/GenreFilter';
 
 const mockGenres = ['All', 'Rock', 'Jazz', 'Electronic', 'Hip-Hop'];
 const mockOnChange = jest.fn();

@@ -15,13 +15,13 @@ jest.mock('../../app/utils/slugify', () => ({
 }));
 
 // Mock components
-jest.mock('../../app/components/LazyImage', () => {
+jest.mock('../../components/ui/LazyImage', () => {
   return function MockLazyImage({ src, alt, width, height }) {
     return <img src={src} alt={alt} width={width} height={height} data-testid="lazy-image" />;
   };
 });
 
-jest.mock('../../app/components/LibrarySearchBox', () => {
+jest.mock('../../components/features/library/LibrarySearchBox', () => {
   return function MockLibrarySearchBox({ data, onSearchResults }) {
     return (
       <div data-testid="library-search-box">
@@ -40,7 +40,7 @@ jest.mock('../../app/components/LibrarySearchBox', () => {
   };
 });
 
-jest.mock('../../app/components/LibrarySummary', () => {
+jest.mock('../../components/features/library/LibrarySummary', () => {
   return function MockLibrarySummary({
     releaseCount,
     selectedGenre,

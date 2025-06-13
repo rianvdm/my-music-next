@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '../utils/test-utils';
-import DecadeFilter from '../../app/components/DecadeFilter';
+import DecadeFilter from '../../components/ui/DecadeFilter';
 
 const mockDecades = ['All', '1960', '1970', '1980', '1990', '2000'];
 const mockOnChange = jest.fn();

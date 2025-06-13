@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import LazyImage from '../components/LazyImage';
-import LibrarySearchBox from '../components/LibrarySearchBox';
-import LibrarySummary from '../components/LibrarySummary';
+import LazyImage from '../../components/ui/LazyImage';
+import LibrarySearchBox from '../../components/features/library/LibrarySearchBox';
+import LibrarySummary from '../../components/features/library/LibrarySummary';
 import { generateArtistSlug, generateAlbumSlug } from '../utils/slugify';
 
 const ITEMS_PER_PAGE = 25;
@@ -93,7 +93,9 @@ const LibraryPage = () => {
 
   // Filter and sort releases
   const filteredAndSortedReleases = useMemo(() => {
-    if (!libraryData) return [];
+    if (!libraryData) {
+      return [];
+    }
 
     return libraryData
       .filter(release => {
@@ -140,10 +142,18 @@ const LibraryPage = () => {
   // Update URL with filters
   useEffect(() => {
     const queryParams = new URLSearchParams();
-    if (selectedGenre !== 'All') queryParams.set('genre', selectedGenre);
-    if (selectedFormat !== 'All') queryParams.set('format', selectedFormat);
-    if (selectedYear !== 'All') queryParams.set('year', selectedYear);
-    if (currentPage !== 1) queryParams.set('page', currentPage.toString());
+    if (selectedGenre !== 'All') {
+      queryParams.set('genre', selectedGenre);
+    }
+    if (selectedFormat !== 'All') {
+      queryParams.set('format', selectedFormat);
+    }
+    if (selectedYear !== 'All') {
+      queryParams.set('year', selectedYear);
+    }
+    if (currentPage !== 1) {
+      queryParams.set('page', currentPage.toString());
+    }
 
     const queryString = queryParams.toString();
     const newUrl = window.location.pathname + (queryString ? `?${queryString}` : '');
@@ -161,7 +171,9 @@ const LibraryPage = () => {
 
   const handleRandomReleaseClick = e => {
     e.preventDefault();
-    if (!filteredAndSortedReleases.length) return;
+    if (!filteredAndSortedReleases.length) {
+      return;
+    }
     const randomCount = Math.min(3, filteredAndSortedReleases.length);
     const shuffled = [...filteredAndSortedReleases].sort(() => 0.5 - Math.random());
     const selected = shuffled.slice(0, randomCount);

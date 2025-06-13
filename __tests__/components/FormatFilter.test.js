@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '../utils/test-utils';
-import FormatFilter from '../../app/components/FormatFilter';
+import FormatFilter from '../../components/ui/FormatFilter';
 
 const mockFormats = ['All', 'Vinyl', 'CD', 'Digital', 'Cassette'];
 const mockOnChange = jest.fn();

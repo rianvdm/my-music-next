@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '../utils/test-utils';
-import NavBar from '../../app/navbar';
+import NavBar from '../../components/layout/NavBar';
 
 // Mock localStorage
 const localStorageMock = {

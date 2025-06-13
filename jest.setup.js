@@ -20,6 +20,22 @@ jest.mock('next/navigation', () => ({
 // Mock window.fetch for API calls
 global.fetch = jest.fn();
 
+// Mock IntersectionObserver
+global.IntersectionObserver = class IntersectionObserver {
+  constructor(callback) {
+    this.callback = callback;
+  }
+  observe() {
+    return null;
+  }
+  unobserve() {
+    return null;
+  }
+  disconnect() {
+    return null;
+  }
+};
+
 // Add Request and Response polyfills for API route testing
 if (typeof global.Request === 'undefined') {
   global.Request = class Request {

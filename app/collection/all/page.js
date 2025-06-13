@@ -8,13 +8,13 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { generateArtistSlug, generateAlbumSlug } from '../../utils/slugify';
 
 // Importing Filter Components
-import GenreFilter from '../../components/GenreFilter';
-import StyleFilter from '../../components/StyleFilter';
-import FormatFilter from '../../components/FormatFilter';
-import DecadeFilter from '../../components/DecadeFilter';
-import ReleaseSummary from '../../components/ReleaseSummary';
-import SearchBox from '../../components/SearchBox'; // Import SearchBox component
-import LazyImage from '../../components/LazyImage'; // Import LazyImage component
+import GenreFilter from '../../../components/ui/GenreFilter';
+import StyleFilter from '../../../components/ui/StyleFilter';
+import FormatFilter from '../../../components/ui/FormatFilter';
+import DecadeFilter from '../../../components/ui/DecadeFilter';
+import ReleaseSummary from '../../../components/features/collection/ReleaseSummary';
+import SearchBox from '../../../components/features/search/SearchBox'; // Import SearchBox component
+import LazyImage from '../../../components/ui/LazyImage'; // Import LazyImage component
 
 const ITEMS_PER_PAGE = 25;
 
@@ -103,7 +103,9 @@ const CollectionListPage = () => {
   }, []);
 
   const filteredAndSortedReleases = useMemo(() => {
-    if (!collectionData) return [];
+    if (!collectionData) {
+      return [];
+    }
 
     return collectionData.data.releases
       .filter(release => {
@@ -150,7 +152,9 @@ const CollectionListPage = () => {
           const artistCompare = a.basic_information.artists[0].name.localeCompare(
             b.basic_information.artists[0].name
           );
-          if (artistCompare !== 0) return artistCompare;
+          if (artistCompare !== 0) {
+            return artistCompare;
+          }
 
           const yearA = a.original_year || a.basic_information.year || 0;
           const yearB = b.original_year || b.basic_information.year || 0;
@@ -169,7 +173,9 @@ const CollectionListPage = () => {
   ]);
 
   const availableStyles = useMemo(() => {
-    if (!collectionData) return ['All'];
+    if (!collectionData) {
+      return ['All'];
+    }
 
     const stylesCount = new Map();
 
@@ -231,11 +237,21 @@ const CollectionListPage = () => {
 
   useEffect(() => {
     const queryParams = new URLSearchParams();
-    if (selectedGenre !== 'All') queryParams.set('genre', selectedGenre);
-    if (selectedFormat !== 'All') queryParams.set('format', selectedFormat);
-    if (selectedDecade !== 'All') queryParams.set('decade', selectedDecade);
-    if (selectedStyle !== 'All') queryParams.set('style', selectedStyle);
-    if (currentPage !== 1) queryParams.set('page', currentPage.toString());
+    if (selectedGenre !== 'All') {
+      queryParams.set('genre', selectedGenre);
+    }
+    if (selectedFormat !== 'All') {
+      queryParams.set('format', selectedFormat);
+    }
+    if (selectedDecade !== 'All') {
+      queryParams.set('decade', selectedDecade);
+    }
+    if (selectedStyle !== 'All') {
+      queryParams.set('style', selectedStyle);
+    }
+    if (currentPage !== 1) {
+      queryParams.set('page', currentPage.toString());
+    }
 
     const queryString = queryParams.toString();
     const newUrl = window.location.pathname + (queryString ? `?${queryString}` : '');
@@ -296,7 +312,9 @@ const CollectionListPage = () => {
   // Handler for Random Release click
   const handleRandomReleaseClick = e => {
     e.preventDefault();
-    if (filteredAndSortedReleases.length === 0) return;
+    if (filteredAndSortedReleases.length === 0) {
+      return;
+    }
     const randomCount = Math.min(3, filteredAndSortedReleases.length);
     const shuffled = [...filteredAndSortedReleases].sort(() => 0.5 - Math.random());
     const selected = shuffled.slice(0, randomCount);

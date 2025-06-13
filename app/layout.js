@@ -2,7 +2,7 @@ export const runtime = 'edge';
 
 import { Inter } from 'next/font/google';
 import './globals.css';
-import NavBar from './navbar';
+import NavBar from '../components/layout/NavBar';
 import { headers } from 'next/headers';
 
 const inter = Inter({ subsets: ['latin'] });

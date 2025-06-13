@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '../utils/test-utils';
-import SearchBox from '../../app/components/SearchBox';
+import SearchBox from '../../components/features/search/SearchBox';
 import { mockSearchData } from '../utils/test-utils';
 
 describe('SearchBox Component', () => {

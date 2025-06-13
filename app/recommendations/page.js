@@ -5,7 +5,7 @@ export const runtime = 'edge';
 import { useEffect, useState } from 'react';
 import { marked } from 'marked';
 import Link from 'next/link';
-import LazyImage from '../components/LazyImage';
+import LazyImage from '../../components/ui/LazyImage';
 
 export default function RecommendationsPage() {
   const [lovedTracks, setLovedTracks] = useState([]);

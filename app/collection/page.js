@@ -6,19 +6,21 @@ import { useEffect, useState, useMemo, lazy, Suspense } from 'react';
 
 // Lazy load chart components for better performance
 const LazyPieChart = lazy(() =>
-  import('../components/LazyCharts').then(module => ({ default: module.LazyPieChart }))
+  import('../../components/charts/LazyCharts').then(module => ({ default: module.LazyPieChart }))
 );
 const LazyBarChart = lazy(() =>
-  import('../components/LazyCharts').then(module => ({ default: module.LazyBarChart }))
+  import('../../components/charts/LazyCharts').then(module => ({ default: module.LazyBarChart }))
 );
 const LazyYearBarChart = lazy(() =>
-  import('../components/LazyCharts').then(module => ({ default: module.LazyYearBarChart }))
+  import('../../components/charts/LazyCharts').then(module => ({
+    default: module.LazyYearBarChart,
+  }))
 );
 import { useRouter, useSearchParams } from 'next/navigation';
-import GenreFilter from '../components/GenreFilter';
-import FormatFilter from '../components/FormatFilter';
-import DecadeFilter from '../components/DecadeFilter';
-import ReleaseSummary from '../components/ReleaseSummary';
+import GenreFilter from '../../components/ui/GenreFilter';
+import FormatFilter from '../../components/ui/FormatFilter';
+import DecadeFilter from '../../components/ui/DecadeFilter';
+import ReleaseSummary from '../../components/features/collection/ReleaseSummary';
 
 const DiscogsStatsPage = () => {
   const router = useRouter();
