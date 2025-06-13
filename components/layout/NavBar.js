@@ -87,6 +87,8 @@ function NavBar() {
             onClick={toggleTheme}
             style={{
               color: theme === 'light' ? '#000000' : '#ffffff',
+              padding: '16px 16px 0 16px',
+              margin: 0,
             }}
           >
             ☀️/🌙
