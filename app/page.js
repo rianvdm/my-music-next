@@ -2,74 +2,11 @@
 
 export const runtime = 'edge';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { generateArtistSlug, generateAlbumSlug, generateLastfmArtistSlug } from './utils/slugify';
-import { genres } from './utils/genres';
-
-// Custom hooks for data fetching
-const useRandomFact = () => {
-  const [fact, setFact] = useState('Did you know');
-
-  useEffect(() => {
-    const fetchRandomFact = async () => {
-      try {
-        const response = await fetch('https://kv-fetch-random-fact.rian-db8.workers.dev/');
-        const factData = await response.json();
-        setFact(factData.data);
-      } catch (error) {
-        console.error('Error fetching random fact:', error);
-        setFact('Did you know? There was an error loading a random fact.');
-      }
-    };
-
-    fetchRandomFact();
-  }, []);
-
-  return fact;
-};
-
-const useRandomGenre = () => {
-  const [genreData, setGenreData] = useState({ urlGenre: null, displayGenre: null });
-
-  useEffect(() => {
-    const randomGenre = genres[Math.floor(Math.random() * genres.length)];
-
-    // Capitalize the first letter of each word and replace hyphens with spaces
-    const displayGenre = randomGenre
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
-
-    setGenreData({ urlGenre: randomGenre, displayGenre });
-  }, []);
-
-  return genreData;
-};
-
-const useRecentSearches = () => {
-  const [searches, setSearches] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchRecentSearches = async () => {
-      try {
-        const response = await fetch('https://kv-fetch-recentsearches.rian-db8.workers.dev/');
-        const data = await response.json();
-        setSearches(data.data);
-      } catch (error) {
-        console.error('Error fetching recent searches:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchRecentSearches();
-  }, []);
-
-  return { searches, isLoading };
-};
+import { useRandomFact, useRandomGenre, useRecentSearches } from './hooks';
 
 // Subcomponents
 const DayGreeting = () => {
@@ -127,8 +64,12 @@ const AlbumSearch = () => {
 };
 
 const RecentSearches = ({ searches, isLoading }) => {
-  if (isLoading) return <div className="track_ul2">Loading recent searches...</div>;
-  if (!searches?.length) return null;
+  if (isLoading) {
+    return <div className="track_ul2">Loading recent searches...</div>;
+  }
+  if (!searches?.length) {
+    return null;
+  }
 
   return (
     <div className="track-grid">
