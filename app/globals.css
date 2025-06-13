@@ -669,7 +669,7 @@ pre {
   background: none;
   border: none;
   color: var(--c-accent);
-  text-decoration: underline;
+  text-decoration: none;
   padding: 4px 0;
   margin: 0;
   min-width: auto;
@@ -679,7 +679,7 @@ pre {
 .button--link:hover {
   background: none;
   color: rgba(var(--c-accent-rgb), 0.8);
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .button--icon {
