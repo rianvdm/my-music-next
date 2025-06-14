@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Input from '../../components/ui/Input';
 
 const API_URL = 'https://personality-api.rian-db8.workers.dev/api';
 
@@ -15,7 +16,9 @@ const usePersonalities = () => {
     try {
       setIsLoading(true);
       const response = await fetch(`${API_URL}/personalities`);
-      if (!response.ok) throw new Error('Failed to fetch personalities');
+      if (!response.ok) {
+        throw new Error('Failed to fetch personalities');
+      }
       const data = await response.json();
       setPersonalities(data.personalities);
       setActivePersonality(data.activePersonality);
@@ -35,7 +38,9 @@ const usePersonalities = () => {
 
 // Simple Modal Component
 const SimpleModal = ({ show, onClose, title, children }) => {
-  if (!show) return null;
+  if (!show) {
+    return null;
+  }
 
   const modalOverlayStyle = {
     position: 'fixed',
@@ -98,9 +103,8 @@ const PersonalityForm = ({ onAdd }) => {
       <h1 style={{ textAlign: 'center' }}>Add New Personality</h1>
       <form>
         <div className="search-form" style={{ display: 'flex', justifyContent: 'center' }}>
-          <input
-            id="follow-up-search"
-            type="text"
+          <Input
+            variant="form"
             name="name"
             value={formData.name}
             onChange={handleChange}
@@ -159,7 +163,9 @@ const GameDataForm = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(gameData),
       });
-      if (!response.ok) throw new Error('Failed to save game data');
+      if (!response.ok) {
+        throw new Error('Failed to save game data');
+      }
       setMessage('Game data saved successfully');
     } catch (err) {
       setMessage(`Error: ${err.message}`);
@@ -170,21 +176,25 @@ const GameDataForm = () => {
     <div style={{ maxWidth: '800px', margin: '20px auto', padding: '20px' }}>
       <h2 style={{ textAlign: 'center', marginBottom: '15px', marginTop: '0' }}>Set Game Data</h2>
       <form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-        <input
+        <Input
           type="number"
+          variant="form"
+          size="small"
           name="gameVersion"
           value={gameData.gameVersion}
           onChange={handleChange}
           placeholder="Game version"
-          style={{ width: 'calc(33% - 7.5px)', padding: '8px' }}
+          style={{ width: 'calc(33% - 7.5px)' }}
           required
         />
-        <input
+        <Input
           type="date"
+          variant="form"
+          size="small"
           name="gameDate"
           value={gameData.gameDate}
           onChange={handleChange}
-          style={{ width: 'calc(67% - 7.5px)', padding: '8px' }}
+          style={{ width: 'calc(67% - 7.5px)' }}
           required
         />
         <button
@@ -225,7 +235,9 @@ const PersonalityList = ({ personalities, activePersonality, onUpdate, onDelete,
     setSelectedPersonality(null);
   };
 
-  if (!Object.keys(personalities).length) return <div>No personalities found.</div>;
+  if (!Object.keys(personalities).length) {
+    return <div>No personalities found.</div>;
+  }
 
   return (
     <>
@@ -306,7 +318,9 @@ export default function PersonalityManagerClient() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(personalityData),
         });
-        if (!response.ok) throw new Error('Failed to add personality');
+        if (!response.ok) {
+          throw new Error('Failed to add personality');
+        }
         fetchPersonalities();
       } catch (err) {
         console.error('Error adding personality:', err);
@@ -325,7 +339,9 @@ export default function PersonalityManagerClient() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ content: updatedContent }),
           });
-          if (!response.ok) throw new Error('Failed to update personality');
+          if (!response.ok) {
+            throw new Error('Failed to update personality');
+          }
           fetchPersonalities();
         } catch (err) {
           console.error('Error updating personality:', err);
@@ -342,7 +358,9 @@ export default function PersonalityManagerClient() {
           const response = await fetch(`${API_URL}/personalities/${name}`, {
             method: 'DELETE',
           });
-          if (!response.ok) throw new Error('Failed to delete personality');
+          if (!response.ok) {
+            throw new Error('Failed to delete personality');
+          }
           fetchPersonalities();
         } catch (err) {
           console.error('Error deleting personality:', err);
@@ -360,7 +378,9 @@ export default function PersonalityManagerClient() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name }),
         });
-        if (!response.ok) throw new Error('Failed to set active personality');
+        if (!response.ok) {
+          throw new Error('Failed to set active personality');
+        }
         fetchPersonalities();
       } catch (err) {
         console.error('Error setting active personality:', err);
@@ -369,8 +389,12 @@ export default function PersonalityManagerClient() {
     [fetchPersonalities]
   );
 
-  if (isLoading) return <div>Loading personalities...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (isLoading) {
+    return <div>Loading personalities...</div>;
+  }
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div>

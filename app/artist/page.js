@@ -4,6 +4,7 @@ export const runtime = 'edge';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Input from '../../components/ui/Input';
 
 export default function ArtistPage() {
   const [randomFact, setRandomFact] = useState('Did you know ...');
@@ -71,9 +72,9 @@ export default function ArtistPage() {
       </header>
       <main>
         <div id="search-form">
-          <input
+          <Input
             id="artist-name"
-            type="text"
+            variant="form"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             onKeyDown={handleKeyDown} // Listen for Enter key press

@@ -1,6 +1,7 @@
 // ../../components/SearchBox.js
 import { useState, useEffect, memo, useCallback, useMemo } from 'react';
 import Button from '../../ui/Button';
+import Input from '../../ui/Input';
 
 const SearchBox = memo(({ data, onSearchResults }) => {
   const [query, setQuery] = useState('');
@@ -41,12 +42,11 @@ const SearchBox = memo(({ data, onSearchResults }) => {
         gap: '1rem',
       }}
     >
-      <input
-        type="text"
+      <Input
+        variant="search"
         value={query}
         onChange={e => setQuery(e.target.value)}
         placeholder="Filter by artist or album title"
-        className="search-input" // Apply your existing styles here
       />
       {/* Clear search button */}
       {query && (

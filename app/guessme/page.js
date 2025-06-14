@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { marked } from 'marked';
 import Button from '../../components/ui/Button';
+import Input from '../../components/ui/Input';
 
 export default function GuessMe() {
   const [userGuess, setUserGuess] = useState('');
@@ -112,10 +113,9 @@ export default function GuessMe() {
         </h3>
       ) : null}
       <div id="search-form" style={{ marginBottom: '20px' }}>
-        <input
+        <Input
           ref={inputRef}
-          id="follow-up-search"
-          type="text"
+          variant="expandable"
           value={userGuess}
           onChange={e => setUserGuess(e.target.value)}
           placeholder="Enter your question or guess..."

@@ -4,6 +4,7 @@ export const runtime = 'edge';
 
 import { useState } from 'react';
 import Button from '../../components/ui/Button';
+import Input from '../../components/ui/Input';
 
 export default function PlaylistCoverPage() {
   const inputWidth = '400px';
@@ -161,18 +162,13 @@ export default function PlaylistCoverPage() {
                 >
                   {field.label}
                 </label>
-                <input
-                  id={field.id}
-                  type="text"
+                <Input
                   name={field.name}
                   value={formData[field.name]}
                   onChange={handleInputChange}
                   placeholder={field.placeholder}
                   required={field.required}
-                  style={{
-                    flex: 1,
-                    minWidth: '300px',
-                  }}
+                  variant="flex"
                 />
               </div>
             ))}

@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
+import Input from '../../ui/Input';
 
 const LibrarySearchBox = ({ data, onSearchResults }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -27,12 +28,11 @@ const LibrarySearchBox = ({ data, onSearchResults }) => {
 
   return (
     <div className="search-container">
-      <input
-        type="text"
+      <Input
+        variant="search"
         placeholder="Search by artist or album..."
         value={searchTerm}
         onChange={e => handleSearch(e.target.value)}
-        className="search-input"
       />
     </div>
   );

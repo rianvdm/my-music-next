@@ -418,60 +418,8 @@ img.center-image {
   padding-bottom: 1em;
 }
 
-#search-form input,
 #search-form button {
   margin-right: 0.5em;
-}
-
-#artist-name,
-#album-name,
-#song-name,
-#lastFmUsername,
-#follow-up-search,
-#playlist-name,
-#genres-input,
-#vibe-input,
-#objects-input,
-#font-input,
-#colors-input {
-  border: 2px solid #ccc;
-  border-radius: 4px;
-  padding: 8px;
-  font-size: 16px;
-  outline: none;
-  transition: border-color 0.3s;
-}
-
-#artist-name,
-#album-name,
-#song-name,
-#lastFmUsername,
-#playlist-name,
-#genres-input,
-#vibe-input,
-#objects-input,
-#font-input,
-#colors-input {
-  width: 90%;
-  max-width: 300px;
-}
-
-#artist-name:focus,
-#album-name:focus,
-#song-name:focus,
-#lastFmUsername:focus,
-#follow-up-search:focus,
-#playlist-name:focus,
-#genres-input:focus,
-#vibe-input:focus,
-#objects-input:focus,
-#font-input:focus,
-#colors-input:focus {
-  border-color: var(--c-accent);
-  box-shadow: 0 0 5px var(--c-accent);
-  transition:
-    border-color 0.3s ease-in-out,
-    box-shadow 0.3s ease-in-out;
 }
 
 /* Responsive Search Form */
@@ -480,7 +428,6 @@ img.center-image {
     flex-direction: column;
   }
 
-  #search-form input,
   #search-form button {
     width: 90%;
     max-width: 300px;
@@ -640,11 +587,6 @@ pre {
   margin: 0 auto;
 }
 
-#follow-up-search {
-  flex-grow: 1;
-  margin-right: 10px;
-}
-
 .button {
   min-width: 100px;
 }
@@ -797,24 +739,6 @@ pre {
   margin-bottom: 0.1em;
   font-size: 16px;
   color: var(--c-base);
-}
-
-/* Styles for search input box */
-.search-input {
-  padding: 8px;
-  width: 100%;
-  max-width: 400px;
-  border-radius: 4px;
-  border: 2px solid #ccc;
-  font-size: 16px;
-  outline: none;
-  transition: border-color 0.3s ease;
-}
-
-/* Hover and focus effects for the search input */
-.search-input:focus {
-  border-color: var(--c-accent);
-  box-shadow: 0 0 5px var(--c-accent);
 }
 
 /* Clear search link */

@@ -5,6 +5,7 @@ export const runtime = 'edge';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { generateArtistSlug, generateAlbumSlug, generateLastfmArtistSlug } from '../utils/slugify';
+import Input from '../../components/ui/Input';
 
 export default function AlbumSearchPage() {
   const [album, setAlbum] = useState('');
@@ -81,17 +82,17 @@ export default function AlbumSearchPage() {
       </header>
       <main>
         <div id="search-form">
-          <input
+          <Input
             id="album-name"
-            type="text"
+            variant="form"
             value={album}
             onChange={e => setAlbum(e.target.value)}
             onKeyDown={handleKeyDown} // Listen for Enter key press
             placeholder="Enter album name..."
           />
-          <input
+          <Input
             id="artist-name"
-            type="text"
+            variant="form"
             value={artist}
             onChange={e => setArtist(e.target.value)}
             onKeyDown={handleKeyDown} // Listen for Enter key press

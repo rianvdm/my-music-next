@@ -34,7 +34,9 @@ const RecentTrackDisplay = ({ recentTracks, isLoading }) => {
   const [artistSummary, setArtistSummary] = useState({ data: null, isLoading: false });
 
   useEffect(() => {
-    if (!recentTracks?.last_artist) return;
+    if (!recentTracks?.last_artist) {
+      return;
+    }
 
     setArtistSummary(prev => ({ ...prev, isLoading: true }));
     let isMounted = true;
@@ -65,8 +67,12 @@ const RecentTrackDisplay = ({ recentTracks, isLoading }) => {
     };
   }, [recentTracks?.last_artist]);
 
-  if (isLoading) return <div className="track_ul2">Loading recent tracks...</div>;
-  if (!recentTracks) return null;
+  if (isLoading) {
+    return <div className="track_ul2">Loading recent tracks...</div>;
+  }
+  if (!recentTracks) {
+    return null;
+  }
 
   const { last_artist, last_album } = recentTracks;
   const artistSlug = generateLastfmArtistSlug(last_artist);
