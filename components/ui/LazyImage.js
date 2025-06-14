@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, memo } from 'react';
 import Image from 'next/image';
+import LoadingSpinner from './LoadingSpinner';
 
 const LazyImage = memo(({ src, alt, width, height }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -51,7 +52,9 @@ const LazyImage = memo(({ src, alt, width, height }) => {
           quality={75}
         />
       ) : (
-        <div className="placeholder-image">Loading...</div>
+        <div className="placeholder-image">
+          <LoadingSpinner variant="inline" />
+        </div>
       )}
     </div>
   );

@@ -69,7 +69,7 @@ const RecentTrackDisplay = ({ recentTracks, isLoading }) => {
   }, [recentTracks?.last_artist]);
 
   if (isLoading) {
-    return <LoadingSpinner variant="tracks" />;
+    return <LoadingSpinner variant="tracks" showSpinner={true} />;
   }
   if (!recentTracks) {
     return null;
@@ -148,7 +148,7 @@ export default function MyStats() {
 
   const renderTopArtists = () => {
     if (!topArtistsData) {
-      return <LoadingSpinner variant="data" text="Loading artists..." />;
+      return <LoadingSpinner variant="data" text="Loading artists..." showSpinner={true} />;
     }
 
     return (
@@ -189,7 +189,7 @@ export default function MyStats() {
 
   const renderTopAlbums = () => {
     if (!topAlbumsData) {
-      return <LoadingSpinner variant="data" text="Loading albums..." />;
+      return <LoadingSpinner variant="data" text="Loading albums..." showSpinner={true} />;
     }
 
     return (
@@ -224,7 +224,7 @@ export default function MyStats() {
 
   const renderDiscogsCollection = () => {
     if (!discogsData) {
-      return <LoadingSpinner variant="collection" />;
+      return <LoadingSpinner variant="collection" showSpinner={true} />;
     }
 
     return (

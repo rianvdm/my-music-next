@@ -35,7 +35,14 @@ export default function LazyMarkdown({
   }, [content]);
 
   if (loading) {
-    return <LoadingSpinner variant="content" text={loadingText} className={className} />;
+    return (
+      <LoadingSpinner
+        variant="content"
+        text={loadingText}
+        className={className}
+        showSpinner={true}
+      />
+    );
   }
 
   return <div className={className} dangerouslySetInnerHTML={{ __html: html }} />;

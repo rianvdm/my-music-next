@@ -196,7 +196,7 @@ const LibraryPage = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner variant="library" />;
+    return <LoadingSpinner variant="library" showSpinner={true} />;
   }
 
   return (

@@ -391,7 +391,7 @@ export default function PersonalityManagerClient() {
   );
 
   if (isLoading) {
-    return <LoadingSpinner variant="personalities" size="medium" />;
+    return <LoadingSpinner variant="personalities" size="medium" showSpinner={true} />;
   }
   if (error) {
     return <div>Error: {error}</div>;

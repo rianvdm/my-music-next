@@ -101,7 +101,7 @@ describe('Artist Page', () => {
 
       render(<ArtistPage params={mockParams} />);
 
-      expect(screen.getByText('Loading...')).toBeInTheDocument();
+      expect(screen.getByText('Loading content...')).toBeInTheDocument();
     });
 
     it('parses artist name from URL correctly', async () => {
@@ -411,7 +411,7 @@ describe('Artist Page', () => {
       render(<ArtistPage params={mockParams} />);
 
       // Should show loading state initially
-      expect(screen.getByText('Loading...')).toBeInTheDocument();
+      expect(screen.getByText('Loading content...')).toBeInTheDocument();
 
       await waitFor(() => {
         expect(screen.getByText('Pink Floyd')).toBeInTheDocument();
@@ -572,7 +572,7 @@ describe('Artist Page', () => {
       render(<ArtistPage params={malformedParams} />);
 
       // Should handle gracefully without crashing
-      expect(screen.getByText('Loading...')).toBeInTheDocument();
+      expect(screen.getByText('Loading content...')).toBeInTheDocument();
     });
 
     it('handles API returning artist data with error flag', async () => {
@@ -624,7 +624,7 @@ describe('Artist Page', () => {
       render(<ArtistPage params={mockParams} />);
 
       // Initial loading
-      expect(screen.getByText('Loading...')).toBeInTheDocument();
+      expect(screen.getByText('Loading content...')).toBeInTheDocument();
 
       // Artist data loads
       await waitFor(() => {

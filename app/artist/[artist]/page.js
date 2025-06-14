@@ -4,6 +4,7 @@ export const runtime = 'edge';
 
 import { useEffect, useState, useRef, lazy, Suspense } from 'react';
 import LazyMarkdown from '../../../components/ui/LazyMarkdown';
+import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 import Link from 'next/link';
 import {
   generateArtistSlug,
@@ -99,7 +100,7 @@ export default function ArtistPage({ params }) {
   }
 
   if (!artistDetails) {
-    return <p>Loading...</p>;
+    return <LoadingSpinner variant="content" size="large" showSpinner={true} />;
   }
 
   const renderOpenAISummary = summary => {

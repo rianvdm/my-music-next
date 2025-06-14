@@ -134,7 +134,7 @@ const DiscogsStatsPage = () => {
   }, [selectedGenre, selectedFormat, selectedDecade, router]);
 
   if (loading) {
-    return <LoadingSpinner variant="collection" />;
+    return <LoadingSpinner variant="collection" showSpinner={true} />;
   }
 
   if (!collectionData) {
@@ -401,7 +401,7 @@ const DiscogsStatsPage = () => {
             <>
               <h2>Genre Distribution</h2>
               <div className="track_ul2" style={{ height: '400px' }}>
-                <Suspense fallback={<LoadingSpinner variant="chart" />}>
+                <Suspense fallback={<LoadingSpinner variant="chart" showSpinner={true} />}>
                   <LazyPieChart data={genreData} colors={COLORS} />
                 </Suspense>
               </div>
@@ -412,7 +412,7 @@ const DiscogsStatsPage = () => {
             <>
               <h2>Format Distribution</h2>
               <div className="track_ul2" style={{ height: '400px' }}>
-                <Suspense fallback={<LoadingSpinner variant="chart" />}>
+                <Suspense fallback={<LoadingSpinner variant="chart" showSpinner={true} />}>
                   <LazyPieChart data={formatData} colors={COLORS} />
                 </Suspense>
               </div>
@@ -421,14 +421,14 @@ const DiscogsStatsPage = () => {
 
           <h2>Top 10 Artists</h2>
           <div className="track_ul2" style={{ height: '500px', width: '100%' }}>
-            <Suspense fallback={<LoadingSpinner variant="chart" />}>
+            <Suspense fallback={<LoadingSpinner variant="chart" showSpinner={true} />}>
               <LazyBarChart data={artistData} layout="vertical" />
             </Suspense>
           </div>
 
           <h2>Releases by Original Release Year</h2>
           <div className="track_ul2" style={{ height: '400px' }}>
-            <Suspense fallback={<LoadingSpinner variant="chart" />}>
+            <Suspense fallback={<LoadingSpinner variant="chart" showSpinner={true} />}>
               <LazyYearBarChart
                 data={yearData}
                 ticks={generateYearTicks(minYear, maxYear)}

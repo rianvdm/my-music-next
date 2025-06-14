@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { marked } from 'marked';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 export default function GuessMe() {
   const [userGuess, setUserGuess] = useState('');
@@ -106,7 +107,7 @@ export default function GuessMe() {
     <div className="track_ul2">
       <h1>Guess the Music Personality</h1>
       {gameDataLoading ? (
-        <h3 style={{ textAlign: 'center' }}>Loading...</h3>
+        <LoadingSpinner variant="data" showSpinner={true} />
       ) : gameData ? (
         <h3 style={{ textAlign: 'center' }}>
           Guess Me #{gameData.gameVersion}: {formatDate(gameData.gameDate)}

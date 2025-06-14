@@ -7,7 +7,7 @@ import LoadingSpinner from '../../ui/LoadingSpinner';
 
 const RecentSearches = memo(({ searches, isLoading }) => {
   if (isLoading) {
-    return <LoadingSpinner variant="search" />;
+    return <LoadingSpinner variant="search" showSpinner={true} />;
   }
   if (!searches?.length) {
     return null;

@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { marked } from 'marked';
 import Link from 'next/link';
 import LazyImage from '../../components/ui/LazyImage';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 export default function RecommendationsPage() {
   const [lovedTracks, setLovedTracks] = useState([]);
@@ -142,7 +143,9 @@ export default function RecommendationsPage() {
                   height={150}
                 />
               ) : (
-                <div className="placeholder-image">Loading...</div>
+                <div className="placeholder-image">
+                  <LoadingSpinner variant="inline" />
+                </div>
               )}
             </div>
             <div className="no-wrap-text">
@@ -171,7 +174,7 @@ export default function RecommendationsPage() {
                 {trackSummaries[`${track.title}_${track.artist}`] ? (
                   <p>{trackSummaries[`${track.title}_${track.artist}`]}</p>
                 ) : (
-                  <p>Loading...</p>
+                  <LoadingSpinner variant="inline" />
                 )}
               </div>
             </div>
