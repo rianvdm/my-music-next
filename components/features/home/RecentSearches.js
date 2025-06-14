@@ -3,10 +3,11 @@
 import { memo } from 'react';
 import Link from 'next/link';
 import { generateArtistSlug, generateAlbumSlug } from '../../../app/utils/slugify';
+import LoadingSpinner from '../../ui/LoadingSpinner';
 
 const RecentSearches = memo(({ searches, isLoading }) => {
   if (isLoading) {
-    return <div className="track_ul2">Loading recent searches...</div>;
+    return <LoadingSpinner variant="search" />;
   }
   if (!searches?.length) {
     return null;

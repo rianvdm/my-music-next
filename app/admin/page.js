@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Input from '../../components/ui/Input';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 const API_URL = 'https://personality-api.rian-db8.workers.dev/api';
 
@@ -390,7 +391,7 @@ export default function PersonalityManagerClient() {
   );
 
   if (isLoading) {
-    return <div>Loading personalities...</div>;
+    return <LoadingSpinner variant="personalities" size="medium" />;
   }
   if (error) {
     return <div>Error: {error}</div>;

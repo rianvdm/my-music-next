@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import LoadingSpinner from './LoadingSpinner';
 
 // Lazy load marked for better performance
 const lazyMarked = () => import('marked').then(module => module.marked);
@@ -34,7 +35,7 @@ export default function LazyMarkdown({
   }, [content]);
 
   if (loading) {
-    return <div className={className}>{loadingText}</div>;
+    return <LoadingSpinner variant="content" text={loadingText} className={className} />;
   }
 
   return <div className={className} dangerouslySetInnerHTML={{ __html: html }} />;

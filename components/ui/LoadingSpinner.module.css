@@ -1,0 +1,120 @@
+/* Base loading styles - matches track_ul2 from globals.css */
+.loading {
+  margin: 0.1em auto 0;
+  font-size: 18px;
+  line-height: 1.4em;
+  max-width: 800px;
+  overflow: auto;
+  color: var(--c-base);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+}
+
+/* Variants */
+.default {
+  /* Uses base styles */
+}
+
+.inline {
+  display: inline-flex;
+  margin: 0;
+  max-width: none;
+  font-size: inherit;
+  vertical-align: baseline;
+}
+
+.data {
+  /* Uses base styles - for data loading states */
+}
+
+.chart {
+  /* Uses base styles - for chart loading states */
+}
+
+.search {
+  /* Uses base styles - for search results loading */
+}
+
+.collection {
+  /* Uses base styles - for collection data loading */
+}
+
+.library {
+  /* Uses base styles - for library data loading */
+}
+
+.recommendations {
+  /* Uses base styles - for recommendation loading */
+}
+
+.content {
+  /* Uses base styles - for content loading */
+}
+
+.generating {
+  /* Uses base styles - for generation processes */
+}
+
+.tracks {
+  /* Uses base styles - for track loading */
+}
+
+.personalities {
+  /* Uses base styles - for personality loading */
+}
+
+/* Sizes */
+.small {
+  font-size: 14px;
+  line-height: 1.2em;
+}
+
+.medium {
+  font-size: 18px;
+  line-height: 1.4em;
+}
+
+.large {
+  font-size: 20px;
+  line-height: 1.5em;
+}
+
+/* Spinner animation */
+.spinner {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+  font-size: 1.2em;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Dark theme support */
+[data-theme='dark'] .loading {
+  color: var(--c-base);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .loading {
+    font-size: 16px;
+    margin: 0.2em auto;
+  }
+
+  .small {
+    font-size: 12px;
+  }
+
+  .large {
+    font-size: 18px;
+  }
+}

@@ -122,7 +122,7 @@ describe('Album Page', () => {
 
       render(<AlbumPage params={mockParams} />);
 
-      expect(screen.getByText('Loading...')).toBeInTheDocument();
+      expect(screen.getByText('Loading content...')).toBeInTheDocument();
     });
 
     it('parses artist and album from URL correctly', async () => {
@@ -404,7 +404,7 @@ describe('Album Page', () => {
       render(<AlbumPage params={mockParams} />);
 
       // Initial loading
-      expect(screen.getByText('Loading...')).toBeInTheDocument();
+      expect(screen.getByText('Loading content...')).toBeInTheDocument();
 
       // Album data loads
       await waitFor(() => {

@@ -18,6 +18,7 @@ const LazyYearBarChart = lazy(() =>
 );
 import { useRouter, useSearchParams } from 'next/navigation';
 import FilterDropdown from '../../components/ui/FilterDropdown';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import Button from '../../components/ui/Button';
 import ReleaseSummary from '../../components/features/collection/ReleaseSummary';
 
@@ -133,7 +134,7 @@ const DiscogsStatsPage = () => {
   }, [selectedGenre, selectedFormat, selectedDecade, router]);
 
   if (loading) {
-    return <div className="track_ul2">Loading collection data...</div>;
+    return <LoadingSpinner variant="collection" />;
   }
 
   if (!collectionData) {
@@ -400,7 +401,7 @@ const DiscogsStatsPage = () => {
             <>
               <h2>Genre Distribution</h2>
               <div className="track_ul2" style={{ height: '400px' }}>
-                <Suspense fallback={<div className="track_ul2">Loading chart...</div>}>
+                <Suspense fallback={<LoadingSpinner variant="chart" />}>
                   <LazyPieChart data={genreData} colors={COLORS} />
                 </Suspense>
               </div>
@@ -411,7 +412,7 @@ const DiscogsStatsPage = () => {
             <>
               <h2>Format Distribution</h2>
               <div className="track_ul2" style={{ height: '400px' }}>
-                <Suspense fallback={<div className="track_ul2">Loading chart...</div>}>
+                <Suspense fallback={<LoadingSpinner variant="chart" />}>
                   <LazyPieChart data={formatData} colors={COLORS} />
                 </Suspense>
               </div>
@@ -420,14 +421,14 @@ const DiscogsStatsPage = () => {
 
           <h2>Top 10 Artists</h2>
           <div className="track_ul2" style={{ height: '500px', width: '100%' }}>
-            <Suspense fallback={<div className="track_ul2">Loading chart...</div>}>
+            <Suspense fallback={<LoadingSpinner variant="chart" />}>
               <LazyBarChart data={artistData} layout="vertical" />
             </Suspense>
           </div>
 
           <h2>Releases by Original Release Year</h2>
           <div className="track_ul2" style={{ height: '400px' }}>
-            <Suspense fallback={<div className="track_ul2">Loading chart...</div>}>
+            <Suspense fallback={<LoadingSpinner variant="chart" />}>
               <LazyYearBarChart
                 data={yearData}
                 ticks={generateYearTicks(minYear, maxYear)}

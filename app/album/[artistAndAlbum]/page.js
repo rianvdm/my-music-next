@@ -2,8 +2,9 @@
 
 export const runtime = 'edge';
 
-import { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import LazyMarkdown from '../../../components/ui/LazyMarkdown';
+import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 import Link from 'next/link';
 import {
   generateArtistSlug,
@@ -223,7 +224,7 @@ export default function AlbumPage({ params }) {
     if (summary.content === 'Generating summary...') {
       return (
         <div>
-          {summary.content}
+          <LoadingSpinner variant="generating" showSpinner={true} />
           {showExtendedMessage && (
             <span>
               {
@@ -284,7 +285,7 @@ export default function AlbumPage({ params }) {
   }
 
   if (!albumDetails) {
-    return <p>Loading...</p>;
+    return <LoadingSpinner variant="content" size="large" showSpinner={true} />;
   }
 
   const prettySpotifyArtist = generateLastfmArtistSlug(albumDetails.artist);
@@ -308,21 +309,26 @@ export default function AlbumPage({ params }) {
             />
             <div className="no-wrap-text">
               <p>
-                <strong>Released:</strong> {releaseYear}
+                <strong>Released:</strong>{' '}
+                {releaseYear === 'Loading...' ? <LoadingSpinner variant="inline" /> : releaseYear}
               </p>
               <p>
                 <strong>Genres:</strong>{' '}
-                {genres !== 'Unknown'
-                  ? genres.split(', ').map((genre, index) => {
-                      const genreSlug = generateGenreSlug(genre);
-                      return (
-                        <span key={index}>
-                          <Link href={`/genre/${genreSlug}`}>{genre}</Link>
-                          {index < genres.split(', ').length - 1 ? ' | ' : ''}
-                        </span>
-                      );
-                    })
-                  : genres}
+                {genres === 'Loading...' ? (
+                  <LoadingSpinner variant="inline" />
+                ) : genres !== 'Unknown' ? (
+                  genres.split(', ').map((genre, index) => {
+                    const genreSlug = generateGenreSlug(genre);
+                    return (
+                      <span key={index}>
+                        <Link href={`/genre/${genreSlug}`}>{genre}</Link>
+                        {index < genres.split(', ').length - 1 ? ' | ' : ''}
+                      </span>
+                    );
+                  })
+                ) : (
+                  genres
+                )}
               </p>
               <p>
                 <strong>Streaming:</strong>
@@ -332,11 +338,11 @@ export default function AlbumPage({ params }) {
                     Spotify ↗
                   </a>
                 ) : (
-                  'Loading...'
+                  <LoadingSpinner variant="inline" />
                 )}
                 <br />
                 {streamingUrls.appleMusic === '' ? (
-                  'Loading...'
+                  <LoadingSpinner variant="inline" />
                 ) : streamingUrls.appleMusic ? (
                   <a href={streamingUrls.appleMusic} target="_blank" rel="noopener noreferrer">
                     Apple Music ↗
@@ -346,7 +352,7 @@ export default function AlbumPage({ params }) {
                 )}
                 <br />
                 {streamingUrls.youtube === '' ? (
-                  'Loading...'
+                  <LoadingSpinner variant="inline" />
                 ) : streamingUrls.youtube ? (
                   <a href={streamingUrls.youtube} target="_blank" rel="noopener noreferrer">
                     YouTube ↗
@@ -356,7 +362,7 @@ export default function AlbumPage({ params }) {
                 )}
                 <br />
                 {streamingUrls.songLink === '' ? (
-                  'Loading...'
+                  <LoadingSpinner variant="inline" />
                 ) : streamingUrls.songLink ? (
                   <a href={streamingUrls.songLink} target="_blank" rel="noopener noreferrer">
                     Songlink ↗
@@ -372,7 +378,7 @@ export default function AlbumPage({ params }) {
           <div style={{ marginTop: '20px' }}>
             <h2>Album Recommendations</h2>
             {loadingRecommendation ? (
-              <p>{recommendation}</p>
+              <LoadingSpinner variant="recommendations" showSpinner={true} />
             ) : (
               <LazyMarkdown content={recommendation} />
             )}

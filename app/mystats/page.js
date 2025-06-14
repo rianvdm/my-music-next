@@ -5,6 +5,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { generateArtistSlug, generateAlbumSlug, generateLastfmArtistSlug } from '../utils/slugify';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 const useRecentTracks = () => {
   const [recentTracks, setRecentTracks] = useState(null);
@@ -68,7 +69,7 @@ const RecentTrackDisplay = ({ recentTracks, isLoading }) => {
   }, [recentTracks?.last_artist]);
 
   if (isLoading) {
-    return <div className="track_ul2">Loading recent tracks...</div>;
+    return <LoadingSpinner variant="tracks" />;
   }
   if (!recentTracks) {
     return null;
@@ -88,7 +89,13 @@ const RecentTrackDisplay = ({ recentTracks, isLoading }) => {
       <Link href={`/artist/${artistSlug}`}>
         <strong>{last_artist}</strong>
       </Link>
-      {artistSummary.isLoading ? '...' : artistSummary.data ? `. ${artistSummary.data}` : '.'}
+      {artistSummary.isLoading ? (
+        <LoadingSpinner variant="inline" text="..." />
+      ) : artistSummary.data ? (
+        `. ${artistSummary.data}`
+      ) : (
+        '.'
+      )}
     </p>
   );
 };
@@ -141,7 +148,7 @@ export default function MyStats() {
 
   const renderTopArtists = () => {
     if (!topArtistsData) {
-      return <p>Loading artists...</p>;
+      return <LoadingSpinner variant="data" text="Loading artists..." />;
     }
 
     return (
@@ -182,7 +189,7 @@ export default function MyStats() {
 
   const renderTopAlbums = () => {
     if (!topAlbumsData) {
-      return <p>Loading albums...</p>;
+      return <LoadingSpinner variant="data" text="Loading albums..." />;
     }
 
     return (
@@ -217,7 +224,7 @@ export default function MyStats() {
 
   const renderDiscogsCollection = () => {
     if (!discogsData) {
-      return <p>Loading collection...</p>;
+      return <LoadingSpinner variant="collection" />;
     }
 
     return (

@@ -7,6 +7,7 @@ import Button from '../../components/ui/Button';
 import FilterDropdown from '../../components/ui/FilterDropdown';
 import LibrarySearchBox from '../../components/features/library/LibrarySearchBox';
 import LibrarySummary from '../../components/features/library/LibrarySummary';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import { generateArtistSlug, generateAlbumSlug } from '../utils/slugify';
 
 const ITEMS_PER_PAGE = 25;
@@ -195,7 +196,7 @@ const LibraryPage = () => {
   };
 
   if (loading) {
-    return <div className="track_ul2">Loading library data...</div>;
+    return <LoadingSpinner variant="library" />;
   }
 
   return (
