@@ -17,7 +17,8 @@ export default function ArtistPage({ params }) {
   const { artist: prettyArtist } = params;
   const [artistDetails, setArtistDetails] = useState(null);
   const [topAlbums, setTopAlbums] = useState([]);
-  const [openAISummary, setOpenAISummary] = useState('Loading summary...');
+  const [openAISummary, setOpenAISummary] = useState(null);
+  const [summaryLoading, setSummaryLoading] = useState(true);
   const [error, setError] = useState(null);
   const fetchedOpenAISummary = useRef(false);
 
@@ -85,9 +86,11 @@ export default function ArtistPage({ params }) {
           );
           const summaryData = await summaryResponse.json();
           setOpenAISummary(summaryData.data);
+          setSummaryLoading(false);
         } catch (error) {
           console.error('Error fetching OpenAI summary:', error);
           setOpenAISummary('Failed to load ChatGPT summary.');
+          setSummaryLoading(false);
         }
       }
 
@@ -103,8 +106,18 @@ export default function ArtistPage({ params }) {
     return <LoadingSpinner variant="content" size="large" showSpinner={true} />;
   }
 
-  const renderOpenAISummary = summary => {
-    return <LazyMarkdown content={summary} loadingText="Loading summary..." />;
+  const renderOpenAISummary = () => {
+    if (summaryLoading) {
+      return (
+        <LoadingSpinner
+          variant="content"
+          size="medium"
+          showSpinner={true}
+          text="Loading summary..."
+        />
+      );
+    }
+    return <LazyMarkdown content={openAISummary} />;
   };
 
   const formattedPlaycount = new Intl.NumberFormat().format(artistDetails.userplaycount);
@@ -184,7 +197,7 @@ export default function ArtistPage({ params }) {
             ))}
           </ul>
           <strong>Overview:</strong>
-          {renderOpenAISummary(openAISummary)}
+          {renderOpenAISummary()}
         </section>
       </main>
     </div>

@@ -4,17 +4,14 @@ export const runtime = 'edge';
 
 import { useEffect, useState, useRef } from 'react';
 import { marked } from 'marked';
+import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 
 export default function GenrePage({ params }) {
   const { genre: prettyGenre } = params;
-  const [genreSummary, setGenreSummary] = useState({
-    content: 'Generating summary...',
-    citations: [],
-  });
-  const [showExtendedMessage, setShowExtendedMessage] = useState(false);
+  const [genreSummary, setGenreSummary] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const fetchedGenreSummary = useRef(false);
-  const timerRef = useRef(null);
 
   const decodePrettyUrl = prettyUrl => {
     return decodeURIComponent(prettyUrl.replace(/-/g, ' ')).replace(/\b\w/g, char =>
@@ -23,21 +20,6 @@ export default function GenrePage({ params }) {
   };
 
   const genre = decodePrettyUrl(prettyGenre);
-
-  // Separate effect for the timer
-  useEffect(() => {
-    if (genreSummary.content === 'Generating summary...') {
-      timerRef.current = setTimeout(() => {
-        setShowExtendedMessage(true);
-      }, 2000);
-
-      return () => {
-        if (timerRef.current) {
-          clearTimeout(timerRef.current);
-        }
-      };
-    }
-  }, [genreSummary]);
 
   // Effect for fetching data
   useEffect(() => {
@@ -55,12 +37,14 @@ export default function GenrePage({ params }) {
             content: summaryData.data.content,
             citations: summaryData.data.citations,
           });
+          setIsLoading(false);
         } catch (error) {
           console.error('Error fetching genre summary:', error);
           setGenreSummary({
             content: 'Failed to load genre summary.',
             citations: [],
           });
+          setIsLoading(false);
         }
       }
 
@@ -69,21 +53,6 @@ export default function GenrePage({ params }) {
   }, [genre]);
 
   const renderGenreSummary = summary => {
-    if (summary.content === 'Generating summary...') {
-      return (
-        <div>
-          {summary.content}
-          {showExtendedMessage && (
-            <span>
-              {
-                " It's taking a little while to make sure the robots don't say dumb things, but hang in there, it really is coming..."
-              }
-            </span>
-          )}
-        </div>
-      );
-    }
-
     // Replace [n] with clickable links
     const contentWithClickableCitations = summary.content.replace(/\[(\d+)\]/g, (match, num) => {
       const index = parseInt(num) - 1;
@@ -121,7 +90,18 @@ export default function GenrePage({ params }) {
         <h1 style={{ marginBottom: 0 }}>{genre}</h1>
       </header>
       <main>
-        <section className="track_ul2">{renderGenreSummary(genreSummary)}</section>
+        <section className="track_ul2">
+          {isLoading ? (
+            <LoadingSpinner
+              variant="content"
+              size="medium"
+              showSpinner={true}
+              text="Generating summary..."
+            />
+          ) : (
+            renderGenreSummary(genreSummary)
+          )}
+        </section>
       </main>
     </div>
   );
