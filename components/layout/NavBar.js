@@ -10,6 +10,7 @@ function NavBar() {
   const [theme, setTheme] = useState('light');
   const [showMoreMenu, setShowMoreMenu] = useState(false);
   const dropdownRef = useRef(null);
+  const moreButtonRef = useRef(null);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'light';
@@ -32,6 +33,39 @@ function NavBar() {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
+  }, [showMoreMenu]);
+
+  // Position dropdown based on button location
+  useEffect(() => {
+    if (showMoreMenu && moreButtonRef.current && dropdownRef.current) {
+      const button = moreButtonRef.current;
+      const dropdown = dropdownRef.current.querySelector(`.${styles.dropdownMenu}`);
+
+      if (dropdown) {
+        const buttonRect = button.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+        const dropdownWidth = 180; // Approximate dropdown width
+
+        // Reset positioning
+        dropdown.style.left = '';
+        dropdown.style.right = '';
+        dropdown.style.transform = '';
+
+        // If button is in left third of screen, align dropdown to left
+        if (buttonRect.left < viewportWidth / 3) {
+          dropdown.style.left = '0';
+        }
+        // If button is in right third of screen, align dropdown to right
+        else if (buttonRect.right > (viewportWidth * 2) / 3) {
+          dropdown.style.right = '0';
+        }
+        // Otherwise center it
+        else {
+          dropdown.style.left = '50%';
+          dropdown.style.transform = 'translateX(-50%)';
+        }
+      }
+    }
   }, [showMoreMenu]);
 
   const toggleTheme = () => {
@@ -58,6 +92,7 @@ function NavBar() {
         </li>
         <li className={`${styles.navItem} ${styles.moreDropdown}`} ref={dropdownRef}>
           <button
+            ref={moreButtonRef}
             className={styles.moreButton}
             onClick={() => setShowMoreMenu(!showMoreMenu)}
             aria-expanded={showMoreMenu}

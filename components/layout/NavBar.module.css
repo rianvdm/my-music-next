@@ -143,9 +143,6 @@
   }
 
   .dropdownMenu {
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
     min-width: 180px;
   }
 }
@@ -161,9 +158,6 @@
   }
 
   .dropdownMenu {
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
     min-width: 160px;
   }
 }
