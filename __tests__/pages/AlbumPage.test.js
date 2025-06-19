@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '../utils/test-utils';
+import { render, screen, waitFor, act } from '../utils/test-utils';
 import AlbumPage from '../../app/album/[artistAndAlbum]/page';
 
 // Mock utility functions
@@ -116,17 +116,21 @@ describe('Album Page', () => {
   });
 
   describe('Basic Rendering', () => {
-    it('renders loading state initially', () => {
+    it('renders loading state initially', async () => {
       // Mock fetch to never resolve
       fetch.mockImplementation(() => new Promise(() => {}));
 
-      render(<AlbumPage params={mockParams} />);
+      await act(async () => {
+        render(<AlbumPage params={mockParams} />);
+      });
 
       expect(screen.getByText('Loading content...')).toBeInTheDocument();
     });
 
     it('parses artist and album from URL correctly', async () => {
-      render(<AlbumPage params={mockParams} />);
+      await act(async () => {
+        render(<AlbumPage params={mockParams} />);
+      });
 
       await waitFor(() => {
         expect(
@@ -146,7 +150,9 @@ describe('Album Page', () => {
         return Promise.resolve({ ok: true, json: async () => ({}) });
       });
 
-      render(<AlbumPage params={mockParams} />);
+      await act(async () => {
+        render(<AlbumPage params={mockParams} />);
+      });
 
       await waitFor(() => {
         expect(screen.getByText(/Album not found/)).toBeInTheDocument();
@@ -156,7 +162,9 @@ describe('Album Page', () => {
 
   describe('Album Data Display', () => {
     it('displays album information correctly', async () => {
-      render(<AlbumPage params={mockParams} />);
+      await act(async () => {
+        render(<AlbumPage params={mockParams} />);
+      });
 
       await waitFor(() => {
         expect(
@@ -167,7 +175,9 @@ describe('Album Page', () => {
     });
 
     it('displays genres when available', async () => {
-      render(<AlbumPage params={mockParams} />);
+      await act(async () => {
+        render(<AlbumPage params={mockParams} />);
+      });
 
       await waitFor(() => {
         expect(
@@ -185,7 +195,9 @@ describe('Album Page', () => {
 
   describe('Streaming Links', () => {
     it('displays streaming platform information when available', async () => {
-      render(<AlbumPage params={mockParams} />);
+      await act(async () => {
+        render(<AlbumPage params={mockParams} />);
+      });
 
       await waitFor(() => {
         expect(
@@ -212,7 +224,9 @@ describe('Album Page', () => {
         return Promise.resolve({ ok: true, json: async () => ({}) });
       });
 
-      render(<AlbumPage params={mockParams} />);
+      await act(async () => {
+        render(<AlbumPage params={mockParams} />);
+      });
 
       // When SongLink API fails, the component shows an error state
       await waitFor(() => {
@@ -223,7 +237,9 @@ describe('Album Page', () => {
 
   describe('AI Summary', () => {
     it('displays AI summary when available', async () => {
-      render(<AlbumPage params={mockParams} />);
+      await act(async () => {
+        render(<AlbumPage params={mockParams} />);
+      });
 
       await waitFor(() => {
         expect(
@@ -251,7 +267,9 @@ describe('Album Page', () => {
         return Promise.resolve({ ok: true, json: async () => ({}) });
       });
 
-      render(<AlbumPage params={mockParams} />);
+      await act(async () => {
+        render(<AlbumPage params={mockParams} />);
+      });
 
       await waitFor(() => {
         expect(
@@ -280,7 +298,9 @@ describe('Album Page', () => {
         return Promise.resolve({ ok: true, json: async () => ({}) });
       });
 
-      render(<AlbumPage params={mockParams} />);
+      await act(async () => {
+        render(<AlbumPage params={mockParams} />);
+      });
 
       // Wait for album data to load first
       await waitFor(() => {
@@ -296,7 +316,9 @@ describe('Album Page', () => {
 
   describe('Recommendations', () => {
     it('handles recommendations when available', async () => {
-      render(<AlbumPage params={mockParams} />);
+      await act(async () => {
+        render(<AlbumPage params={mockParams} />);
+      });
 
       await waitFor(() => {
         expect(
@@ -317,7 +339,9 @@ describe('Album Page', () => {
         artistAndAlbum: 'invalid-url-format',
       };
 
-      render(<AlbumPage params={malformedParams} />);
+      await act(async () => {
+        render(<AlbumPage params={malformedParams} />);
+      });
 
       // Should handle gracefully without crashing
       expect(screen.getByText(/Loading/)).toBeInTheDocument();
@@ -328,7 +352,9 @@ describe('Album Page', () => {
         artistAndAlbum: '',
       };
 
-      render(<AlbumPage params={emptyParams} />);
+      await act(async () => {
+        render(<AlbumPage params={emptyParams} />);
+      });
 
       // Should handle gracefully without crashing
       expect(screen.getByText(/Loading/)).toBeInTheDocument();
@@ -364,7 +390,9 @@ describe('Album Page', () => {
         return Promise.resolve({ ok: true, json: async () => ({}) });
       });
 
-      render(<AlbumPage params={mockParams} />);
+      await act(async () => {
+        render(<AlbumPage params={mockParams} />);
+      });
 
       await waitFor(() => {
         expect(
@@ -401,7 +429,9 @@ describe('Album Page', () => {
         return new Promise(() => {});
       });
 
-      render(<AlbumPage params={mockParams} />);
+      await act(async () => {
+        render(<AlbumPage params={mockParams} />);
+      });
 
       // Initial loading
       expect(screen.getByText('Loading content...')).toBeInTheDocument();
@@ -423,7 +453,9 @@ describe('Album Page', () => {
         return Promise.reject(new Error('Complete API failure'));
       });
 
-      render(<AlbumPage params={mockParams} />);
+      await act(async () => {
+        render(<AlbumPage params={mockParams} />);
+      });
 
       await waitFor(() => {
         expect(screen.getByText(/Album not found/)).toBeInTheDocument();
