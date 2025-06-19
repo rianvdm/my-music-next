@@ -145,7 +145,8 @@
   .dropdownMenu {
     left: auto;
     right: 0;
-    min-width: 200px;
+    min-width: 180px;
+    transform: translateX(0);
   }
 }
 
@@ -160,7 +161,9 @@
   }
 
   .dropdownMenu {
-    min-width: 200px;
+    min-width: 160px;
+    right: 0;
+    left: auto;
   }
 }
 
