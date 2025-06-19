@@ -1,3 +1,5 @@
+// ABOUTME: Privacy policy page displaying the application's data collection and usage practices
+// ABOUTME: Static legal content explaining how user information is handled and protected
 export const runtime = 'edge';
 
 export default function TermsPage() {

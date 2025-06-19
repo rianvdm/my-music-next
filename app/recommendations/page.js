@@ -1,3 +1,5 @@
+// ABOUTME: Music recommendations page displaying recently liked tracks from Last.fm with artist summaries
+// ABOUTME: Integrates Spotify search, Songlink, and AI-generated artist descriptions for each recommended track
 'use client';
 
 export const runtime = 'edge';

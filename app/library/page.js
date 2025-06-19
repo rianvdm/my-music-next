@@ -1,3 +1,5 @@
+// ABOUTME: Digital library page for browsing and filtering user's personal music collection with search functionality
+// ABOUTME: Supports genre, format, decade filtering with pagination and random selection features
 'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';

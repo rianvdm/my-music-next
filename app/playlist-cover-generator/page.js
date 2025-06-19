@@ -1,3 +1,5 @@
+// ABOUTME: AI-powered playlist cover art generator using OpenAI and Stability AI models
+// ABOUTME: Creates custom album artwork based on playlist name, genres, mood, colors, and optional objects
 'use client';
 
 export const runtime = 'edge';

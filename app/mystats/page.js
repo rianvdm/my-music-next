@@ -1,3 +1,5 @@
+// ABOUTME: Personal music statistics dashboard displaying Last.fm listening data, top artists/albums, and recent Discogs collection
+// ABOUTME: Integrates with multiple APIs to show real-time listening habits and collection updates
 'use client';
 
 export const runtime = 'edge';
