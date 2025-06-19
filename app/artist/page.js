@@ -1,3 +1,5 @@
+// ABOUTME: Artist search form page that allows users to search for artists by name
+// ABOUTME: Features a search input with Enter key support and displays random music facts while browsing
 'use client';
 
 export const runtime = 'edge';

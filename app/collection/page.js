@@ -1,4 +1,5 @@
-// ../pages/collection/page.js
+// ABOUTME: Physical music collection dashboard that displays interactive statistics and charts from Discogs data
+// ABOUTME: Features filterable genre/format/decade views with pie charts, bar charts, and detailed collection analytics
 'use client';
 
 export const runtime = 'edge';

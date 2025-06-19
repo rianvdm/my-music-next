@@ -1,3 +1,5 @@
+// ABOUTME: Album search page that allows users to search for specific albums by artist and album name
+// ABOUTME: Provides search form with validation and navigation to detailed album pages with random music facts
 'use client';
 
 export const runtime = 'edge';

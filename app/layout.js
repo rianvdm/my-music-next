@@ -1,3 +1,5 @@
+// ABOUTME: Root layout component that provides the main HTML structure and navigation for the entire application
+// ABOUTME: Configures global metadata, fonts, and includes the NavBar component for all pages
 export const runtime = 'edge';
 
 import { Inter } from 'next/font/google';

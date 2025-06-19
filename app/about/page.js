@@ -1,3 +1,5 @@
+// ABOUTME: About page that fetches and displays the project README.md from GitHub repository
+// ABOUTME: Renders markdown content as HTML using the marked library for project documentation
 'use client';
 
 export const runtime = 'edge';

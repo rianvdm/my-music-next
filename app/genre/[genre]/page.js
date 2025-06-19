@@ -1,3 +1,5 @@
+// ABOUTME: Dynamic genre information page that displays AI-generated summaries about music genres
+// ABOUTME: Uses Perplexity API to generate detailed genre descriptions with citations and source links
 'use client';
 
 export const runtime = 'edge';

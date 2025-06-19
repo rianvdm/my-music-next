@@ -1,3 +1,5 @@
+// ABOUTME: Dynamic album detail page that displays comprehensive information about a specific album
+// ABOUTME: Fetches album data from Spotify, streaming links, AI-generated descriptions, and user collection status
 'use client';
 
 export const runtime = 'edge';

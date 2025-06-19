@@ -25,7 +25,7 @@ This is a Next.js music discovery application that helps users explore albums, a
 - Avoid mocks for core business logic, but they're acceptable for external APIs during development.
 - When you are trying to fix a bug or compilation error or any other issue, YOU MUST NEVER throw away the old implementation and rewrite without explicit permission from the user. If you are going to do this, YOU MUST STOP and get explicit permission from the user.
 - NEVER name things as 'improved' or 'new' or 'enhanced', etc. Code naming should be evergreen. What is new today will be "old" someday.
-- Update README.md when adding new features or changing how the project works. Keep setup/usage instructions current.
+- Update README.md and CLAUDE.md when adding new features or changing how the project works. Keep setup/usage instructions current.
 
 # Getting help
 
@@ -38,6 +38,7 @@ This is a Next.js music discovery application that helps users explore albums, a
 - Tests MUST cover the functionality being implemented.
 - NEVER ignore the output of the system or the tests - Logs and messages often contain CRITICAL information.
 - TEST OUTPUT MUST BE PRISTINE TO PASS.
+- If tests time out, run them in smaller chunks to ensure all tests are completed and pass. (Use `--reporter=basic` first, if needed.)
 - If the logs are supposed to contain errors, capture and test it.
 
 ## 🎯 Project Overview

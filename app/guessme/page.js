@@ -1,3 +1,5 @@
+// ABOUTME: Interactive music personality guessing game where users ask questions to identify mystery musicians
+// ABOUTME: Features AI-powered responses that provide hints while maintaining game difficulty and progression
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { marked } from 'marked';

@@ -1,3 +1,5 @@
+// ABOUTME: Main home page component for the Listen To More music discovery application
+// ABOUTME: Displays recent searches, random music facts, and provides quick access to album search functionality
 'use client';
 
 export const runtime = 'edge';

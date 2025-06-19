@@ -1,3 +1,5 @@
+// ABOUTME: Dynamic artist detail page that displays comprehensive artist information from Last.fm and Spotify
+// ABOUTME: Shows artist bio, top albums, similar artists, play counts, and AI-generated summaries with lazy loading
 'use client';
 
 export const runtime = 'edge';

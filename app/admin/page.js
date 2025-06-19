@@ -1,3 +1,5 @@
+// ABOUTME: Admin interface for managing AI personalities used in album recommendations and descriptions
+// ABOUTME: Provides CRUD operations for personality configurations that control OpenAI API behavior
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
