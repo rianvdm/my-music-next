@@ -1,3 +1,5 @@
+// ABOUTME: Custom React hook that fetches and manages random music facts from an external API service
+// ABOUTME: Provides automatic fact loading on mount with error handling and fallback messaging for failed requests
 'use client';
 
 import { useEffect, useState } from 'react';

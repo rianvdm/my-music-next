@@ -1,4 +1,5 @@
-// utils/slugify.js
+// ABOUTME: URL slug generation utilities that clean and format artist names, album titles, and genres for web-safe URLs
+// ABOUTME: Provides consistent string sanitization for routing, removing special characters and normalizing spacing
 
 export const generateArtistSlug = artistName => {
   return encodeURIComponent(

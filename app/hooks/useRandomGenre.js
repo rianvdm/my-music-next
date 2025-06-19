@@ -1,3 +1,5 @@
+// ABOUTME: Custom React hook that selects a random music genre and formats it for both URL slugs and display purposes
+// ABOUTME: Uses memoization to prevent unnecessary re-renders and provides consistent genre data across component lifecycle
 'use client';
 
 import { useEffect, useState, useMemo } from 'react';

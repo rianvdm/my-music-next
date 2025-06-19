@@ -1,3 +1,5 @@
+// ABOUTME: Custom React hook that fetches and manages recent search data from an external API service
+// ABOUTME: Provides loading state management and error handling for displaying user's recent music searches
 'use client';
 
 import { useEffect, useState } from 'react';

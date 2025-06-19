@@ -1,3 +1,5 @@
+// ABOUTME: Comprehensive array of music genre identifiers in slug format for use throughout the application
+// ABOUTME: Contains 97 different music genres from acid-jazz to world-music, used for random selection and filtering
 export const genres = [
   'acid-jazz',
   'afrobeat',

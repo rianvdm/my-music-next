@@ -1,3 +1,5 @@
+// ABOUTME: Custom 404 Not Found page component that displays a styled error message when users visit non-existent routes
+// ABOUTME: Implements Next.js system-ui styling with dark mode support and responsive design for error states
 export const runtime = 'edge';
 
 export default function NotFound() {

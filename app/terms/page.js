@@ -1,3 +1,5 @@
+// ABOUTME: Terms of Service page displaying legal terms and conditions for Listen To More website and Discord bot
+// ABOUTME: Static page component that renders the complete terms of service text with sections for usage, conduct, and liability
 export const runtime = 'edge';
 
 export default function TermsPage() {

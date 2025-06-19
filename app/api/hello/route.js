@@ -1,3 +1,5 @@
+// ABOUTME: Simple API route that returns "Hello World" response, demonstrating Cloudflare edge runtime integration
+// ABOUTME: Template route showing how to use Cloudflare bindings like KV storage in Next.js edge functions
 import { getRequestContext } from '@cloudflare/next-on-pages';
 
 export const runtime = 'edge';
