@@ -4,7 +4,7 @@
 
 import { useEffect, useState, memo } from 'react';
 import Link from 'next/link';
-import Button from '../ui/Button';
+import styles from './NavBar.module.css';
 
 function NavBar() {
   const [theme, setTheme] = useState('light');
@@ -24,55 +24,47 @@ function NavBar() {
   };
 
   return (
-    <nav
-      style={{
-        ...navStyle,
-        background: theme === 'light' ? '#fafafa' : '#121212',
-        color: theme === 'light' ? '#FF6C00' : '#FFA500',
-      }}
-    >
-      <ul style={ulStyle}>
-        <li style={liStyle}>
+    <nav className={styles.nav}>
+      <ul className={styles.navList}>
+        <li className={styles.navItem}>
           <Link href="/">Home</Link>
         </li>
-        <li style={liStyle}>
+        <li className={styles.navItem}>
           <Link href="/artist">Artists</Link>
         </li>
-        <li style={liStyle}>
-          <Link href="/recommendations">Get rec’d</Link>
+        <li className={styles.navItem}>
+          <Link href="/recommendations">Get rec&apos;d</Link>
         </li>
-        <li style={liStyle}>
+        <li className={styles.navItem}>
           <Link href="/mystats">Stats</Link>
         </li>
-        <li style={{ ...liStyle, position: 'relative' }}>
-          <Button
-            variant="link"
+        <li className={`${styles.navItem} ${styles.moreDropdown}`}>
+          <button
+            className={styles.moreButton}
             onClick={() => setShowMoreMenu(!showMoreMenu)}
-            style={{
-              display: 'block',
-              padding: '16px 16px 0 16px',
-            }}
+            aria-expanded={showMoreMenu}
+            aria-haspopup="true"
           >
             More
-          </Button>
+          </button>
           {showMoreMenu && (
-            <ul style={dropdownStyle}>
-              <li style={dropdownItemStyle}>
+            <ul className={styles.dropdownMenu}>
+              <li className={styles.dropdownItem}>
                 <Link href="/playlist-cover-generator" onClick={() => setShowMoreMenu(false)}>
                   Playlist Cover Generator
                 </Link>
               </li>
-              <li style={dropdownItemStyle}>
+              <li className={styles.dropdownItem}>
                 <Link href="/library" onClick={() => setShowMoreMenu(false)}>
                   Digital Library
                 </Link>
               </li>
-              <li style={dropdownItemStyle}>
+              <li className={styles.dropdownItem}>
                 <Link href="/collection/all" onClick={() => setShowMoreMenu(false)}>
                   Discogs Collection
                 </Link>
-              </li>{' '}
-              <li style={dropdownItemStyle}>
+              </li>
+              <li className={styles.dropdownItem}>
                 <Link href="/collection" onClick={() => setShowMoreMenu(false)}>
                   Collection Stats
                 </Link>
@@ -80,127 +72,22 @@ function NavBar() {
             </ul>
           )}
         </li>
-        <li style={liStyle}>
+        <li className={styles.navItem}>
           <Link href="/about">About</Link>
         </li>
-        <li style={liStyle}>
-          <Button
-            variant="icon"
+        <li className={styles.navItem}>
+          <button
+            className={styles.themeToggle}
             onClick={toggleTheme}
-            style={{
-              color: theme === 'light' ? '#000000' : '#ffffff',
-              padding: '16px 16px 0 16px',
-              margin: 0,
-            }}
+            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
           >
             ☀️/🌙
-          </Button>
+          </button>
         </li>
       </ul>
-
-      <style jsx>{`
-        ul {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
-          padding: 0;
-          margin: 0;
-          list-style: none;
-        }
-
-        li {
-          margin: 0 0.5em;
-          white-space: nowrap;
-          flex-shrink: 0;
-        }
-
-        @media (max-width: 768px) {
-          ul {
-            justify-content: space-between;
-          }
-
-          li {
-            flex: 1 0 auto;
-            text-align: center;
-          }
-        }
-
-        @media (max-width: 480px) {
-          ul {
-            justify-content: space-between;
-          }
-
-          li {
-            margin: 0 0.1em; /* Reduced margin for smaller screens */
-            flex: 0 0.5 auto;
-          }
-        }
-
-        /* Dropdown styles */
-        ul ul {
-          position: absolute;
-          top: 100%;
-          left: 0;
-          background-color: var(--c-bg);
-          border: 1px solid var(--c-accent);
-          border-radius: 4px;
-          padding: 0.5em 0;
-          min-width: 200px;
-          z-index: 1000;
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        ul ul li {
-          display: block;
-          margin: 0;
-          padding: 0.5em 1em;
-        }
-
-        ul ul li:hover {
-          background-color: rgba(var(--c-accent-rgb), 0.1);
-        }
-      `}</style>
     </nav>
   );
 }
-
-const navStyle = {
-  padding: '1em',
-  textAlign: 'center',
-};
-
-const ulStyle = {
-  listStyle: 'none',
-  margin: 0,
-  padding: 0,
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-};
-
-const liStyle = {
-  margin: '0 0.1em',
-  flexShrink: 0,
-};
-
-const dropdownStyle = {
-  position: 'absolute',
-  top: '100%',
-  left: '0',
-  backgroundColor: 'var(--c-bg)',
-  border: '1px solid var(--c-accent)',
-  borderRadius: '4px',
-  padding: '0.5em 0',
-  minWidth: '200px',
-  zIndex: 1000,
-  boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-};
-
-const dropdownItemStyle = {
-  display: 'block',
-  margin: 0,
-  padding: '0.5em 1em',
-};
 
 NavBar.displayName = 'NavBar';
 
