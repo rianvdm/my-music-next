@@ -1,3 +1,5 @@
+// ABOUTME: Summary text component for digital library showing filtered release count and criteria
+// ABOUTME: Displays dynamic text based on selected genre, format, and year filters
 'use client';
 
 import React from 'react';

@@ -1,3 +1,5 @@
+// ABOUTME: Search input component for filtering library releases by artist or album name
+// ABOUTME: Provides real-time search results filtering with memoized performance optimization
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import Input from '../../ui/Input';
 

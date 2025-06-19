@@ -1,3 +1,5 @@
+// ABOUTME: Displays a personalized greeting with the current day of the week
+// ABOUTME: Shows "Happy [Day], friend!" using locale-aware date formatting
 'use client';
 
 import { memo } from 'react';

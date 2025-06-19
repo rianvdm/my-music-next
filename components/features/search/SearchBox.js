@@ -1,4 +1,5 @@
-// ../../components/SearchBox.js
+// ABOUTME: Advanced search component with multi-word query support and clear functionality
+// ABOUTME: Filters collection data by artist or album title with optimized performance using memoization
 import { useState, useEffect, memo, useCallback, useMemo } from 'react';
 import Button from '../../ui/Button';
 import Input from '../../ui/Input';

@@ -1,3 +1,5 @@
+// ABOUTME: Welcome section with navigation links to recommendations and random genre exploration
+// ABOUTME: Displays random music facts and encourages music discovery with contextual links
 'use client';
 
 import { memo } from 'react';

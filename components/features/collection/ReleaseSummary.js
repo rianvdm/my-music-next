@@ -1,4 +1,5 @@
-// ../components/ReleaseSummary.js
+// ABOUTME: Summary text component for physical music collection with Discogs integration link
+// ABOUTME: Displays filtered release count and criteria including genre, format, decade, and style
 'use client';
 
 import React from 'react';

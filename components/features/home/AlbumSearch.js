@@ -1,3 +1,5 @@
+// ABOUTME: Album search form component with artist and album input fields
+// ABOUTME: Validates input and navigates to album detail pages using URL slugs
 'use client';
 
 import { useState, useCallback } from 'react';

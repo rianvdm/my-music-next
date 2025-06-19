@@ -1,3 +1,5 @@
+// ABOUTME: Displays a grid of recently searched albums with cover art and links
+// ABOUTME: Shows loading state and handles empty state, linking to album and artist pages
 'use client';
 
 import { memo } from 'react';
