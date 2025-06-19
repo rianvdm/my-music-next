@@ -1,3 +1,5 @@
+// ABOUTME: Performance-optimized image component that uses intersection observer for lazy loading
+// ABOUTME: Shows loading state until image appears in viewport, then loads with fade-in effect and quality optimization
 'use client';
 
 import { useState, useEffect, useRef, memo } from 'react';

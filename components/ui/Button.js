@@ -1,3 +1,5 @@
+// ABOUTME: Standardized button component with multiple variants (primary, secondary, ghost) and states (loading, disabled)
+// ABOUTME: Supports different sizes (small, medium, large) and includes built-in loading state management
 'use client';
 
 import { memo } from 'react';

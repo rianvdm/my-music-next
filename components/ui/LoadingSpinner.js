@@ -1,18 +1,9 @@
+// ABOUTME: Comprehensive loading component with multiple variants (data, chart, content, etc.) and consistent styling
+// ABOUTME: Supports different sizes, custom text, animated spinner icon, and context-specific loading messages
 'use client';
 
 import { memo } from 'react';
 import styles from './LoadingSpinner.module.css';
-
-/**
- * Reusable LoadingSpinner component for consistent loading states
- *
- * @param {Object} props
- * @param {string} [props.text] - Custom loading text (if not provided, uses variant default)
- * @param {string} [props.variant='default'] - Loading variant: 'default', 'inline', 'chart', 'data'
- * @param {string} [props.size='medium'] - Size: 'small', 'medium', 'large'
- * @param {boolean} [props.showSpinner=false] - Whether to show animated spinner icon
- * @param {string} [props.className] - Additional CSS classes
- */
 const LoadingSpinner = memo(
   ({
     text,

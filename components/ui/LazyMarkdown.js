@@ -1,3 +1,5 @@
+// ABOUTME: Lazy-loaded markdown rendering component that dynamically imports the marked library for better performance
+// ABOUTME: Processes markdown content into HTML with loading states and error fallback to plain text
 'use client';
 
 import { useState, useEffect } from 'react';

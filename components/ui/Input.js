@@ -1,17 +1,7 @@
+// ABOUTME: Unified input component with CSS modules that supports multiple variants (default, search, form, flex, expandable)
+// ABOUTME: Handles different sizes, full-width layouts, and forwards refs for form integration
 import React, { forwardRef } from 'react';
 import styles from './Input.module.css';
-
-/**
- * Reusable Input component that supports all existing input patterns
- *
- * @param {Object} props
- * @param {string} [props.variant='default'] - Input variant: 'default', 'search', 'form', 'flex', 'expandable'
- * @param {string} [props.size='medium'] - Input size: 'small', 'medium', 'large'
- * @param {string} [props.fullWidth=false] - Whether input should take full width
- * @param {string} [props.className] - Additional CSS classes
- * @param {Object} [props.style] - Inline styles
- * @param {React.Ref} ref - Forwarded ref
- */
 const Input = forwardRef(
   (
     {

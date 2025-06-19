@@ -1,3 +1,5 @@
+// ABOUTME: Reusable dropdown component for filtering data with customizable options and formatting
+// ABOUTME: Provides consistent select UI across the application with label, value, and onChange handling
 'use client';
 
 import { memo } from 'react';
