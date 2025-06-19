@@ -143,11 +143,10 @@
   }
 
   .dropdownMenu {
-    left: auto;
-    right: 0;
-    min-width: 140px;
-    width: max-content;
-    max-width: 180px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    min-width: 180px;
   }
 }
 
@@ -162,17 +161,10 @@
   }
 
   .dropdownMenu {
-    right: 0;
-    left: auto;
-    min-width: 120px;
-    width: max-content;
-    max-width: 160px;
-  }
-
-  .dropdownItem a {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.9rem;
-    line-height: 1.2;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    min-width: 160px;
   }
 }
 
