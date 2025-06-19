@@ -5,6 +5,7 @@ export const runtime = 'edge';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import NavBar from '../components/layout/NavBar';
+import PageErrorBoundary from '../components/ui/PageErrorBoundary';
 import { headers } from 'next/headers';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -68,11 +69,11 @@ export default function RootLayout({ children }) {
       </head>
       <body className={inter.className}>
         <NavBar />
-        {children}
+        <PageErrorBoundary pageName="application">{children}</PageErrorBoundary>
         <div className="footer">
           <p>
             <a href="https://youtu.be/cNtprycno14?t=9036" target="_blank">
-              There's a fire that's been burning right outside my door
+              There&apos;s a fire that&apos;s been burning right outside my door
             </a>
             <br />
             <a href="https://github.com/rianvdm/my-music-next/issues" target="_blank">
