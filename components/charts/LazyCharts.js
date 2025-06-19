@@ -1,3 +1,5 @@
+// ABOUTME: Lazy-loaded chart components using Recharts library for data visualization
+// ABOUTME: Provides pie charts, bar charts, and year-based charts with responsive containers
 'use client';
 
 import {

@@ -1,3 +1,5 @@
+// ABOUTME: Reusable text input component with label, error handling, and accessibility features
+// ABOUTME: Supports validation, required fields, disabled states, and forward refs
 'use client';
 
 import { memo, forwardRef } from 'react';

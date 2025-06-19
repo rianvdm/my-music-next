@@ -1,3 +1,5 @@
+// ABOUTME: Main navigation component with responsive menu and theme switcher
+// ABOUTME: Provides site navigation links and dropdown menu for additional pages
 'use client';
 
 import { useEffect, useState, memo } from 'react';

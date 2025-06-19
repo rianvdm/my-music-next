@@ -1,4 +1,5 @@
-// ../components/DecadeFilter.js
+// ABOUTME: Dropdown filter component for selecting music decades from a collection
+// ABOUTME: Renders a select input with decade options and handles selection changes
 'use client';
 
 import React, { memo } from 'react';

@@ -1,4 +1,5 @@
-// ../components/GenreFilter.js
+// ABOUTME: Dropdown filter component for selecting music genres from a collection
+// ABOUTME: Renders a select input with genre options and handles selection changes
 'use client';
 
 import React, { memo } from 'react';
