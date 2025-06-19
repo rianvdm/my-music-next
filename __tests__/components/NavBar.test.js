@@ -83,4 +83,37 @@ describe('NavBar Component', () => {
     expect(screen.getByText('Playlist Cover Generator')).toBeInTheDocument();
     expect(screen.getByText('Discogs Collection')).toBeInTheDocument();
   });
+
+  it('closes more menu when clicking outside', () => {
+    render(<NavBar />);
+
+    const moreButton = screen.getByText('More');
+    fireEvent.click(moreButton);
+
+    // Menu should be visible
+    expect(screen.getByText('Digital Library')).toBeInTheDocument();
+
+    // Click outside the dropdown (on the document body)
+    fireEvent.mouseDown(document.body);
+
+    // Menu should be closed (items should not be visible)
+    expect(screen.queryByText('Digital Library')).not.toBeInTheDocument();
+  });
+
+  it('closes more menu when clicking other nav items', () => {
+    render(<NavBar />);
+
+    const moreButton = screen.getByText('More');
+    fireEvent.click(moreButton);
+
+    // Menu should be visible
+    expect(screen.getByText('Digital Library')).toBeInTheDocument();
+
+    // Click on another nav item
+    const homeLink = screen.getByText('Home');
+    fireEvent.mouseDown(homeLink);
+
+    // Menu should be closed
+    expect(screen.queryByText('Digital Library')).not.toBeInTheDocument();
+  });
 });

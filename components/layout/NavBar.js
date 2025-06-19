@@ -2,19 +2,37 @@
 // ABOUTME: Provides site navigation links and dropdown menu for additional pages
 'use client';
 
-import { useEffect, useState, memo } from 'react';
+import { useEffect, useState, useRef, memo } from 'react';
 import Link from 'next/link';
 import styles from './NavBar.module.css';
 
 function NavBar() {
   const [theme, setTheme] = useState('light');
   const [showMoreMenu, setShowMoreMenu] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'light';
     setTheme(savedTheme);
     document.documentElement.setAttribute('data-theme', savedTheme);
   }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = event => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowMoreMenu(false);
+      }
+    };
+
+    if (showMoreMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showMoreMenu]);
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
@@ -38,7 +56,7 @@ function NavBar() {
         <li className={styles.navItem}>
           <Link href="/mystats">Stats</Link>
         </li>
-        <li className={`${styles.navItem} ${styles.moreDropdown}`}>
+        <li className={`${styles.navItem} ${styles.moreDropdown}`} ref={dropdownRef}>
           <button
             className={styles.moreButton}
             onClick={() => setShowMoreMenu(!showMoreMenu)}
