@@ -13,6 +13,20 @@ global.fetch = jest.fn();
 describe('Home Page', () => {
   const mockPush = jest.fn();
 
+  // Helper to render component and wait for initial data load
+  const renderAndWait = async () => {
+    const result = render(<Home />);
+
+    // Wait for initial async operations to complete
+    await waitFor(() => {
+      // Check that fetch has been called for both endpoints
+      expect(fetch).toHaveBeenCalledWith(expect.stringContaining('random-fact'));
+      expect(fetch).toHaveBeenCalledWith(expect.stringContaining('recentsearches'));
+    });
+
+    return result;
+  };
+
   beforeEach(() => {
     // Reset mocks before each test
     fetch.mockClear();
@@ -55,7 +69,7 @@ describe('Home Page', () => {
 
   describe('Basic Rendering', () => {
     it('renders the main page without crashing', async () => {
-      render(<Home />);
+      await renderAndWait();
 
       // Wait for async content to load
       await waitFor(() => {
@@ -63,8 +77,8 @@ describe('Home Page', () => {
       });
     });
 
-    it('displays the day greeting with current day', () => {
-      render(<Home />);
+    it('displays the day greeting with current day', async () => {
+      await renderAndWait();
 
       const dayNames = [
         'Sunday',
@@ -80,8 +94,8 @@ describe('Home Page', () => {
       expect(screen.getByText(`Happy ${currentDay}, friend!`)).toBeInTheDocument();
     });
 
-    it('displays welcome message and navigation links', () => {
-      render(<Home />);
+    it('displays welcome message and navigation links', async () => {
+      await renderAndWait();
 
       expect(screen.getByText(/Welcome, music traveler/)).toBeInTheDocument();
       expect(screen.getByRole('link', { name: /get rec'd/i })).toHaveAttribute(
@@ -90,8 +104,8 @@ describe('Home Page', () => {
       );
     });
 
-    it('displays album search form', () => {
-      render(<Home />);
+    it('displays album search form', async () => {
+      await renderAndWait();
 
       expect(screen.getByPlaceholderText('Enter album name...')).toBeInTheDocument();
       expect(screen.getByPlaceholderText('Enter artist name...')).toBeInTheDocument();
@@ -101,7 +115,7 @@ describe('Home Page', () => {
 
   describe('Random Fact Hook', () => {
     it('displays random fact when API call succeeds', async () => {
-      render(<Home />);
+      await renderAndWait();
 
       await waitFor(() => {
         expect(screen.getByText('🧠 Test random fact about music')).toBeInTheDocument();
@@ -123,7 +137,7 @@ describe('Home Page', () => {
         return Promise.reject(new Error('Unknown URL'));
       });
 
-      render(<Home />);
+      await renderAndWait();
 
       await waitFor(() => {
         expect(screen.getByText(/error loading a random fact/)).toBeInTheDocument();
@@ -163,8 +177,8 @@ describe('Home Page', () => {
   });
 
   describe('Album Search Functionality', () => {
-    it('handles form input changes', () => {
-      render(<Home />);
+    it('handles form input changes', async () => {
+      await renderAndWait();
 
       const albumInput = screen.getByPlaceholderText('Enter album name...');
       const artistInput = screen.getByPlaceholderText('Enter artist name...');
@@ -176,8 +190,8 @@ describe('Home Page', () => {
       expect(artistInput.value).toBe('Test Artist');
     });
 
-    it('shows error when trying to search with empty fields', () => {
-      render(<Home />);
+    it('shows error when trying to search with empty fields', async () => {
+      await renderAndWait();
 
       const searchButton = screen.getByRole('button', { name: /search/i });
       fireEvent.click(searchButton);
@@ -185,8 +199,8 @@ describe('Home Page', () => {
       expect(screen.getByText('Please enter both album and artist names.')).toBeInTheDocument();
     });
 
-    it('navigates to album page when search is valid', () => {
-      render(<Home />);
+    it('navigates to album page when search is valid', async () => {
+      await renderAndWait();
 
       const albumInput = screen.getByPlaceholderText('Enter album name...');
       const artistInput = screen.getByPlaceholderText('Enter artist name...');
@@ -199,8 +213,8 @@ describe('Home Page', () => {
       expect(mockPush).toHaveBeenCalledWith('/album/pink-floyd_dark-side-of-the-moon');
     });
 
-    it('handles Enter key press for search', () => {
-      render(<Home />);
+    it('handles Enter key press for search', async () => {
+      await renderAndWait();
 
       const albumInput = screen.getByPlaceholderText('Enter album name...');
       const artistInput = screen.getByPlaceholderText('Enter artist name...');
@@ -215,16 +229,28 @@ describe('Home Page', () => {
 
   describe('Recent Searches', () => {
     it('displays loading state initially', () => {
-      // Mock fetch to never resolve to test loading state
-      fetch.mockImplementationOnce(() => new Promise(() => {}));
+      // Mock fetch to delay resolution to test loading state
+      fetch.mockImplementation(url => {
+        if (url.includes('random-fact')) {
+          return Promise.resolve({
+            ok: true,
+            json: async () => ({ data: 'Test random fact about music' }),
+          });
+        } else if (url.includes('recentsearches')) {
+          // Return a promise that never resolves for recentsearches
+          return new Promise(() => {});
+        }
+        return Promise.reject(new Error('Unknown URL'));
+      });
 
-      render(<Home />);
+      const { container } = render(<Home />);
 
+      // Check loading state synchronously - it should be visible immediately
       expect(screen.getByText('Loading recent searches...')).toBeInTheDocument();
     });
 
     it('displays recent searches when API call succeeds', async () => {
-      render(<Home />);
+      await renderAndWait();
 
       await waitFor(() => {
         expect(screen.getByText('Test Album')).toBeInTheDocument();
@@ -253,7 +279,7 @@ describe('Home Page', () => {
         return Promise.reject(new Error('Unknown URL'));
       });
 
-      render(<Home />);
+      await renderAndWait();
 
       await waitFor(() => {
         expect(screen.queryByText('Loading recent searches...')).not.toBeInTheDocument();
@@ -276,7 +302,7 @@ describe('Home Page', () => {
         return Promise.reject(new Error('Unknown URL'));
       });
 
-      render(<Home />);
+      await renderAndWait();
 
       await waitFor(() => {
         expect(screen.queryByText('Loading recent searches...')).not.toBeInTheDocument();
@@ -289,7 +315,7 @@ describe('Home Page', () => {
 
   describe('Integration', () => {
     it('renders all main sections together', async () => {
-      render(<Home />);
+      await renderAndWait();
 
       // Wait for all async content
       await waitFor(() => {

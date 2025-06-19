@@ -10,6 +10,22 @@ const customRender = (ui, options) => {
   });
 };
 
+// Utility to suppress console.error in tests
+export function suppressConsoleError() {
+  const originalError = console.error;
+  const mockError = jest.fn();
+
+  beforeAll(() => {
+    console.error = mockError;
+  });
+
+  afterAll(() => {
+    console.error = originalError;
+  });
+
+  return mockError;
+}
+
 // Mock data for testing
 export const mockAlbumData = {
   id: '123',

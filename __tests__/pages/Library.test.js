@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '../utils/test-utils';
+import { render, screen, fireEvent, waitFor, suppressConsoleError } from '../utils/test-utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 import LibraryPage from '../../app/library/page';
 
@@ -109,6 +109,9 @@ describe('Library Page', () => {
   const mockPush = jest.fn();
   const mockReplace = jest.fn();
   const mockSearchParamsGet = jest.fn();
+
+  // Suppress console.error for tests that intentionally trigger errors
+  const mockConsoleError = suppressConsoleError();
 
   beforeEach(() => {
     // Reset mocks

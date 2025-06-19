@@ -174,7 +174,7 @@ export default function AlbumPage({ params }) {
             `https://api-spotify-artists.rian-db8.workers.dev/?id=${artistId}`
           );
           const artistDetailsData = await artistDetailsResponse.json();
-          const fetchedGenres = artistDetailsData.data.genres || [];
+          const fetchedGenres = artistDetailsData?.data?.genres || [];
           setGenres(fetchedGenres.slice(0, 3).join(', ') || 'Unknown');
         } catch (error) {
           // eslint-disable-next-line no-console

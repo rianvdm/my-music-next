@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '../utils/test-utils';
+import { render, screen, waitFor, suppressConsoleError } from '../utils/test-utils';
 import ArtistPage from '../../app/artist/[artist]/page';
 
 // Mock utility functions
@@ -64,6 +64,9 @@ describe('Artist Page', () => {
   const mockParams = {
     artist: 'pink-floyd',
   };
+
+  // Suppress console.error for tests that intentionally trigger errors
+  const mockConsoleError = suppressConsoleError();
 
   beforeEach(() => {
     fetch.mockClear();
