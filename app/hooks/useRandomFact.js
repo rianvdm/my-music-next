@@ -18,6 +18,7 @@ export function useRandomFact() {
         const factData = await response.json();
         setFact(factData.data);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error fetching random fact:', error);
         setFact('Did you know? There was an error loading a random fact.');
       }

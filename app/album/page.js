@@ -4,9 +4,9 @@
 
 export const runtime = 'edge';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { generateArtistSlug, generateAlbumSlug, generateLastfmArtistSlug } from '../utils/slugify';
+import { generateArtistSlug, generateAlbumSlug } from '../utils/slugify';
 import Input from '../../components/ui/Input';
 
 export default function AlbumSearchPage() {
@@ -15,23 +15,23 @@ export default function AlbumSearchPage() {
   const [randomFact, setRandomFact] = useState('Did you know ...');
   const [error, setError] = useState('');
   const router = useRouter();
-  let fetchController = null; // Controller for aborting previous fetch
+  const fetchController = useRef(null); // Controller for aborting previous fetch
 
   useEffect(() => {
     let didCancel = false;
 
     // If there is an existing fetch operation, abort it
-    if (fetchController) {
-      fetchController.abort();
+    if (fetchController.current) {
+      fetchController.current.abort();
     }
 
     // Create a new AbortController for this request
-    fetchController = new AbortController();
+    fetchController.current = new AbortController();
 
     async function fetchRandomFact() {
       try {
         const response = await fetch('https://kv-fetch-random-fact.rian-db8.workers.dev/', {
-          signal: fetchController.signal, // Attach the controller's signal to the fetch
+          signal: fetchController.current.signal, // Attach the controller's signal to the fetch
         });
         const factData = await response.json();
         if (!didCancel) {
@@ -39,6 +39,7 @@ export default function AlbumSearchPage() {
         }
       } catch (error) {
         if (!didCancel && error.name !== 'AbortError') {
+          // eslint-disable-next-line no-console
           console.error('Error fetching random fact:', error);
           setRandomFact('Did you know? There was an error loading a random fact.');
         }
@@ -49,8 +50,8 @@ export default function AlbumSearchPage() {
 
     return () => {
       didCancel = true;
-      if (fetchController) {
-        fetchController.abort(); // Cleanup on unmount or rerender
+      if (fetchController.current) {
+        fetchController.current.abort(); // Cleanup on unmount or rerender
       }
     };
   }, []); // Empty dependency array ensures this effect runs only once

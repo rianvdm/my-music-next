@@ -60,6 +60,7 @@ export async function generateMetadata({ params }) {
       throw new Error('Album not found');
     }
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error fetching album data:', error);
 
     // Return default metadata or handle error appropriately

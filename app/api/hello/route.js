@@ -1,10 +1,8 @@
 // ABOUTME: Simple API route that returns "Hello World" response, demonstrating Cloudflare edge runtime integration
 // ABOUTME: Template route showing how to use Cloudflare bindings like KV storage in Next.js edge functions
-import { getRequestContext } from '@cloudflare/next-on-pages';
-
 export const runtime = 'edge';
 
-export async function GET(request) {
+export async function GET() {
   const responseText = 'Hello World';
 
   // In the edge runtime you can use Bindings that are available in your application

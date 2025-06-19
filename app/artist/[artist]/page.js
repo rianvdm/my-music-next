@@ -4,16 +4,11 @@
 
 export const runtime = 'edge';
 
-import { useEffect, useState, useRef, lazy, Suspense } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import LazyMarkdown from '../../../components/ui/LazyMarkdown';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 import Link from 'next/link';
-import {
-  generateArtistSlug,
-  generateAlbumSlug,
-  generateLastfmArtistSlug,
-  generateGenreSlug,
-} from '../../utils/slugify';
+import { generateArtistSlug, generateAlbumSlug, generateGenreSlug } from '../../utils/slugify';
 
 export default function ArtistPage({ params }) {
   const { artist: prettyArtist } = params;
@@ -66,6 +61,7 @@ export default function ArtistPage({ params }) {
 
           setTopAlbums(albumsData.topAlbums?.slice(0, 3) || []);
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.error('Error fetching artist data:', error);
           setError(error.message);
         }
@@ -90,6 +86,7 @@ export default function ArtistPage({ params }) {
           setOpenAISummary(summaryData.data);
           setSummaryLoading(false);
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.error('Error fetching OpenAI summary:', error);
           setOpenAISummary('Failed to load ChatGPT summary.');
           setSummaryLoading(false);

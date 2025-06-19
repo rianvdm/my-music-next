@@ -326,6 +326,7 @@ export default function PersonalityManagerClient() {
         }
         fetchPersonalities();
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error('Error adding personality:', err);
       }
     },
@@ -347,6 +348,7 @@ export default function PersonalityManagerClient() {
           }
           fetchPersonalities();
         } catch (err) {
+          // eslint-disable-next-line no-console
           console.error('Error updating personality:', err);
         }
       }
@@ -366,6 +368,7 @@ export default function PersonalityManagerClient() {
           }
           fetchPersonalities();
         } catch (err) {
+          // eslint-disable-next-line no-console
           console.error('Error deleting personality:', err);
         }
       }
@@ -386,6 +389,7 @@ export default function PersonalityManagerClient() {
         }
         fetchPersonalities();
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error('Error setting active personality:', err);
       }
     },

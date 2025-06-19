@@ -8,12 +8,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import LazyMarkdown from '../../../components/ui/LazyMarkdown';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 import Link from 'next/link';
-import {
-  generateArtistSlug,
-  generateAlbumSlug,
-  generateLastfmArtistSlug,
-  generateGenreSlug,
-} from '../../utils/slugify';
+import { generateGenreSlug, generateLastfmArtistSlug } from '../../utils/slugify';
 
 export default function AlbumPage({ params }) {
   const { artistAndAlbum } = params;
@@ -25,7 +20,6 @@ export default function AlbumPage({ params }) {
     songLink: '',
   });
   const [releaseYear, setReleaseYear] = useState('Loading...');
-  const [trackCount, setTrackCount] = useState('Loading...');
   const [genres, setGenres] = useState('Loading...');
   const [openAISummary, setOpenAISummary] = useState({
     content: 'Generating summary...',
@@ -34,17 +28,11 @@ export default function AlbumPage({ params }) {
   const [showExtendedMessage, setShowExtendedMessage] = useState(false);
   const [artistId, setArtistId] = useState(null);
   const [error, setError] = useState(null);
-  const [kvKey, setKvKey] = useState(null);
   const fetchedOpenAISummary = useRef(false);
   const fetchedRecommendations = useRef(false); // New ref to track recommendation fetching
   const timerRef = useRef(null);
   const [recommendation, setRecommendation] = useState('Loading recommendations...');
   const [loadingRecommendation, setLoadingRecommendation] = useState(true);
-  const [followUpQuestion, setFollowUpQuestion] = useState('');
-  const [conversationHistory, setConversationHistory] = useState([]);
-  const [followUpResponse, setFollowUpResponse] = useState('');
-  const [loadingFollowUp, setLoadingFollowUp] = useState(false);
-  const [followUpCount, setFollowUpCount] = useState(0);
 
   const decodePrettyUrl = prettyUrl => decodeURIComponent(prettyUrl.replace(/-/g, ' '));
 
@@ -121,7 +109,6 @@ export default function AlbumPage({ params }) {
             if (releaseDate) {
               setReleaseYear(releaseDate.split('-')[0]);
             }
-            setTrackCount(spotifyAlbum.tracks || 'Unknown');
 
             if (spotifyAlbum.artistIds && spotifyAlbum.artistIds.length > 0) {
               setArtistId(spotifyAlbum.artistIds[0]);
@@ -146,6 +133,7 @@ export default function AlbumPage({ params }) {
             throw new Error('Album not found');
           }
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.error('Error fetching album data:', error);
           setError('Album not found.');
         }
@@ -169,8 +157,8 @@ export default function AlbumPage({ params }) {
           content: summaryData.data.content,
           citations: summaryData.data.citations,
         });
-        setKvKey(summaryData.kvKey);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error fetching OpenAI summary:', error);
         setOpenAISummary({ content: 'Failed to load summary.', citations: [] });
       }
@@ -189,6 +177,7 @@ export default function AlbumPage({ params }) {
           const fetchedGenres = artistDetailsData.data.genres || [];
           setGenres(fetchedGenres.slice(0, 3).join(', ') || 'Unknown');
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.error('Error fetching artist genres:', error);
           setGenres('Failed to load genres');
         }
@@ -211,6 +200,7 @@ export default function AlbumPage({ params }) {
           const data = await response.json();
           setRecommendation(data.data);
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.error('Error fetching recommendations:', error);
           setRecommendation('Failed to load recommendations.');
         } finally {
@@ -269,19 +259,15 @@ export default function AlbumPage({ params }) {
     );
   };
 
-  const renderFollowUpResponse = response => {
-    return <LazyMarkdown content={response} />;
-  };
-
   if (error) {
     return (
       <p>
-        {error} This either means it's not available to stream, or I am doing something wrong with
-        the search. Please{' '}
+        {error} This either means it&apos;s not available to stream, or I am doing something wrong
+        with the search. Please{' '}
         <Link href="https://github.com/rianvdm/my-music-next/issues">submit a bug report</Link> and
         let me know what you searched for! <br />
         <br />
-        You can also <a href="/album">try the search manually</a> and see if that works.
+        You can also <Link href="/album">try the search manually</Link> and see if that works.
       </p>
     );
   }

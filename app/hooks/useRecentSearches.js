@@ -19,6 +19,7 @@ export function useRecentSearches() {
         const data = await response.json();
         setSearches(data.data);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error fetching recent searches:', error);
       } finally {
         setIsLoading(false);

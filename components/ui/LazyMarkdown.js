@@ -22,6 +22,7 @@ export default function LazyMarkdown({
         const marked = await lazyMarked();
         setHtml(marked(content));
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error processing markdown:', error);
         setHtml(content); // Fallback to plain text
       } finally {

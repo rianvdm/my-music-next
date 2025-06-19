@@ -103,6 +103,7 @@ const DiscogsStatsPage = () => {
 
         setLoading(false);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error fetching Discogs collection:', error);
         setLoading(false);
       }
@@ -266,17 +267,11 @@ const DiscogsStatsPage = () => {
   const artistData = sortedArtists.map(([name, value]) => ({ name, value }));
 
   // Prepare data for releases by year chart
-  let totalWithOriginalYear = 0;
   const releasesByYear = filteredReleases.reduce((acc, release) => {
     // Prioritize original_year, fall back to basic_information.year if original_year is not available
     const year = release.original_year || release.basic_information.year;
     if (year) {
       acc[year] = (acc[year] || 0) + 1;
-    }
-
-    // Count items with original_year
-    if (release.original_year) {
-      totalWithOriginalYear++;
     }
 
     return acc;
@@ -286,11 +281,6 @@ const DiscogsStatsPage = () => {
   const years = Object.keys(releasesByYear).map(Number);
   const minYear = Math.min(...years);
   const maxYear = Math.max(...years);
-
-  const percentageWithOriginalYear = (
-    (totalWithOriginalYear / filteredReleases.length) *
-    100
-  ).toFixed(2);
 
   const COLORS = [
     '#FF6C00',

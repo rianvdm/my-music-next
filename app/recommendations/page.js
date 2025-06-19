@@ -15,7 +15,6 @@ export default function RecommendationsPage() {
   const [trackSummaries, setTrackSummaries] = useState({});
   const [artistImages, setArtistImages] = useState({});
   const [spotifyLinks, setSpotifyLinks] = useState({});
-  const [newAlbumsContent, setNewAlbumsContent] = useState('');
   const [lastUpdatedDate, setLastUpdatedDate] = useState('');
 
   useEffect(() => {
@@ -40,6 +39,7 @@ export default function RecommendationsPage() {
           setLastUpdatedDate(formattedDate);
         }
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error fetching loved tracks:', error);
       }
     };
@@ -51,6 +51,7 @@ export default function RecommendationsPage() {
         const htmlContent = marked(markdown);
         setNewAlbumsContent(htmlContent);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error fetching new albums content:', error);
         setNewAlbumsContent('<p>Failed to load new albums content.</p>');
       }
@@ -101,9 +102,11 @@ export default function RecommendationsPage() {
               [trackKey]: { spotifyUrl, previewUrl, songlinkUrl },
             }));
           } else {
+            // eslint-disable-next-line no-console
             console.error(`No Spotify data found for ${track.title} by ${track.artist}`);
           }
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.error(`Error fetching data for ${track.title} by ${track.artist}:`, error);
         }
       });

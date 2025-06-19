@@ -12,7 +12,6 @@ export default function GenrePage({ params }) {
   const { genre: prettyGenre } = params;
   const [genreSummary, setGenreSummary] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
   const fetchedGenreSummary = useRef(false);
 
   const decodePrettyUrl = prettyUrl => {
@@ -41,6 +40,7 @@ export default function GenrePage({ params }) {
           });
           setIsLoading(false);
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.error('Error fetching genre summary:', error);
           setGenreSummary({
             content: 'Failed to load genre summary.',

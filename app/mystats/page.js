@@ -3,7 +3,6 @@
 'use client';
 
 export const runtime = 'edge';
-import Head from 'next/head';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { generateArtistSlug, generateAlbumSlug, generateLastfmArtistSlug } from '../utils/slugify';
@@ -21,6 +20,7 @@ const useRecentTracks = () => {
         const data = await response.json();
         setRecentTracks(data);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error fetching recent tracks:', error);
       } finally {
         setIsLoading(false);
@@ -56,6 +56,7 @@ const RecentTrackDisplay = ({ recentTracks, isLoading }) => {
           setArtistSummary({ data: summaryData.data, isLoading: false });
         }
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error fetching artist summary:', error);
         if (isMounted) {
           setArtistSummary({ data: null, isLoading: false });
@@ -117,6 +118,7 @@ export default function MyStats() {
         const topArtistsData = await topArtistsResponse.json();
         setTopArtistsData(topArtistsData);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error fetching top artists:', error);
       }
     };
@@ -127,6 +129,7 @@ export default function MyStats() {
         const topAlbumsData = await topAlbumsResponse.json();
         setTopAlbumsData(topAlbumsData);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error fetching top albums:', error);
       }
     };
@@ -139,6 +142,7 @@ export default function MyStats() {
         const discogsData = await discogsResponse.json();
         setDiscogsData(discogsData);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error fetching Discogs collection:', error);
       }
     };

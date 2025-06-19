@@ -25,6 +25,7 @@ export default function AboutPage() {
 
         setAboutContent(modifiedContent);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error fetching about content:', error);
         setAboutContent('<p>Failed to load about content.</p>');
       }

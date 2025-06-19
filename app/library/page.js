@@ -88,6 +88,7 @@ const LibraryPage = () => {
 
         setLoading(false);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error fetching library data:', error);
         setLoading(false);
       }

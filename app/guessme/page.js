@@ -34,6 +34,7 @@ export default function GuessMe() {
           setGameData(data);
         }
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error fetching game data:', error);
       } finally {
         setGameDataLoading(false);
@@ -65,6 +66,7 @@ export default function GuessMe() {
         setCorrectName(data.correctName);
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error submitting guess:', error);
       setCurrentAnswer('Failed to submit your guess. Please try again.');
     } finally {
@@ -90,8 +92,8 @@ export default function GuessMe() {
             className="correct-guess track_ul2"
             style={{ marginTop: '20px', fontWeight: 'bold', color: 'green' }}
           >
-            Congratulations! You've correctly guessed that the musical personality is {correctName}.
-            Come back tomorrow for a new game!
+            Congratulations! You&apos;ve correctly guessed that the musical personality is{' '}
+            {correctName}. Come back tomorrow for a new game!
           </div>
         )}
       </>

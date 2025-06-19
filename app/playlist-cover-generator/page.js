@@ -9,8 +9,6 @@ import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 
 export default function PlaylistCoverPage() {
-  const inputWidth = '400px';
-
   const [formData, setFormData] = useState({
     playlistName: '',
     genres: '',
@@ -55,6 +53,7 @@ export default function PlaylistCoverPage() {
       }
 
       setGeneratedPrompt(promptData.data);
+      // eslint-disable-next-line no-console
       console.log('Generated prompt:', promptData.data);
 
       const imageResponse = await fetch(
@@ -71,6 +70,7 @@ export default function PlaylistCoverPage() {
 
       setGeneratedImage(imageData.data);
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error:', error);
       alert(`Error generating image: ${error.message}`);
     } finally {
