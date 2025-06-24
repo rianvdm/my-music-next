@@ -25,12 +25,10 @@ export default function AlbumPage({ params }) {
     content: 'Generating summary...',
     citations: [],
   });
-  const [showExtendedMessage, setShowExtendedMessage] = useState(false);
   const [artistId, setArtistId] = useState(null);
   const [error, setError] = useState(null);
   const fetchedOpenAISummary = useRef(false);
   const fetchedRecommendations = useRef(false); // New ref to track recommendation fetching
-  const timerRef = useRef(null);
   const [recommendation, setRecommendation] = useState('Loading recommendations...');
   const [loadingRecommendation, setLoadingRecommendation] = useState(true);
 
@@ -67,21 +65,6 @@ export default function AlbumPage({ params }) {
   const { prettyArtist, prettyAlbum } = parseArtistAndAlbum(artistAndAlbum);
   const artist = decodePrettyUrl(prettyArtist);
   const album = decodePrettyUrl(prettyAlbum);
-
-  // Timer effect for showing extended message after 3 seconds
-  useEffect(() => {
-    if (openAISummary.content === 'Generating summary...') {
-      timerRef.current = setTimeout(() => {
-        setShowExtendedMessage(true);
-      }, 3000); // Show extended message after 3 seconds
-
-      return () => {
-        if (timerRef.current) {
-          clearTimeout(timerRef.current);
-        }
-      };
-    }
-  }, [openAISummary]);
 
   // Fetch album details
   useEffect(() => {
@@ -214,18 +197,7 @@ export default function AlbumPage({ params }) {
 
   const renderOpenAISummary = summary => {
     if (summary.content === 'Generating summary...') {
-      return (
-        <div>
-          <LoadingSpinner variant="generating" showSpinner={true} />
-          {showExtendedMessage && (
-            <span>
-              {
-                " It's taking a little while to make sure the robots don't say dumb things, but hang in there, it really is coming..."
-              }
-            </span>
-          )}
-        </div>
-      );
+      return <LoadingSpinner variant="generating" showSpinner={true} />;
     }
 
     // Replace [n] with clickable links
