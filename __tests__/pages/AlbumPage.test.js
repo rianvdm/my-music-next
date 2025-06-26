@@ -62,7 +62,7 @@ const mockOpenAISummary = {
 };
 
 const mockRecommendations = {
-  data: 'If you like this album, you might also enjoy Wish You Were Here by Pink Floyd...',
+  data: 'If you like this album, you might also enjoy Wish You Were Here by Pink Floyd[1][2], Animals by Pink Floyd[3], and In the Court of the Crimson King by King Crimson[4].',
 };
 
 const mockArtistGenres = {
@@ -332,6 +332,49 @@ describe('Album Page', () => {
       // Check for recommendations section
       await waitFor(() => {
         expect(screen.getByText('Album Recommendations')).toBeInTheDocument();
+      });
+    });
+
+    it('removes citation references from recommendations', async () => {
+      fetch.mockImplementation(url => {
+        if (url.includes('api-spotify-search')) {
+          return Promise.resolve({
+            ok: true,
+            json: async () => mockSpotifyAlbumData,
+          });
+        } else if (url.includes('api-perplexity-albumrecs')) {
+          return Promise.resolve({
+            ok: true,
+            json: async () => mockRecommendations,
+          });
+        }
+        return Promise.resolve({ ok: true, json: async () => ({}) });
+      });
+
+      await act(async () => {
+        render(<AlbumPage params={mockParams} />);
+      });
+
+      await waitFor(() => {
+        expect(
+          screen.getByRole('heading', { name: /Dark Side of the Moon by Pink Floyd/ })
+        ).toBeInTheDocument();
+      });
+
+      // Wait for recommendations to load
+      await waitFor(() => {
+        expect(screen.getByText('Album Recommendations')).toBeInTheDocument();
+        // Check that the text appears without citations
+        expect(
+          screen.getByText(
+            /If you like this album, you might also enjoy Wish You Were Here by Pink Floyd, Animals by Pink Floyd, and In the Court of the Crimson King by King Crimson\./
+          )
+        ).toBeInTheDocument();
+        // Ensure no citation numbers appear
+        expect(screen.queryByText(/\[1\]/)).not.toBeInTheDocument();
+        expect(screen.queryByText(/\[2\]/)).not.toBeInTheDocument();
+        expect(screen.queryByText(/\[3\]/)).not.toBeInTheDocument();
+        expect(screen.queryByText(/\[4\]/)).not.toBeInTheDocument();
       });
     });
   });

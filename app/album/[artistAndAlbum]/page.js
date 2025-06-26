@@ -34,6 +34,14 @@ export default function AlbumPage({ params }) {
 
   const decodePrettyUrl = prettyUrl => decodeURIComponent(prettyUrl.replace(/-/g, ' '));
 
+  // Function to remove citation references like [1], [2], etc. from text
+  const removeCitations = text => {
+    if (!text) {
+      return text;
+    }
+    return text.replace(/\[\d+\]/g, '');
+  };
+
   // Updated URL parsing logic
   const parseArtistAndAlbum = urlSegment => {
     // First try to split by underscore
@@ -340,7 +348,7 @@ export default function AlbumPage({ params }) {
             {loadingRecommendation ? (
               <LoadingSpinner variant="recommendations" showSpinner={true} />
             ) : (
-              <LazyMarkdown content={recommendation} />
+              <LazyMarkdown content={removeCitations(recommendation)} />
             )}
           </div>
         </section>
