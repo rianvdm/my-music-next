@@ -161,7 +161,7 @@ export default function MyStats() {
       <div className="track-grid">
         {topArtistsData.map(artist => {
           const artistSlug = generateArtistSlug(artist.name);
-          const genre = artist.tags[0] || 'No genre';
+          const genre = artist.tags && artist.tags[0] ? artist.tags[0] : 'No genre';
           return (
             <div className="track" key={artist.name}>
               <Link href={`artist/${artistSlug}`} rel="noopener noreferrer">
