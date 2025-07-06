@@ -119,7 +119,7 @@ export default function PlaylistCoverPage() {
 
   const MODEL_OPTIONS = [
     { value: 'STABILITY', label: 'Stability AI' },
-    { value: 'OPENAI', label: 'DALLE 3' },
+    { value: 'OPENAI', label: 'OpenAI (gpt-image-1)' },
   ];
 
   return (
