@@ -231,10 +231,14 @@ describe('Album Page', () => {
         render(<AlbumPage params={mockParams} />);
       });
 
-      // When SongLink API fails, the component shows an error state
-      await waitFor(() => {
-        expect(screen.getByText(/Album not found/)).toBeInTheDocument();
-      });
+      // When SongLink API fails, the component shows "Not available" instead of crashing
+      await waitFor(
+        () => {
+          expect(screen.getByText('Spotify ↗')).toBeInTheDocument(); // Spotify should still work
+          expect(screen.getByText(/Not available/)).toBeInTheDocument(); // At least one "Not available" should appear
+        },
+        { timeout: 2000 }
+      );
     });
   });
 

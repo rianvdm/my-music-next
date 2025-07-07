@@ -105,18 +105,35 @@ export default function AlbumPage({ params }) {
               setArtistId(spotifyAlbum.artistIds[0]);
             }
 
-            const songLinkResponse = await fetch(
-              `https://api-songlink.rian-db8.workers.dev/?url=${encodeURIComponent(
-                spotifyAlbum.url
-              )}`
-            );
-            const songLinkData = await songLinkResponse.json();
-            setStreamingUrls(prevUrls => ({
-              ...prevUrls,
-              songLink: songLinkData.pageUrl,
-              appleMusic: songLinkData.appleUrl,
-              youtube: songLinkData.youtubeUrl,
-            }));
+            try {
+              const songLinkResponse = await fetch(
+                `https://api-songlink.rian-db8.workers.dev/?url=${encodeURIComponent(
+                  spotifyAlbum.url
+                )}`
+              );
+
+              if (!songLinkResponse.ok) {
+                throw new Error(`Songlink API responded with status: ${songLinkResponse.status}`);
+              }
+
+              const songLinkData = await songLinkResponse.json();
+              setStreamingUrls(prevUrls => ({
+                ...prevUrls,
+                songLink: songLinkData.pageUrl,
+                appleMusic: songLinkData.appleUrl,
+                youtube: songLinkData.youtubeUrl,
+              }));
+            } catch (songLinkError) {
+              // eslint-disable-next-line no-console
+              console.error('Error fetching songlink data:', songLinkError);
+              // Set streaming URLs to null to show "Not available" instead of loading
+              setStreamingUrls(prevUrls => ({
+                ...prevUrls,
+                songLink: null,
+                appleMusic: null,
+                youtube: null,
+              }));
+            }
 
             // Fetch OpenAI summary using the album and artist from Spotify
             fetchOpenAISummary(spotifyAlbum.name, spotifyAlbum.artist);
@@ -316,7 +333,7 @@ export default function AlbumPage({ params }) {
                     Apple Music ↗
                   </a>
                 ) : (
-                  'Not available on Apple Music'
+                  'Not available'
                 )}
                 <br />
                 {streamingUrls.youtube === '' ? (
@@ -326,7 +343,7 @@ export default function AlbumPage({ params }) {
                     YouTube ↗
                   </a>
                 ) : (
-                  'Not available on YouTube'
+                  'Not available'
                 )}
                 <br />
                 {streamingUrls.songLink === '' ? (
@@ -336,7 +353,7 @@ export default function AlbumPage({ params }) {
                     Songlink ↗
                   </a>
                 ) : (
-                  'Not available on Songlink'
+                  'Not available'
                 )}
               </p>
             </div>
