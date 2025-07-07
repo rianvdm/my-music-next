@@ -7,6 +7,7 @@ export const runtime = 'edge';
 import { useState } from 'react';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 export default function PlaylistCoverPage() {
   const [formData, setFormData] = useState({
@@ -182,6 +183,25 @@ export default function PlaylistCoverPage() {
             </Button>
           </form>
 
+          {isLoading && !generatedPrompt && (
+            <div
+              className="track_ul2"
+              style={{
+                marginTop: '1rem',
+                textAlign: 'left',
+                maxWidth: '600px',
+                margin: '1rem auto',
+              }}
+            >
+              <h2 style={{ margin: '0 0 0.5em' }}>Generated Prompt</h2>
+              <LoadingSpinner
+                text="Generating image prompt..."
+                showSpinner={true}
+                variant="content"
+              />
+            </div>
+          )}
+
           {generatedPrompt && (
             <div
               className="track_ul2"
@@ -207,7 +227,23 @@ export default function PlaylistCoverPage() {
             </div>
           )}
 
-          {generatedImage && (
+          {isLoading && generatedPrompt && !generatedImage && (
+            <div
+              className="track_ul2"
+              style={{
+                marginTop: '1rem',
+                textAlign: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+              <h2 style={{ margin: '0 0 0.5em' }}>Generated Cover</h2>
+              <LoadingSpinner text="Generating image..." showSpinner={true} variant="content" />
+            </div>
+          )}
+
+          {generatedImage && !isLoading && (
             <div
               className="track_ul2"
               style={{
