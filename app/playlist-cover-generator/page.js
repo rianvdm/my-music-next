@@ -37,11 +37,11 @@ export default function PlaylistCoverPage() {
     setGeneratedImage(null);
 
     try {
-      const promptInput = `Create a prompt for a playlist cover with these details:
+      const promptInput = `Create a prompt for ChatGPT to generate a playlist cover image with these details:
       Playlist Title: '${formData.playlistName}'
       Genres: ${formData.genres}
       Mood/Vibe: ${formData.vibe}
-      Objects to Include: ${formData.objects}
+      Objects or other instructions: ${formData.objects}
       Color Style: ${formData.colors}`;
 
       const promptResponse = await fetch(
@@ -104,9 +104,9 @@ export default function PlaylistCoverPage() {
     },
     {
       id: 'objects-input',
-      label: 'Objects (optional)',
+      label: 'Objects/instructions',
       name: 'objects',
-      placeholder: 'e.g., Mountains, Ocean, Guitars',
+      placeholder: 'e.g., Mountains, Ocean, Small clean font, Realistic',
       required: false,
     },
     {
