@@ -127,7 +127,7 @@ export default function PlaylistCoverPage() {
         <section className="track_ul2" style={{ textAlign: 'left' }}>
           <p>
             <strong>For best results, use a playlist name that is 1-3 words.</strong> You also might
-            need to give it a more than one try to get the perfect image.
+            need to give it more than one try to get the perfect image.
           </p>
 
           <form
