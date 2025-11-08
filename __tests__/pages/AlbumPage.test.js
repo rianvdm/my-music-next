@@ -94,7 +94,7 @@ describe('Album Page', () => {
           ok: true,
           json: async () => mockSongLinkData,
         });
-      } else if (url.includes('api-perplexity-albumdetail')) {
+      } else if (url.includes('/api/album-detail') || url.includes('api-perplexity-albumdetail')) {
         return Promise.resolve({
           ok: true,
           json: async () => mockOpenAISummary,
@@ -104,7 +104,7 @@ describe('Album Page', () => {
           ok: true,
           json: async () => mockArtistGenres,
         });
-      } else if (url.includes('album-recommendations')) {
+      } else if (url.includes('/api/album-recs') || url.includes('album-recommendations')) {
         return Promise.resolve({
           ok: true,
           json: async () => mockRecommendations,
@@ -268,7 +268,10 @@ describe('Album Page', () => {
             ok: true,
             json: async () => mockSpotifyAlbumData,
           });
-        } else if (url.includes('api-perplexity-albumdetail')) {
+        } else if (
+          url.includes('/api/album-detail') ||
+          url.includes('api-perplexity-albumdetail')
+        ) {
           return Promise.reject(new Error('AI API Error'));
         }
         return Promise.resolve({ ok: true, json: async () => ({}) });
@@ -298,7 +301,10 @@ describe('Album Page', () => {
             ok: true,
             json: async () => mockSpotifyAlbumData,
           });
-        } else if (url.includes('api-perplexity-albumdetail')) {
+        } else if (
+          url.includes('/api/album-detail') ||
+          url.includes('api-perplexity-albumdetail')
+        ) {
           // Return a promise that never resolves to keep showing generating message
           return new Promise(() => {});
         }
@@ -346,7 +352,7 @@ describe('Album Page', () => {
             ok: true,
             json: async () => mockSpotifyAlbumData,
           });
-        } else if (url.includes('api-perplexity-albumrecs')) {
+        } else if (url.includes('/api/album-recs') || url.includes('api-perplexity-albumrecs')) {
           return Promise.resolve({
             ok: true,
             json: async () => mockRecommendations,
@@ -430,7 +436,10 @@ describe('Album Page', () => {
             ok: true,
             json: async () => mockSongLinkData,
           });
-        } else if (url.includes('api-perplexity-albumdetail')) {
+        } else if (
+          url.includes('/api/album-detail') ||
+          url.includes('api-perplexity-albumdetail')
+        ) {
           // Delay to see generating message
           return new Promise(() => {});
         } else if (url.includes('api-spotify-artists')) {
@@ -438,7 +447,7 @@ describe('Album Page', () => {
             ok: true,
             json: async () => mockArtistGenres,
           });
-        } else if (url.includes('album-recommendations')) {
+        } else if (url.includes('/api/album-recs') || url.includes('album-recommendations')) {
           // Delay to see loading message
           return new Promise(() => {});
         }
