@@ -40,4 +40,4 @@ next-env.d.ts
 .dev.vars
 **/wrangler.toml
 
-personalities
+personalities.env.local
