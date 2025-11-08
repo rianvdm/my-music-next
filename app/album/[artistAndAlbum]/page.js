@@ -28,19 +28,8 @@ export default function AlbumPage({ params }) {
   const [artistId, setArtistId] = useState(null);
   const [error, setError] = useState(null);
   const fetchedOpenAISummary = useRef(false);
-  const fetchedRecommendations = useRef(false); // New ref to track recommendation fetching
-  const [recommendation, setRecommendation] = useState('Loading recommendations...');
-  const [loadingRecommendation, setLoadingRecommendation] = useState(true);
 
   const decodePrettyUrl = prettyUrl => decodeURIComponent(prettyUrl.replace(/-/g, ' '));
-
-  // Function to remove citation references like [1], [2], etc. from text
-  const removeCitations = text => {
-    if (!text) {
-      return text;
-    }
-    return text.replace(/\[\d+\]/g, '');
-  };
 
   // Updated URL parsing logic
   const parseArtistAndAlbum = urlSegment => {
@@ -194,32 +183,6 @@ export default function AlbumPage({ params }) {
     }
   }, [artistId]);
 
-  // Automatically fetch recommendations on page load, ensuring it's only fetched once
-  useEffect(() => {
-    if (!fetchedRecommendations.current) {
-      fetchedRecommendations.current = true; // Ensure this block only runs once
-      const fetchRecommendations = async () => {
-        try {
-          const response = await fetch(
-            `/api/album-recs?album=${encodeURIComponent(
-              album
-            )}&artist=${encodeURIComponent(artist)}`
-          );
-          const data = await response.json();
-          setRecommendation(data.data);
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.error('Error fetching recommendations:', error);
-          setRecommendation('Failed to load recommendations.');
-        } finally {
-          setLoadingRecommendation(false);
-        }
-      };
-
-      fetchRecommendations();
-    }
-  }, [album, artist]);
-
   const renderOpenAISummary = summary => {
     if (summary.content === 'Generating summary...') {
       return <LoadingSpinner variant="generating" showSpinner={true} />;
@@ -359,15 +322,6 @@ export default function AlbumPage({ params }) {
             </div>
           </div>
           {renderOpenAISummary(openAISummary)}
-          {/* New recommendation section */}
-          <div style={{ marginTop: '20px' }}>
-            <h2>Album Recommendations</h2>
-            {loadingRecommendation ? (
-              <LoadingSpinner variant="recommendations" showSpinner={true} />
-            ) : (
-              <LazyMarkdown content={removeCitations(recommendation)} />
-            )}
-          </div>
         </section>
       </main>
     </div>

@@ -61,10 +61,6 @@ const mockOpenAISummary = {
   kvKey: 'test-kv-key',
 };
 
-const mockRecommendations = {
-  data: 'If you like this album, you might also enjoy Wish You Were Here by Pink Floyd[1][2], Animals by Pink Floyd[3], and In the Court of the Crimson King by King Crimson[4].',
-};
-
 const mockArtistGenres = {
   data: {
     genres: ['Progressive Rock', 'Psychedelic Rock', 'Classic Rock'],
@@ -103,11 +99,6 @@ describe('Album Page', () => {
         return Promise.resolve({
           ok: true,
           json: async () => mockArtistGenres,
-        });
-      } else if (url.includes('/api/album-recs') || url.includes('album-recommendations')) {
-        return Promise.resolve({
-          ok: true,
-          json: async () => mockRecommendations,
         });
       }
       return Promise.resolve({ ok: true, json: async () => ({}) });
@@ -327,68 +318,6 @@ describe('Album Page', () => {
     });
   });
 
-  describe('Recommendations', () => {
-    it('handles recommendations when available', async () => {
-      await act(async () => {
-        render(<AlbumPage params={mockParams} />);
-      });
-
-      await waitFor(() => {
-        expect(
-          screen.getByRole('heading', { name: /Dark Side of the Moon by Pink Floyd/ })
-        ).toBeInTheDocument();
-      });
-
-      // Check for recommendations section
-      await waitFor(() => {
-        expect(screen.getByText('Album Recommendations')).toBeInTheDocument();
-      });
-    });
-
-    it('removes citation references from recommendations', async () => {
-      fetch.mockImplementation(url => {
-        if (url.includes('api-spotify-search')) {
-          return Promise.resolve({
-            ok: true,
-            json: async () => mockSpotifyAlbumData,
-          });
-        } else if (url.includes('/api/album-recs') || url.includes('api-perplexity-albumrecs')) {
-          return Promise.resolve({
-            ok: true,
-            json: async () => mockRecommendations,
-          });
-        }
-        return Promise.resolve({ ok: true, json: async () => ({}) });
-      });
-
-      await act(async () => {
-        render(<AlbumPage params={mockParams} />);
-      });
-
-      await waitFor(() => {
-        expect(
-          screen.getByRole('heading', { name: /Dark Side of the Moon by Pink Floyd/ })
-        ).toBeInTheDocument();
-      });
-
-      // Wait for recommendations to load
-      await waitFor(() => {
-        expect(screen.getByText('Album Recommendations')).toBeInTheDocument();
-        // Check that the text appears without citations
-        expect(
-          screen.getByText(
-            /If you like this album, you might also enjoy Wish You Were Here by Pink Floyd, Animals by Pink Floyd, and In the Court of the Crimson King by King Crimson\./
-          )
-        ).toBeInTheDocument();
-        // Ensure no citation numbers appear
-        expect(screen.queryByText(/\[1\]/)).not.toBeInTheDocument();
-        expect(screen.queryByText(/\[2\]/)).not.toBeInTheDocument();
-        expect(screen.queryByText(/\[3\]/)).not.toBeInTheDocument();
-        expect(screen.queryByText(/\[4\]/)).not.toBeInTheDocument();
-      });
-    });
-  });
-
   describe('Edge Cases', () => {
     it('handles malformed URL parameters', async () => {
       const malformedParams = {
@@ -447,9 +376,6 @@ describe('Album Page', () => {
             ok: true,
             json: async () => mockArtistGenres,
           });
-        } else if (url.includes('/api/album-recs') || url.includes('album-recommendations')) {
-          // Delay to see loading message
-          return new Promise(() => {});
         }
         return Promise.resolve({ ok: true, json: async () => ({}) });
       });
@@ -467,7 +393,6 @@ describe('Album Page', () => {
 
       // Check that main content sections are present
       expect(screen.getByText('Generating summary...')).toBeInTheDocument();
-      expect(screen.getByText('Album Recommendations')).toBeInTheDocument();
     });
 
     it('maintains proper loading states', async () => {
