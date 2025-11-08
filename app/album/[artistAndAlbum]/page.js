@@ -156,7 +156,7 @@ export default function AlbumPage({ params }) {
       fetchedOpenAISummary.current = true;
       try {
         const summaryResponse = await fetch(
-          `https://api-perplexity-albumdetail.rian-db8.workers.dev?album=${encodeURIComponent(
+          `/api/album-detail?album=${encodeURIComponent(
             albumName
           )}&artist=${encodeURIComponent(artistName)}`
         );
@@ -201,7 +201,7 @@ export default function AlbumPage({ params }) {
       const fetchRecommendations = async () => {
         try {
           const response = await fetch(
-            `https://api-perplexity-albumrecs.rian-db8.workers.dev/?album=${encodeURIComponent(
+            `/api/album-recs?album=${encodeURIComponent(
               album
             )}&artist=${encodeURIComponent(artist)}`
           );
