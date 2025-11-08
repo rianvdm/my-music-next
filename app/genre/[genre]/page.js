@@ -30,9 +30,7 @@ export default function GenrePage({ params }) {
       async function fetchGenreSummary() {
         try {
           const encodedGenre = encodeURIComponent(genre);
-          const summaryResponse = await fetch(
-            `https://api-perplexity-genresummary.rian-db8.workers.dev?genre=${encodedGenre}`
-          );
+          const summaryResponse = await fetch(`/api/genre-summary?genre=${encodedGenre}`);
           const summaryData = await summaryResponse.json();
           setGenreSummary({
             content: summaryData.data.content,

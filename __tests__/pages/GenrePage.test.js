@@ -232,9 +232,7 @@ describe('Genre Page', () => {
       });
 
       await waitFor(() => {
-        expect(fetch).toHaveBeenCalledWith(
-          'https://api-perplexity-genresummary.rian-db8.workers.dev?genre=Progressive%20Rock'
-        );
+        expect(fetch).toHaveBeenCalledWith('/api/genre-summary?genre=Progressive%20Rock');
       });
     });
 

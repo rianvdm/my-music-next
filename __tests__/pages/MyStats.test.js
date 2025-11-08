@@ -125,7 +125,10 @@ describe('MyStats Page', () => {
             ok: true,
             json: async () => mockRecentTracks,
           });
-        } else if (url.includes('api-perplexity-artistsentence')) {
+        } else if (
+          url.includes('/api/artist-sentence') ||
+          url.includes('api-perplexity-artistsentence')
+        ) {
           return Promise.resolve({
             ok: true,
             json: async () => mockArtistSummary,
@@ -182,7 +185,10 @@ describe('MyStats Page', () => {
             ok: true,
             json: async () => mockRecentTracks,
           });
-        } else if (url.includes('api-perplexity-artistsentence')) {
+        } else if (
+          url.includes('/api/artist-sentence') ||
+          url.includes('api-perplexity-artistsentence')
+        ) {
           // Never resolve to keep loading state
           return new Promise(() => {});
         }
