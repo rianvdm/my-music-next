@@ -1,6 +1,8 @@
-## Hello 👋
+## Listen To More
 
-My name is [Rian van der Merwe](https://elezea.com/) and this site started as a side project about the music I listen to, but then I got obsessed with it and now it's **an ever-expanding album and artist database that helps you find wonderful things to listen to.** Look around, do some searching, and (hopefully) find your next favorite album.
+**Listen To More** is a music discovery platform designed to help you explore albums, learn about artists, and find your next favorite listen. Search for any album or artist to get detailed information, streaming links across all platforms, and AI-generated summaries. Connect your Last.fm account to view personalized listening statistics, or link your Discogs collection to manage your physical music library. The platform integrates with Spotify for album data, Last.fm for scrobbling and recommendations, Discogs for collection tracking, and OpenAI for intelligent summaries. A companion Discord bot lets you quickly share album details and streaming links in any server.
+
+Created by [Rian van der Merwe](https://elezea.com/).
 
 ## Discord Bot
 
