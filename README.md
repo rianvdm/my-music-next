@@ -1,6 +1,6 @@
 ## Listen To More
 
-**Listen To More** is a music discovery platform designed to help you explore albums, learn about artists, and find your next favorite listen. Search for any album or artist to get detailed information, streaming links across all platforms, and AI-generated summaries. Connect your Last.fm account to view personalized listening statistics, or link your Discogs collection to manage your physical music library. The platform integrates with Spotify for album data, Last.fm for scrobbling and recommendations, Discogs for collection tracking, and OpenAI for intelligent summaries. A companion Discord bot lets you quickly share album details and streaming links in any server.
+**Listen To More** is a music discovery platform designed to help you explore albums, learn about artists, and find your next favorite listen. Search for any album or artist to get detailed information, streaming links across all platforms, and AI-generated summaries. It also connects with Last.fm to view my personalized listening statistics, and links with Discogs to manage my physical music library. The platform integrates with Spotify for album data, Last.fm for scrobbling and recommendations, Discogs for collection tracking, and OpenAI for intelligent summaries. A companion Discord bot lets you quickly share album details and streaming links in any server.
 
 Created by [Rian van der Merwe](https://elezea.com/).
 
