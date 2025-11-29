@@ -23,6 +23,82 @@ This document provides everything needed to start each coding session for the re
 
 ---
 
+## Patterns to Get Right from the Start
+
+These are anti-patterns found in the current codebase that we must avoid in the rewrite:
+
+### 1. No Layout Files for Metadata
+
+**Current hack:** 9 layout.js files exist solely to call `generateMetadata()` and return `{children}`.
+
+**New approach:** Metadata lives in page files only. Create a centralized metadata utility:
+
+```typescript
+// packages/shared/src/utils/metadata.ts
+export function createMetadata(params: MetadataParams): Metadata {
+  return {
+    title: params.title ? `${params.title} | Listen To More` : 'Listen To More',
+    description: params.description || DEFAULT_DESCRIPTION,
+    openGraph: { ...DEFAULT_OG, ...params.openGraph },
+    twitter: { ...DEFAULT_TWITTER, ...params.twitter },
+  };
+}
+```
+
+### 2. Centralized API Endpoints
+
+**Current hack:** 30+ hardcoded URLs like `https://api-lastfm-artistdetail.rian-db8.workers.dev` scattered across files.
+
+**New approach:** All API calls go through service classes. No raw URLs in components.
+
+### 3. Single Data Fetching Pattern
+
+**Current hack:** 5 different patterns (useEffect, hooks, layout fetching, sequential, nested).
+
+**New approach:** One custom hook pattern for all data fetching:
+
+```typescript
+// Example usage in any component
+const { data, loading, error } = useQuery(() => spotify.getAlbum(id));
+```
+
+### 4. Consistent Error Handling
+
+**Current hack:** Some pages show errors, others silently fail, others crash.
+
+**New approach:** Every fetch has error handling. Standardized error UI component.
+
+### 5. Consistent Loading States
+
+**Current hack:** String states (`'Loading...'`), booleans, nulls, objects all used.
+
+**New approach:** Single pattern: `{ data: T | null, loading: boolean, error: Error | null }`
+
+### 6. No Inline Styles
+
+**Current hack:** 13 files with inline style objects.
+
+**New approach:** CSS modules only. Create utility classes for common patterns.
+
+### 7. No Duplicate Code
+
+**Current issues found:**
+
+- Random fact fetching duplicated in album/page.js and artist/page.js
+- Citation rendering duplicated in album and genre pages
+- URL parsing duplicated in layout and page files
+- Filter logic duplicated in collection and library pages
+
+**New approach:** Extract to shared components and hooks immediately.
+
+### 8. Consistent Link Handling
+
+**Current hack:** Mix of `<Link>` and `<a>` tags for internal routes.
+
+**New approach:** Always use framework's Link component for internal routes.
+
+---
+
 ## Project Structure
 
 ```
