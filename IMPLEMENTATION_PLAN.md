@@ -1027,8 +1027,13 @@ For production, use `wrangler secret put KEY_NAME` for each.
 | KV Fetch  | 8               | 0 (replaced by D1)     |
 | **Total** | **34**          | **6 services + 1 app** |
 
-Workers staying in cloudflare-workers repo: `bluesky-random-fact`, `discogs-mcp-server`
-Workers being deleted: `personality-api`, everything in `_archive/`
+**What happens to old repos after migration:**
+
+- `my-music-next` → Archive (read-only), keep for reference
+- `cloudflare-workers` → Archive (read-only), keep for reference
+- `bluesky-random-fact` and `discogs-mcp-server` stay active in cloudflare-workers (not part of listentomore)
+
+Nothing gets deleted. The old code remains available for reference.
 
 ---
 
